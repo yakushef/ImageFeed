@@ -26,22 +26,15 @@ class ImagesListViewController: UIViewController {
         
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
-
-    // MARK: Status bar color
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
     
     //MARK: Methods
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         
         cell.dateLabel.text = dateFormatter.string(from: Date())
         
-        if indexPath.row % 2 == 0 {
-            if let likeImage = UIImage(named: "favActive") {
-                cell.likeButton.setImage(likeImage, for: .normal)
-            }
-        }
+        let isLiked = indexPath.row % 2 == 0
+        let likeImage = UIImage(named: isLiked ? "likeButtonActive" : "likeButtonInactive")
+        cell.likeButton.setImage(likeImage, for: .normal)
         
         guard let image = UIImage(named: "\(indexPath.row)") else { return }
         cell.cellImage.image = image
