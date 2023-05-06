@@ -13,8 +13,9 @@
 		BC4CA0F229FC30B4005DBCDE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC4CA0F029FC30B4005DBCDE /* Main.storyboard */; };
 		BC4CA0F429FC30B6005DBCDE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BC4CA0F329FC30B6005DBCDE /* Assets.xcassets */; };
 		BC4CA0F729FC30B6005DBCDE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC4CA0F529FC30B6005DBCDE /* LaunchScreen.storyboard */; };
-		BC576C392A0237C2003C36C7 /* ColorsAndExtentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC576C382A0237C2003C36C7 /* ColorsAndExtentions.swift */; };
+		BC576C392A0237C2003C36C7 /* UIColor+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC576C382A0237C2003C36C7 /* UIColor+Extentions.swift */; };
 		BC6E7C8129FFD412007D5688 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6E7C8029FFD412007D5688 /* ImagesListCell.swift */; };
+		BCF0D5A92A06D112009D7CC5 /* GradientImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF0D5A82A06D112009D7CC5 /* GradientImageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,8 +27,9 @@
 		BC4CA0F329FC30B6005DBCDE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BC4CA0F629FC30B6005DBCDE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BC4CA0F829FC30B6005DBCDE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BC576C382A0237C2003C36C7 /* ColorsAndExtentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsAndExtentions.swift; sourceTree = "<group>"; };
+		BC576C382A0237C2003C36C7 /* UIColor+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extentions.swift"; sourceTree = "<group>"; };
 		BC6E7C8029FFD412007D5688 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
+		BCF0D5A82A06D112009D7CC5 /* GradientImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,7 +62,7 @@
 		BC4CA0E929FC30B4005DBCDE /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
-				BC576C382A0237C2003C36C7 /* ColorsAndExtentions.swift */,
+				BCF0D5AA2A06D127009D7CC5 /* UI Customizations */,
 				BC576C372A023797003C36C7 /* Presentation */,
 				BC4CA0EA29FC30B4005DBCDE /* AppDelegate.swift */,
 				BC4CA0EC29FC30B4005DBCDE /* SceneDelegate.swift */,
@@ -79,6 +81,15 @@
 				BC6E7C8029FFD412007D5688 /* ImagesListCell.swift */,
 			);
 			path = Presentation;
+			sourceTree = "<group>";
+		};
+		BCF0D5AA2A06D127009D7CC5 /* UI Customizations */ = {
+			isa = PBXGroup;
+			children = (
+				BC576C382A0237C2003C36C7 /* UIColor+Extentions.swift */,
+				BCF0D5A82A06D112009D7CC5 /* GradientImageView.swift */,
+			);
+			path = "UI Customizations";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -154,7 +165,8 @@
 			files = (
 				BC4CA0EF29FC30B4005DBCDE /* ImagesListViewController.swift in Sources */,
 				BC6E7C8129FFD412007D5688 /* ImagesListCell.swift in Sources */,
-				BC576C392A0237C2003C36C7 /* ColorsAndExtentions.swift in Sources */,
+				BCF0D5A92A06D112009D7CC5 /* GradientImageView.swift in Sources */,
+				BC576C392A0237C2003C36C7 /* UIColor+Extentions.swift in Sources */,
 				BC4CA0EB29FC30B4005DBCDE /* AppDelegate.swift in Sources */,
 				BC4CA0ED29FC30B4005DBCDE /* SceneDelegate.swift in Sources */,
 			);
