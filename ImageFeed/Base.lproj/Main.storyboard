@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ch0-9N-L3R">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -83,7 +84,7 @@
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" name="YP Black"/>
+                        <color key="backgroundColor" name="YPBlack"/>
                         <constraints>
                             <constraint firstItem="XtR-1c-GP1" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Bw8-en-yKU"/>
                             <constraint firstAttribute="trailing" secondItem="XtR-1c-GP1" secondAttribute="trailing" id="R55-a0-oBm"/>
@@ -99,12 +100,122 @@
             </objects>
             <point key="canvasLocation" x="76.92307692307692" y="3.5545023696682461"/>
         </scene>
+        <!--Profile View Controller-->
+        <scene sceneID="qcb-uN-Lha">
+            <objects>
+                <viewController id="Ch0-9N-L3R" customClass="ProfileViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="CRq-l9-bVA">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="51D-CC-sPS">
+                                <rect key="frame" x="333" y="89" width="44" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="8wk-qW-J5R"/>
+                                    <constraint firstAttribute="width" constant="44" id="euf-I0-nbj"/>
+                                </constraints>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="ipad.and.arrow.forward" catalog="system">
+                                    <color key="titleColor" name="YPRed"/>
+                                </state>
+                                <buttonConfiguration key="configuration" style="plain">
+                                    <imageReference key="image" image="ipad.and.arrow.forward" renderingMode="template"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage"/>
+                                    <color key="baseForegroundColor" name="YPRed"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="logoutButtonTapped:" destination="Ch0-9N-L3R" eventType="touchUpInside" id="47u-ad-CKL"/>
+                                </connections>
+                            </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Photo" translatesAutoresizingMaskIntoConstraints="NO" id="508-jx-jkL">
+                                <rect key="frame" x="16" y="76" width="70" height="70"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="70" id="TZK-0k-cJk"/>
+                                    <constraint firstAttribute="width" constant="70" id="eMn-2q-Bk6"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="35"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Екатерина Новикова" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="35F-8H-D9m" userLabel="fullNameLabel">
+                                <rect key="frame" x="16" y="154" width="358" height="18"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="18" id="HF2-Pd-jLI"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="23"/>
+                                <color key="textColor" name="YPWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@ekaterina_nov" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="spi-KZ-AyQ" userLabel="usernameLabel">
+                                <rect key="frame" x="16" y="180" width="358" height="18"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="18" id="XpW-iY-aNL"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" name="YPGray"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hello, world!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="20U-Hs-oeu" userLabel="statusLabel">
+                                <rect key="frame" x="16" y="206" width="358" height="18"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="18" id="3Cj-7G-Sa5"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" name="YPWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="7n8-xW-i2U"/>
+                        <color key="backgroundColor" name="YPBlack"/>
+                        <constraints>
+                            <constraint firstItem="spi-KZ-AyQ" firstAttribute="top" secondItem="35F-8H-D9m" secondAttribute="bottom" constant="8" id="0Ah-yu-LjS"/>
+                            <constraint firstItem="20U-Hs-oeu" firstAttribute="top" secondItem="spi-KZ-AyQ" secondAttribute="bottom" constant="8" id="1mM-by-bRj"/>
+                            <constraint firstItem="35F-8H-D9m" firstAttribute="top" secondItem="508-jx-jkL" secondAttribute="bottom" constant="8" id="BiO-bH-ANA"/>
+                            <constraint firstItem="7n8-xW-i2U" firstAttribute="trailing" secondItem="spi-KZ-AyQ" secondAttribute="trailing" constant="16" id="CjG-Ds-vhc"/>
+                            <constraint firstItem="7n8-xW-i2U" firstAttribute="trailing" secondItem="20U-Hs-oeu" secondAttribute="trailing" constant="16" id="Du5-5I-AUP"/>
+                            <constraint firstItem="spi-KZ-AyQ" firstAttribute="leading" secondItem="7n8-xW-i2U" secondAttribute="leading" constant="16" id="Ssh-YP-m5E"/>
+                            <constraint firstItem="7n8-xW-i2U" firstAttribute="trailing" secondItem="35F-8H-D9m" secondAttribute="trailing" constant="16" id="TzH-7v-raf"/>
+                            <constraint firstItem="508-jx-jkL" firstAttribute="leading" secondItem="7n8-xW-i2U" secondAttribute="leading" constant="16" id="gQI-bE-1tV"/>
+                            <constraint firstItem="508-jx-jkL" firstAttribute="top" secondItem="7n8-xW-i2U" secondAttribute="top" constant="29" id="nfV-Qo-x8W"/>
+                            <constraint firstItem="7n8-xW-i2U" firstAttribute="trailing" secondItem="51D-CC-sPS" secondAttribute="trailing" constant="13" id="opa-6Q-tfc"/>
+                            <constraint firstItem="20U-Hs-oeu" firstAttribute="leading" secondItem="7n8-xW-i2U" secondAttribute="leading" constant="16" id="pwr-g5-dy7"/>
+                            <constraint firstItem="51D-CC-sPS" firstAttribute="centerY" secondItem="508-jx-jkL" secondAttribute="centerY" id="uI8-N4-NeM"/>
+                            <constraint firstItem="35F-8H-D9m" firstAttribute="leading" secondItem="7n8-xW-i2U" secondAttribute="leading" constant="16" id="ylt-lL-eCC"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="fullNameLabel" destination="35F-8H-D9m" id="Gzs-7j-U2O"/>
+                        <outlet property="logoutButton" destination="51D-CC-sPS" id="02U-KL-5W3"/>
+                        <outlet property="userStatusLabel" destination="20U-Hs-oeu" id="px9-3E-LcX"/>
+                        <outlet property="usernameLabel" destination="spi-KZ-AyQ" id="IEx-zy-Cuh"/>
+                        <outlet property="userpicView" destination="508-jx-jkL" id="fAJ-Wj-rdf"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="a6k-ph-uoc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="913.84615384615381" y="3.5545023696682461"/>
+        </scene>
     </scenes>
     <resources>
         <image name="14" width="200" height="133"/>
+        <image name="Photo" width="70" height="70"/>
+        <image name="ipad.and.arrow.forward" catalog="system" width="113" height="128"/>
+        <image name="ipad.and.arrow.forward" width="20" height="22"/>
         <image name="likeButtonInactive" width="30" height="27.333333969116211"/>
         <namedColor name="YP Black">
             <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="YPBlack">
+            <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="YPGray">
+            <color red="0.68235294117647061" green="0.68627450980392157" blue="0.70588235294117652" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="YPRed">
+            <color red="0.96078431372549022" green="0.41960784313725491" blue="0.42352941176470588" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="YPWhite">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC2A22C42A0D5AF30096E22B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2A22C32A0D5AF30096E22B /* ProfileViewController.swift */; };
 		BC4CA0EB29FC30B4005DBCDE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC4CA0EA29FC30B4005DBCDE /* AppDelegate.swift */; };
 		BC4CA0ED29FC30B4005DBCDE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC4CA0EC29FC30B4005DBCDE /* SceneDelegate.swift */; };
 		BC4CA0EF29FC30B4005DBCDE /* ImagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC4CA0EE29FC30B4005DBCDE /* ImagesListViewController.swift */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BC2A22C32A0D5AF30096E22B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		BC4CA0E729FC30B4005DBCDE /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC4CA0EA29FC30B4005DBCDE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BC4CA0EC29FC30B4005DBCDE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 			children = (
 				BC4CA0EE29FC30B4005DBCDE /* ImagesListViewController.swift */,
 				BC6E7C8029FFD412007D5688 /* ImagesListCell.swift */,
+				BC2A22C32A0D5AF30096E22B /* ProfileViewController.swift */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -167,6 +170,7 @@
 				BC6E7C8129FFD412007D5688 /* ImagesListCell.swift in Sources */,
 				BCF0D5A92A06D112009D7CC5 /* GradientImageView.swift in Sources */,
 				BC576C392A0237C2003C36C7 /* UIColor+Extentions.swift in Sources */,
+				BC2A22C42A0D5AF30096E22B /* ProfileViewController.swift in Sources */,
 				BC4CA0EB29FC30B4005DBCDE /* AppDelegate.swift in Sources */,
 				BC4CA0ED29FC30B4005DBCDE /* SceneDelegate.swift in Sources */,
 			);
