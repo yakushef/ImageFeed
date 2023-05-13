@@ -8,13 +8,21 @@
 import UIKit
 
 final class SingleImageViewController: UIViewController {
+    var image: UIImage! {
+        didSet {
+            guard isViewLoaded else {
+                return
+            }
+            fullScreenImageView.image = image
+        }
+    }
     
-    @IBOutlet weak var fullScreenImageView: UIImageView!
+    @IBOutlet var fullScreenImageView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-
+        fullScreenImageView.image = image
     }
     
 

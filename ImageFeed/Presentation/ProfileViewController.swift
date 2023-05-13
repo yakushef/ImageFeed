@@ -10,11 +10,11 @@ import UIKit
 class ProfileViewController: UIViewController {
 
     
-    @IBOutlet weak var userpicView: UIImageView!
-    @IBOutlet weak var userStatusLabel: UILabel!
-    @IBOutlet weak var usernameLabel: UILabel!
-    @IBOutlet weak var fullNameLabel: UILabel!
-    @IBOutlet weak var logoutButton: UIButton!
+    @IBOutlet private var userpicView: UIImageView!
+    @IBOutlet private var userStatusLabel: UILabel!
+    @IBOutlet private var usernameLabel: UILabel!
+    @IBOutlet private var fullNameLabel: UILabel!
+    @IBOutlet private var logoutButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +22,7 @@ class ProfileViewController: UIViewController {
     }
     
     
-    @IBAction func logoutButtonTapped(_ sender: Any) {
+    @IBAction private func logoutButtonTapped(_ sender: Any) {
     }
     
 }

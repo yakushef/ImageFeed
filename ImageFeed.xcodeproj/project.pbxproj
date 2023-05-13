@@ -17,6 +17,7 @@
 		BC4CA0F729FC30B6005DBCDE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC4CA0F529FC30B6005DBCDE /* LaunchScreen.storyboard */; };
 		BC576C392A0237C2003C36C7 /* UIColor+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC576C382A0237C2003C36C7 /* UIColor+Extentions.swift */; };
 		BC6E7C8129FFD412007D5688 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6E7C8029FFD412007D5688 /* ImagesListCell.swift */; };
+		BCCA7E182A0EBEC6007D7102 /* ImageListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCCA7E172A0EBEC6007D7102 /* ImageListCell.xib */; };
 		BCF0D5A92A06D112009D7CC5 /* GradientImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF0D5A82A06D112009D7CC5 /* GradientImageView.swift */; };
 /* End PBXBuildFile section */
 
@@ -33,6 +34,7 @@
 		BC4CA0F829FC30B6005DBCDE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BC576C382A0237C2003C36C7 /* UIColor+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extentions.swift"; sourceTree = "<group>"; };
 		BC6E7C8029FFD412007D5688 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
+		BCCA7E172A0EBEC6007D7102 /* ImageListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImageListCell.xib; sourceTree = "<group>"; };
 		BCF0D5A82A06D112009D7CC5 /* GradientImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -50,6 +52,7 @@
 		BC4CA0DE29FC30B4005DBCDE = {
 			isa = PBXGroup;
 			children = (
+				BCCA7E172A0EBEC6007D7102 /* ImageListCell.xib */,
 				BC4CA0E929FC30B4005DBCDE /* ImageFeed */,
 				BC4CA0E829FC30B4005DBCDE /* Products */,
 			);
@@ -157,6 +160,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BC4CA0F729FC30B6005DBCDE /* LaunchScreen.storyboard in Resources */,
+				BCCA7E182A0EBEC6007D7102 /* ImageListCell.xib in Resources */,
 				BC4CA0F429FC30B6005DBCDE /* Assets.xcassets in Resources */,
 				BC4CA0F229FC30B4005DBCDE /* Main.storyboard in Resources */,
 			);
