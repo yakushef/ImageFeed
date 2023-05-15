@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aJb-76-6oR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aJb-76-6oR">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -35,7 +35,7 @@
                     <navigationItem key="navigationItem" id="64j-Ht-Hea"/>
                     <connections>
                         <outlet property="tableView" destination="sS0-96-Nyr" id="EoB-2Z-gDZ"/>
-                        <segue destination="D1O-lp-B8C" kind="show" identifier="ShowSingleImage" id="pMe-cm-Ap2"/>
+                        <segue destination="D1O-lp-B8C" kind="presentation" identifier="ShowSingleImage" id="pMe-cm-Ap2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -45,27 +45,78 @@
         <!--Single Image View Controller-->
         <scene sceneID="2sg-A6-G6m">
             <objects>
-                <viewController id="D1O-lp-B8C" customClass="SingleImageViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="D1O-lp-B8C" customClass="SingleImageViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wLA-yc-oBO">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="14" translatesAutoresizingMaskIntoConstraints="NO" id="sdW-Rs-hH2">
-                                <rect key="frame" x="0.0" y="91" width="390" height="670"/>
-                            </imageView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ghi-cN-dNd">
+                                <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="14" translatesAutoresizingMaskIntoConstraints="NO" id="sdW-Rs-hH2">
+                                        <rect key="frame" x="0.0" y="0.0" width="200" height="133"/>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="sdW-Rs-hH2" firstAttribute="trailing" secondItem="ghi-cN-dNd" secondAttribute="trailing" id="UWg-Oa-EW6"/>
+                                    <constraint firstItem="sdW-Rs-hH2" firstAttribute="bottom" secondItem="ghi-cN-dNd" secondAttribute="bottom" id="fwh-2s-CLF"/>
+                                    <constraint firstItem="sdW-Rs-hH2" firstAttribute="leading" secondItem="ghi-cN-dNd" secondAttribute="leading" id="pri-HL-pcA"/>
+                                    <constraint firstItem="sdW-Rs-hH2" firstAttribute="top" secondItem="ghi-cN-dNd" secondAttribute="top" id="wIJ-Bx-l59"/>
+                                </constraints>
+                                <viewLayoutGuide key="contentLayoutGuide" id="rwD-1h-cew"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="U4Z-ZN-f1T"/>
+                                <connections>
+                                    <outlet property="delegate" destination="D1O-lp-B8C" id="Ihe-4r-jmo"/>
+                                </connections>
+                            </scrollView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eRp-Ci-ICr">
+                                <rect key="frame" x="16" y="60.000000000000007" width="15.666666666666664" height="22.333333333333336"/>
+                                <color key="tintColor" name="YPWhite"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="chevron.backward" catalog="system">
+                                    <color key="titleColor" name="YPWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="backButtonTapped:" destination="D1O-lp-B8C" eventType="touchUpInside" id="d21-2c-wdn"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uvX-Dz-lX6" userLabel="shareButton">
+                                <rect key="frame" x="170" y="743" width="50" height="50"/>
+                                <color key="backgroundColor" name="YPBlack"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="YC1-ag-Cie"/>
+                                    <constraint firstAttribute="width" constant="50" id="rdl-fJ-MNq"/>
+                                </constraints>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="Sharing"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.clipsToBounds" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="25"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="didTapShareButton:" destination="D1O-lp-B8C" eventType="touchUpInside" id="Elg-ck-5LL"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="tdr-Qo-L47"/>
                         <color key="backgroundColor" name="YPBlack"/>
                         <constraints>
-                            <constraint firstAttribute="bottomMargin" secondItem="sdW-Rs-hH2" secondAttribute="bottom" id="0Vc-Kd-l9J"/>
-                            <constraint firstItem="sdW-Rs-hH2" firstAttribute="leading" secondItem="tdr-Qo-L47" secondAttribute="leading" id="3ev-dk-l5B"/>
-                            <constraint firstItem="sdW-Rs-hH2" firstAttribute="trailing" secondItem="tdr-Qo-L47" secondAttribute="trailing" id="QFa-LF-hrC"/>
-                            <constraint firstItem="sdW-Rs-hH2" firstAttribute="top" secondItem="wLA-yc-oBO" secondAttribute="topMargin" id="ZH2-Z3-6Uw"/>
+                            <constraint firstItem="eRp-Ci-ICr" firstAttribute="top" secondItem="wLA-yc-oBO" secondAttribute="top" constant="60" id="3oF-SB-b8A"/>
+                            <constraint firstAttribute="bottom" secondItem="ghi-cN-dNd" secondAttribute="bottom" id="BvV-Vg-txJ"/>
+                            <constraint firstItem="ghi-cN-dNd" firstAttribute="top" secondItem="wLA-yc-oBO" secondAttribute="top" id="WIP-ks-j64"/>
+                            <constraint firstItem="ghi-cN-dNd" firstAttribute="leading" secondItem="wLA-yc-oBO" secondAttribute="leading" id="XX8-tO-U1h"/>
+                            <constraint firstItem="tdr-Qo-L47" firstAttribute="bottom" secondItem="uvX-Dz-lX6" secondAttribute="bottom" constant="51" id="bkB-lZ-rUR"/>
+                            <constraint firstItem="uvX-Dz-lX6" firstAttribute="centerX" secondItem="tdr-Qo-L47" secondAttribute="centerX" id="gWw-6O-vl8"/>
+                            <constraint firstAttribute="trailing" secondItem="ghi-cN-dNd" secondAttribute="trailing" id="pqE-vu-Ngl"/>
+                            <constraint firstItem="eRp-Ci-ICr" firstAttribute="leading" secondItem="tdr-Qo-L47" secondAttribute="leading" constant="16" id="tUA-a3-ByS"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="U4t-00-gXs"/>
                     <connections>
                         <outlet property="fullScreenImageView" destination="sdW-Rs-hH2" id="HBD-9Q-aMz"/>
+                        <outlet property="scrollView" destination="ghi-cN-dNd" id="pbB-IY-5qm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lPw-UF-Gwi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -206,6 +257,8 @@
         <image name="14" width="200" height="133"/>
         <image name="Active" width="24" height="24"/>
         <image name="Photo" width="70" height="70"/>
+        <image name="Sharing" width="30.333333969116211" height="30"/>
+        <image name="chevron.backward" catalog="system" width="97" height="128"/>
         <image name="ipad.and.arrow.forward" width="20" height="22"/>
         <image name="person.crop.rectangle.stack.fill" width="20" height="22"/>
         <namedColor name="YPBlack">
