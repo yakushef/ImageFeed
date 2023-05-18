@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ImagesListViewController: UIViewController {
+final class ImagesListViewController: UIViewController {
 
     @IBOutlet private var tableView: UITableView!
     
@@ -22,14 +22,13 @@ class ImagesListViewController: UIViewController {
         return formatter
     }()
     
+    // MARK: Segue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == ShowSingleImageSegueIdentifier {
             let viewController = segue.destination as! SingleImageViewController
             let indexPath = sender as! IndexPath
-            //_ = viewController.view
             let image = UIImage(named: photosName[indexPath.row])
             viewController.image = image
-            //viewController.fullScreenImageView.image = image
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -44,7 +43,10 @@ class ImagesListViewController: UIViewController {
         tableView.register(UINib(nibName: "ImageListCell", bundle: nil), forCellReuseIdentifier: ImagesListCell.reuseIdentifier)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+        tableView.contentInset = UIEdgeInsets(top: 12,
+                                              left: 0,
+                                              bottom: 12,
+                                              right: 0)
     }
     
     //MARK: Methods
@@ -59,8 +61,9 @@ class ImagesListViewController: UIViewController {
         guard let image = UIImage(named: "\(indexPath.row)") else { return }
         cell.cellImage.image = image
     }
-    
 }
+
+// MARK: - UITableView
 
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -85,7 +88,8 @@ extension ImagesListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier,
+                                                 for: indexPath)
 
         guard let imageListCell = cell as? ImagesListCell else {
             return UITableViewCell()
@@ -95,6 +99,4 @@ extension ImagesListViewController: UITableViewDataSource {
 
         return imageListCell
     }
-    
-    
 }

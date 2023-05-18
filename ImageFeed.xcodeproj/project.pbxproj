@@ -49,10 +49,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BC311BCE2A1694E0005AE0BC /* IInterface Builder */ = {
+			isa = PBXGroup;
+			children = (
+				BC4CA0F029FC30B4005DBCDE /* Main.storyboard */,
+				BCCA7E172A0EBEC6007D7102 /* ImageListCell.xib */,
+				BC4CA0F529FC30B6005DBCDE /* LaunchScreen.storyboard */,
+			);
+			path = "IInterface Builder";
+			sourceTree = "<group>";
+		};
+		BC311BCF2A1699AE005AE0BC /* Image List */ = {
+			isa = PBXGroup;
+			children = (
+				BC4CA0EE29FC30B4005DBCDE /* ImagesListViewController.swift */,
+				BC6E7C8029FFD412007D5688 /* ImagesListCell.swift */,
+			);
+			path = "Image List";
+			sourceTree = "<group>";
+		};
 		BC4CA0DE29FC30B4005DBCDE = {
 			isa = PBXGroup;
 			children = (
-				BCCA7E172A0EBEC6007D7102 /* ImageListCell.xib */,
 				BC4CA0E929FC30B4005DBCDE /* ImageFeed */,
 				BC4CA0E829FC30B4005DBCDE /* Products */,
 			);
@@ -69,13 +87,12 @@
 		BC4CA0E929FC30B4005DBCDE /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
-				BCF0D5AA2A06D127009D7CC5 /* UI Customizations */,
-				BC576C372A023797003C36C7 /* Presentation */,
 				BC4CA0EA29FC30B4005DBCDE /* AppDelegate.swift */,
 				BC4CA0EC29FC30B4005DBCDE /* SceneDelegate.swift */,
-				BC4CA0F029FC30B4005DBCDE /* Main.storyboard */,
+				BC311BCE2A1694E0005AE0BC /* IInterface Builder */,
+				BCF0D5AA2A06D127009D7CC5 /* UI Customizations */,
+				BC576C372A023797003C36C7 /* Presentation */,
 				BC4CA0F329FC30B6005DBCDE /* Assets.xcassets */,
-				BC4CA0F529FC30B6005DBCDE /* LaunchScreen.storyboard */,
 				BC4CA0F829FC30B6005DBCDE /* Info.plist */,
 			);
 			path = ImageFeed;
@@ -84,8 +101,7 @@
 		BC576C372A023797003C36C7 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
-				BC4CA0EE29FC30B4005DBCDE /* ImagesListViewController.swift */,
-				BC6E7C8029FFD412007D5688 /* ImagesListCell.swift */,
+				BC311BCF2A1699AE005AE0BC /* Image List */,
 				BC2A22C32A0D5AF30096E22B /* ProfileViewController.swift */,
 				BC2A22C52A0D6ADA0096E22B /* SingleImageViewController.swift */,
 			);
