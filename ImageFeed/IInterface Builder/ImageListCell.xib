@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationWidth="10" reuseIdentifier="ImagesListCell" rowHeight="147" id="Uzf-vy-By7" customClass="ImagesListCell" customModule="ImageFeed" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="390" height="147"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Uzf-vy-By7" id="BKK-yC-j3v">
+                <rect key="frame" x="0.0" y="0.0" width="390" height="147"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="14" translatesAutoresizingMaskIntoConstraints="NO" id="Rvy-2w-Pzi" customClass="GradientImageView" customModule="ImageFeed" customModuleProvider="target">
+                        <rect key="frame" x="16" y="4" width="358" height="139"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="16"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </imageView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K7E-5L-vIR">
+                        <rect key="frame" x="330" y="4" width="44" height="44"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="44" id="MAm-Bi-q2j"/>
+                            <constraint firstAttribute="width" constant="44" id="S17-VL-6gJ"/>
+                        </constraints>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                        <state key="normal" image="likeButtonInactive"/>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="27 августа 2021" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gYE-Gm-j43">
+                        <rect key="frame" x="24" y="117" width="358" height="18"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="18" id="ioy-8m-o1T"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <color key="textColor" name="YPWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="K7E-5L-vIR" firstAttribute="top" secondItem="Rvy-2w-Pzi" secondAttribute="top" id="2Ci-MV-skN"/>
+                    <constraint firstItem="Rvy-2w-Pzi" firstAttribute="top" secondItem="BKK-yC-j3v" secondAttribute="top" constant="4" id="3GM-nw-4oo"/>
+                    <constraint firstAttribute="bottom" secondItem="Rvy-2w-Pzi" secondAttribute="bottom" constant="4" id="BLE-0j-3SN"/>
+                    <constraint firstAttribute="trailing" secondItem="Rvy-2w-Pzi" secondAttribute="trailing" constant="16" id="BV9-GX-yeg"/>
+                    <constraint firstItem="gYE-Gm-j43" firstAttribute="bottom" secondItem="Rvy-2w-Pzi" secondAttribute="bottom" constant="-8" id="OGw-7Z-nPJ"/>
+                    <constraint firstItem="gYE-Gm-j43" firstAttribute="trailing" secondItem="Rvy-2w-Pzi" secondAttribute="trailing" constant="8" id="WBR-Fq-o3l"/>
+                    <constraint firstItem="gYE-Gm-j43" firstAttribute="leading" secondItem="Rvy-2w-Pzi" secondAttribute="leading" constant="8" id="XyR-w5-TUk"/>
+                    <constraint firstItem="Rvy-2w-Pzi" firstAttribute="leading" secondItem="BKK-yC-j3v" secondAttribute="leading" constant="16" id="mpj-AI-901"/>
+                    <constraint firstItem="K7E-5L-vIR" firstAttribute="trailing" secondItem="Rvy-2w-Pzi" secondAttribute="trailing" id="zEk-Kx-gkw"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <connections>
+                <outlet property="cellImage" destination="Rvy-2w-Pzi" id="KoK-sf-siN"/>
+                <outlet property="dateLabel" destination="gYE-Gm-j43" id="uYV-lP-2fb"/>
+                <outlet property="likeButton" destination="K7E-5L-vIR" id="gd4-X0-CyE"/>
+            </connections>
+            <point key="canvasLocation" x="-388" y="17"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="14" width="200" height="133"/>
+        <image name="likeButtonInactive" width="30" height="27.333333969116211"/>
+        <namedColor name="YPWhite">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>
