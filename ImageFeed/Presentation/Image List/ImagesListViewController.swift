@@ -9,7 +9,7 @@ import UIKit
 
 final class ImagesListViewController: UIViewController {
 
-    @IBOutlet private var tableView: UITableView!
+    @IBOutlet private weak var tableView: UITableView!
     
     private let ShowSingleImageSegueIdentifier = "ShowSingleImage"
     
@@ -25,8 +25,7 @@ final class ImagesListViewController: UIViewController {
     // MARK: Segue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == ShowSingleImageSegueIdentifier {
-            let viewController = segue.destination as! SingleImageViewController
-            let indexPath = sender as! IndexPath
+            guard let viewController = segue.destination as? SingleImageViewController, let indexPath = sender as? IndexPath else { return }
             let image = UIImage(named: photosName[indexPath.row])
             viewController.image = image
         } else {
@@ -53,6 +52,7 @@ final class ImagesListViewController: UIViewController {
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         
         cell.dateLabel.text = dateFormatter.string(from: Date())
+        cell.selectionStyle = .none
         
         let isLiked = indexPath.row % 2 == 0
         let likeImage = UIImage(named: isLiked ? "likeButtonActive" : "likeButtonInactive")

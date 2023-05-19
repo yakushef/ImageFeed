@@ -18,7 +18,9 @@ final class SingleImageViewController: UIViewController {
     }
     
     @IBOutlet private var fullScreenImageView: UIImageView!
-    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet private weak var scrollView: UIScrollView!
+    
+    private var doubleTapRecognizer: UITapGestureRecognizer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +28,11 @@ final class SingleImageViewController: UIViewController {
         scrollView.minimumZoomScale = 0.1 // для картинок высокого разрешения
         scrollView.maximumZoomScale = 1.25 // для картинок высокого разрешения
         fullScreenImageView.image = image
+        
+        doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap))
+        doubleTapRecognizer.numberOfTapsRequired = 2
+        view.addGestureRecognizer(doubleTapRecognizer)
+        
         rescaleAndCenterImageInScrollView(image: image)
     }
     
@@ -97,12 +104,37 @@ final class SingleImageViewController: UIViewController {
         dismiss(animated: true)
     }
     
-    @IBAction func didTapShareButton(_ sender: UIButton) {
+    @IBAction private func didTapShareButton(_ sender: UIButton) {
         // TODO: отработать алерт ошибки
         guard let image = image else { assertionFailure("Error loading image"); return }
         let activityVC = UIActivityViewController(activityItems: [image],
                                                   applicationActivities: nil)
         present(activityVC, animated: true)
+    }
+    
+    @objc private func handleDoubleTap() {
+        
+        let visibleRectSize = scrollView.bounds.size
+        let imageSize = image.size
+        
+        let vScale = visibleRectSize.height / imageSize.height
+        let hScale = visibleRectSize.width / imageSize.width
+        
+        if scrollView.frame.width > fullScreenImageView.frame.width || scrollView.frame.height > fullScreenImageView.frame.height {
+
+            let tapPoint = doubleTapRecognizer.location(in: fullScreenImageView)
+
+            let zoomScale = scrollView.maximumZoomScale * 0.5
+            
+            let newSize = CGSize(width: fullScreenImageView.frame.width / zoomScale, height: fullScreenImageView.frame.height / zoomScale)
+            let newOrigin = CGPoint(x: tapPoint.x - newSize.width / 2, y: tapPoint.y + newSize.height / 2)
+            let newRect = CGRect(origin: newOrigin, size: newSize)
+            
+            scrollView.zoom(to: newRect, animated: true)
+            
+        } else {
+            scrollView.setZoomScale(min(hScale, vScale), animated: true)
+        }
     }
 }
 
