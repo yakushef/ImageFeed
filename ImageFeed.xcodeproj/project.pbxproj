@@ -17,6 +17,9 @@
 		BC4CA0F729FC30B6005DBCDE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC4CA0F529FC30B6005DBCDE /* LaunchScreen.storyboard */; };
 		BC576C392A0237C2003C36C7 /* UIColor+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC576C382A0237C2003C36C7 /* UIColor+Extentions.swift */; };
 		BC6E7C8129FFD412007D5688 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6E7C8029FFD412007D5688 /* ImagesListCell.swift */; };
+		BCB75F4A2A1FCDC0007197F4 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB75F492A1FCDC0007197F4 /* Constants.swift */; };
+		BCB75F4C2A1FDA76007197F4 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB75F4B2A1FDA76007197F4 /* AuthViewController.swift */; };
+		BCB75F4F2A1FDE3D007197F4 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB75F4E2A1FDE3D007197F4 /* WebViewViewController.swift */; };
 		BCCA7E182A0EBEC6007D7102 /* ImageListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCCA7E172A0EBEC6007D7102 /* ImageListCell.xib */; };
 		BCF0D5A92A06D112009D7CC5 /* GradientImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF0D5A82A06D112009D7CC5 /* GradientImageView.swift */; };
 /* End PBXBuildFile section */
@@ -34,6 +37,9 @@
 		BC4CA0F829FC30B6005DBCDE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BC576C382A0237C2003C36C7 /* UIColor+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extentions.swift"; sourceTree = "<group>"; };
 		BC6E7C8029FFD412007D5688 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
+		BCB75F492A1FCDC0007197F4 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		BCB75F4B2A1FDA76007197F4 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
+		BCB75F4E2A1FDE3D007197F4 /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
 		BCCA7E172A0EBEC6007D7102 /* ImageListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImageListCell.xib; sourceTree = "<group>"; };
 		BCF0D5A82A06D112009D7CC5 /* GradientImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -49,14 +55,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		BC311BCE2A1694E0005AE0BC /* IInterface Builder */ = {
+		BC311BCE2A1694E0005AE0BC /* Interface Builder */ = {
 			isa = PBXGroup;
 			children = (
 				BC4CA0F029FC30B4005DBCDE /* Main.storyboard */,
 				BCCA7E172A0EBEC6007D7102 /* ImageListCell.xib */,
 				BC4CA0F529FC30B6005DBCDE /* LaunchScreen.storyboard */,
 			);
-			path = "IInterface Builder";
+			path = "Interface Builder";
 			sourceTree = "<group>";
 		};
 		BC311BCF2A1699AE005AE0BC /* Image List */ = {
@@ -89,11 +95,13 @@
 			children = (
 				BC4CA0EA29FC30B4005DBCDE /* AppDelegate.swift */,
 				BC4CA0EC29FC30B4005DBCDE /* SceneDelegate.swift */,
-				BC311BCE2A1694E0005AE0BC /* IInterface Builder */,
+				BC311BCE2A1694E0005AE0BC /* Interface Builder */,
 				BCF0D5AA2A06D127009D7CC5 /* UI Customizations */,
+				BCB75F4D2A1FDE11007197F4 /* Auth */,
 				BC576C372A023797003C36C7 /* Presentation */,
 				BC4CA0F329FC30B6005DBCDE /* Assets.xcassets */,
 				BC4CA0F829FC30B6005DBCDE /* Info.plist */,
+				BCB75F492A1FCDC0007197F4 /* Constants.swift */,
 			);
 			path = ImageFeed;
 			sourceTree = "<group>";
@@ -106,6 +114,15 @@
 				BC2A22C52A0D6ADA0096E22B /* SingleImageViewController.swift */,
 			);
 			path = Presentation;
+			sourceTree = "<group>";
+		};
+		BCB75F4D2A1FDE11007197F4 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				BCB75F4B2A1FDA76007197F4 /* AuthViewController.swift */,
+				BCB75F4E2A1FDE3D007197F4 /* WebViewViewController.swift */,
+			);
+			path = Auth;
 			sourceTree = "<group>";
 		};
 		BCF0D5AA2A06D127009D7CC5 /* UI Customizations */ = {
@@ -191,12 +208,15 @@
 			files = (
 				BC4CA0EF29FC30B4005DBCDE /* ImagesListViewController.swift in Sources */,
 				BC6E7C8129FFD412007D5688 /* ImagesListCell.swift in Sources */,
+				BCB75F4C2A1FDA76007197F4 /* AuthViewController.swift in Sources */,
 				BCF0D5A92A06D112009D7CC5 /* GradientImageView.swift in Sources */,
+				BCB75F4F2A1FDE3D007197F4 /* WebViewViewController.swift in Sources */,
 				BC576C392A0237C2003C36C7 /* UIColor+Extentions.swift in Sources */,
 				BC2A22C42A0D5AF30096E22B /* ProfileViewController.swift in Sources */,
 				BC4CA0EB29FC30B4005DBCDE /* AppDelegate.swift in Sources */,
 				BC2A22C62A0D6ADB0096E22B /* SingleImageViewController.swift in Sources */,
 				BC4CA0ED29FC30B4005DBCDE /* SceneDelegate.swift in Sources */,
+				BCB75F4A2A1FCDC0007197F4 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
