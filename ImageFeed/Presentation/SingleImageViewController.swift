@@ -72,7 +72,6 @@ final class SingleImageViewController: UIViewController {
         }
         
         scrollView.setContentOffset(CGPoint(x: xOffset, y: yOffset), animated: false)
-        
     }
     
     private func centerImage() {
