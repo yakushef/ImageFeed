@@ -93,6 +93,7 @@
 		BC4CA0E929FC30B4005DBCDE /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
+				BCB75F502A208741007197F4 /* Network */,
 				BC4CA0EA29FC30B4005DBCDE /* AppDelegate.swift */,
 				BC4CA0EC29FC30B4005DBCDE /* SceneDelegate.swift */,
 				BC311BCE2A1694E0005AE0BC /* Interface Builder */,
@@ -101,7 +102,6 @@
 				BC576C372A023797003C36C7 /* Presentation */,
 				BC4CA0F329FC30B6005DBCDE /* Assets.xcassets */,
 				BC4CA0F829FC30B6005DBCDE /* Info.plist */,
-				BCB75F492A1FCDC0007197F4 /* Constants.swift */,
 			);
 			path = ImageFeed;
 			sourceTree = "<group>";
@@ -123,6 +123,14 @@
 				BCB75F4E2A1FDE3D007197F4 /* WebViewViewController.swift */,
 			);
 			path = Auth;
+			sourceTree = "<group>";
+		};
+		BCB75F502A208741007197F4 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				BCB75F492A1FCDC0007197F4 /* Constants.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 		BCF0D5AA2A06D127009D7CC5 /* UI Customizations */ = {

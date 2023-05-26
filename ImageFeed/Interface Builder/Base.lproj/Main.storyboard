@@ -79,7 +79,7 @@
                                 </wkWebViewConfiguration>
                             </wkWebView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lBe-xj-kwU">
-                                <rect key="frame" x="1" y="29" width="44" height="44"/>
+                                <rect key="frame" x="1" y="9" width="44" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="44" id="Yo6-6z-qV3"/>
                                     <constraint firstAttribute="height" constant="44" id="f61-nV-SbQ"/>
@@ -98,7 +98,7 @@
                             <constraint firstItem="lBe-xj-kwU" firstAttribute="leading" secondItem="z2i-UC-51q" secondAttribute="leading" constant="1" id="8W1-pd-huc"/>
                             <constraint firstAttribute="bottom" secondItem="vvb-Gj-OFB" secondAttribute="bottom" id="DAx-DE-28U"/>
                             <constraint firstItem="vvb-Gj-OFB" firstAttribute="top" secondItem="5PM-rA-o34" secondAttribute="top" id="FlE-nG-DJH"/>
-                            <constraint firstItem="lBe-xj-kwU" firstAttribute="top" secondItem="z2i-UC-51q" secondAttribute="top" constant="29" id="eEP-wn-CpU"/>
+                            <constraint firstItem="lBe-xj-kwU" firstAttribute="top" secondItem="z2i-UC-51q" secondAttribute="top" constant="9" id="eEP-wn-CpU"/>
                             <constraint firstItem="vvb-Gj-OFB" firstAttribute="leading" secondItem="5PM-rA-o34" secondAttribute="leading" id="tSU-YB-YWt"/>
                             <constraint firstAttribute="trailing" secondItem="vvb-Gj-OFB" secondAttribute="trailing" id="yof-hS-PRS"/>
                         </constraints>
