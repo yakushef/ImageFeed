@@ -60,7 +60,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b0H-eG-gbv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1186.1538461538462" y="-1704.0284360189573"/>
+            <point key="canvasLocation" x="1158" y="-1705"/>
         </scene>
         <!--Web View View Controller-->
         <scene sceneID="c30-bL-Maf">
@@ -72,7 +72,7 @@
                         <subviews>
                             <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vvb-Gj-OFB">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
-                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" name="YPWhite"/>
                                 <wkWebViewConfiguration key="configuration">
                                     <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
                                     <wkPreferences key="preferences"/>
@@ -91,6 +91,10 @@
                                     <action selector="bacButtonTapped:" destination="BIc-WT-q69" eventType="touchUpInside" id="ZOA-6n-nJ5"/>
                                 </connections>
                             </button>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" misplaced="YES" progressViewStyle="bar" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="DcR-rZ-7ch">
+                                <rect key="frame" x="0.0" y="75.333333333333485" width="375" height="1.6666666666666714"/>
+                                <color key="tintColor" name="YPBlack"/>
+                            </progressView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="z2i-UC-51q"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -98,30 +102,35 @@
                             <constraint firstItem="lBe-xj-kwU" firstAttribute="leading" secondItem="z2i-UC-51q" secondAttribute="leading" constant="1" id="8W1-pd-huc"/>
                             <constraint firstAttribute="bottom" secondItem="vvb-Gj-OFB" secondAttribute="bottom" id="DAx-DE-28U"/>
                             <constraint firstItem="vvb-Gj-OFB" firstAttribute="top" secondItem="5PM-rA-o34" secondAttribute="top" id="FlE-nG-DJH"/>
+                            <constraint firstItem="DcR-rZ-7ch" firstAttribute="leading" secondItem="z2i-UC-51q" secondAttribute="leading" id="TO3-Kj-uh7"/>
                             <constraint firstItem="lBe-xj-kwU" firstAttribute="top" secondItem="z2i-UC-51q" secondAttribute="top" constant="9" id="eEP-wn-CpU"/>
+                            <constraint firstItem="DcR-rZ-7ch" firstAttribute="top" secondItem="lBe-xj-kwU" secondAttribute="bottom" id="iFT-U7-gBd"/>
+                            <constraint firstItem="z2i-UC-51q" firstAttribute="trailing" secondItem="DcR-rZ-7ch" secondAttribute="trailing" id="sGP-8Y-Gdv"/>
                             <constraint firstItem="vvb-Gj-OFB" firstAttribute="leading" secondItem="5PM-rA-o34" secondAttribute="leading" id="tSU-YB-YWt"/>
                             <constraint firstAttribute="trailing" secondItem="vvb-Gj-OFB" secondAttribute="trailing" id="yof-hS-PRS"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" style="editor" id="uEM-0P-x5g"/>
                     <connections>
+                        <outlet property="progressBar" destination="DcR-rZ-7ch" id="MXa-8z-pVZ"/>
                         <outlet property="webView" destination="vvb-Gj-OFB" id="ebF-fI-Jst"/>
+                        <segue destination="aJb-76-6oR" kind="show" identifier="authorized" id="kUV-Ky-8CQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IWB-mW-N6T" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1983.0769230769231" y="-1704.0284360189573"/>
+            <point key="canvasLocation" x="1981.5999999999999" y="-1704.6798029556651"/>
         </scene>
         <!--ImageList-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController title="ImageList" id="BYZ-38-t0r" customClass="ImagesListViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="802"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="sS0-96-Nyr">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="729"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="753"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                         </subviews>
@@ -241,7 +250,8 @@
         <!--Tab Bar Controller-->
         <scene sceneID="ora-3g-m1d">
             <objects>
-                <tabBarController id="aJb-76-6oR" sceneMemberID="viewController">
+                <tabBarController modalPresentationStyle="fullScreen" id="aJb-76-6oR" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="aYn-Lz-mzS"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="DMr-MS-Wtp">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -266,7 +276,7 @@
             <objects>
                 <viewController id="Ch0-9N-L3R" customClass="ProfileViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="CRq-l9-bVA">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="802"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="7n8-xW-i2U"/>
                         <color key="backgroundColor" name="YPBlack"/>

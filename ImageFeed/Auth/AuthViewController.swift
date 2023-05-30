@@ -10,21 +10,40 @@ import UIKit
 class AuthViewController: UIViewController {
     
     private let authSegueID = "ShowWebView"
+    let oAuth2Service = OAuth2Service()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let webViewVC = segue.destination as? WebViewViewController else {
+            return
+        }
+        webViewVC.delegate = self
     }
     
 
-    /*
-    // MARK: - Navigation
+}
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+extension AuthViewController: WebViewViewControllerDelegate {
+    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
+        oAuth2Service.fetchAuthToken(code: code) { result in
+            switch result {
+            case .success(let token):
+                print("token:")
+                print(token)
+                vc.performSegue(withIdentifier: "authorized", sender: nil)
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
-    */
-
+    
+    func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
+        vc.dismiss(animated: true)
+    }
+    
+    
 }
