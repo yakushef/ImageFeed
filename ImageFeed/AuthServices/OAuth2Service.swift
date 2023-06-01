@@ -89,78 +89,34 @@ final class OAuth2Service {
     }
     
     func authTokenRequest(code: String) -> URLRequest {
-//        var urlComponents = URLComponents()
-//        urlComponents.scheme = "https"
-//        urlComponents.host = "unsplash.com"
-//        urlComponents.path = "/oauth/token"
-//
-//        urlComponents.queryItems = [URLQueryItem(name: "client_id", value: AccessKey),
-//        URLQueryItem(name: "client_secret", value: SecretKey),
-//        URLQueryItem(name: "redirect_uri", value: RedirectURI),
-//        URLQueryItem(name: "code", value: code),
-//        URLQueryItem(name: "grant_type", value: "authorization_code")]
-//
-//        return URLRequest.makeHttpRequest(path: urlComponents.path, httpMethod: "POST")
+
         
-        let path = "/oauth/token" + "?client_id=\(AccessKey)" + "&&client_secret=\(SecretKey)" + "&&redirect_uri=\(RedirectURI)" + "&&code=\(code)" + "&&grant_type=authorization_code"
+        let path = "/oauth/token" +
+                   "?client_id=\(AccessKey)" +
+                   "&&client_secret=\(SecretKey)" +
+                   "&&redirect_uri=\(RedirectURI)" +
+                   "&&code=\(code)" +
+                   "&&grant_type=authorization_code"
+        
         return URLRequest.makeHttpRequest(path: path,
                     httpMethod: "POST",
                     baseURL: URL(string: "https://unsplash.com")!
         )
     }
     
-//    func object(for request: URLRequest,
-//                completion: @escaping (Result<OAuthTokenResponseBody, Error>) -> Void) -> URLSessionTask {
-//        let decoder = JSONDecoder()
-//        return urlSession.data(for: request) { (result: Result<Data, Error>) in
-//            let response = result.flatMap { data -> Result<OAuthTokenResponseBody, Error> in
-//                Result { try decoder.decode(OAuthTokenResponseBody.self, from: data) }
-//            }
-//           completion(response)
-//        }
-//
-//    }
-    
-    
-    func authorizeUsingToken() {
-        
-        var urlComponents = URLComponents()
-        urlComponents.scheme = "https"
-        urlComponents.host = "api.unsplash.com"
-        urlComponents.path = "/me"
-        var url = urlComponents.url!
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
-        
-        let authToken = OAuth2TokenStorage().token
-        request.setValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")
-        
-        struct User: Encodable {
-            let username: String
-        }
-        request.httpBody = try? JSONEncoder().encode(User(username: "Test"))
-    }
-    
 }
 
-//TODO: flatMap
 extension OAuth2Service {
     private func object(for request: URLRequest,
                         completion: @escaping (Result<OAuthTokenResponseBody, Error>) -> Void) -> URLSessionTask {
         let decoder = JSONDecoder()
         return urlSession.data(for: request) { (result: Result<Data, Error>) in
-            switch result {
-            case .success(let data):
-                do {
-                    let object = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                    completion(.success(object))
-                } catch {
-                    completion(.failure(error))
+            let response = result.flatMap { data -> Result<OAuthTokenResponseBody, Error> in
+                Result {
+                    try decoder.decode(OAuthTokenResponseBody.self, from: data)
                 }
-            case .failure(let error):
-                completion(.failure(error))
             }
+            completion(response)
         }
     }
 }

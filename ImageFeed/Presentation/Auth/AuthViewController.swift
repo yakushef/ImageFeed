@@ -7,14 +7,27 @@
 
 import UIKit
 
-class AuthViewController: UIViewController {
+protocol AuthViewControllerDelegae {
+    func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String)
+}
+
+final class AuthViewController: UIViewController {
+    
+    var delegate: SplashViewController?
     
     private let authSegueID = "ShowWebView"
     let oAuth2Service = OAuth2Service()
+    
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
+        setNeedsStatusBarAppearanceUpdate()
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -23,23 +36,12 @@ class AuthViewController: UIViewController {
         }
         webViewVC.delegate = self
     }
-    
-
 }
 
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        oAuth2Service.fetchAuthToken(code: code) { result in
-            switch result {
-            case .success(let token):
-                print("token:")
-                print(token)
-                vc.performSegue(withIdentifier: "authorized", sender: nil)
-            case .failure(let error):
-                print(error)
-            }
+        self.delegate?.authViewController(self, didAuthenticateWithCode: code)
         }
-    }
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         vc.dismiss(animated: true)

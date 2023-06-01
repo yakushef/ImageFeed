@@ -15,12 +15,21 @@ protocol WebViewViewControllerDelegate {
     func webViewViewControllerDidCancel(_ vc: WebViewViewController)
 }
 
-class WebViewViewController: UIViewController {
+final class WebViewViewController: UIViewController {
     
-    @IBOutlet private var webView: WKWebView!
-    @IBOutlet private var progressBar: UIProgressView!
+    @IBOutlet private weak var webView: WKWebView!
+    @IBOutlet private weak var progressBar: UIProgressView!
     
     var delegate: WebViewViewControllerDelegate?
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setNeedsStatusBarAppearanceUpdate()
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .darkContent
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         webView.addObserver(self,
@@ -34,9 +43,11 @@ class WebViewViewController: UIViewController {
                                forKeyPath: #keyPath(WKWebView.estimatedProgress))
     }
 
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        progressBar.progress = 0
         webView.navigationDelegate = self
         
         let UnsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
@@ -64,7 +75,7 @@ class WebViewViewController: UIViewController {
     
     private func updateProgress() {
         let progress = Float(webView.estimatedProgress)
-        progressBar.setProgress(progress, animated: true)
+        progressBar.setProgress(progress, animated: false)
         progressBar.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
     }
     
@@ -76,10 +87,7 @@ class WebViewViewController: UIViewController {
 extension WebViewViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences, decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
         if let code = code(from: navigationAction) {
-            // TODO: process code
-//            DispatchQueue.main.async {
                 self.delegate?.webViewViewController(self, didAuthenticateWithCode: code)
-//            }
             decisionHandler(.cancel, preferences)
         } else {
             decisionHandler(.allow, preferences)

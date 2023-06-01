@@ -15,12 +15,23 @@ final class ImagesListViewController: UIViewController {
     
     private let photosName: [String] = Array(0...20).map { "\($0)" }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
+    }
+    
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
         formatter.timeStyle = .none
         return formatter
     }()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setNeedsStatusBarAppearanceUpdate()
+    }
+    
     
     // MARK: Segue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

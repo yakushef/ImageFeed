@@ -7,10 +7,6 @@
 
 import Foundation
 
-protocol OAuth2TokenStorageService {
-    
-}
-
 final class OAuth2TokenStorage {
 
     private let userDefaults = UserDefaults.standard
