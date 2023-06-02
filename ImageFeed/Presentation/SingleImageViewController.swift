@@ -17,6 +17,10 @@ final class SingleImageViewController: UIViewController {
         }
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
+    }
+    
     @IBOutlet private var fullScreenImageView: UIImageView!
     @IBOutlet private weak var scrollView: UIScrollView!
     
@@ -72,7 +76,6 @@ final class SingleImageViewController: UIViewController {
         }
         
         scrollView.setContentOffset(CGPoint(x: xOffset, y: yOffset), animated: false)
-        
     }
     
     private func centerImage() {

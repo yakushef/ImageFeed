@@ -15,6 +15,16 @@ final class ProfileViewController: UIViewController {
     private var usernameLabel: UILabel!
     private var statusLabel: UILabel!
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setNeedsStatusBarAppearanceUpdate()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
