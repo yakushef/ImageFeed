@@ -43,7 +43,6 @@ final class WebViewViewController: UIViewController {
                                forKeyPath: #keyPath(WKWebView.estimatedProgress))
     }
 
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -52,14 +51,22 @@ final class WebViewViewController: UIViewController {
         
         let UnsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
 
-        var urlComponents = URLComponents(string: UnsplashAuthorizeURLString)!
+        var urlComponents: URLComponents = { guard let components = URLComponents(string: UnsplashAuthorizeURLString) else { assertionFailure("Invalid Authorize URLComonents"); return URLComponents() }
+            return components }()
+        
         urlComponents.queryItems = [
             URLQueryItem(name: "client_id", value: AccessKey),
             URLQueryItem(name: "redirect_uri", value: RedirectURI),
             URLQueryItem(name: "response_type", value: "code"),
             URLQueryItem(name: "scope", value: AccessScope)
         ]
-        let url = urlComponents.url!
+        let url: URL = {
+            guard let url = urlComponents.url else {
+                assertionFailure("Invalid Authorize URL")
+                return URL(string: "")!
+            }
+            return url
+        }()
         let request = URLRequest(url: url)
         
         webView.load(request)

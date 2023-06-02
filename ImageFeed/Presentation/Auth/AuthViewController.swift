@@ -18,8 +18,6 @@ final class AuthViewController: UIViewController {
     private let authSegueID = "ShowWebView"
     let oAuth2Service = OAuth2Service()
     
-
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         

@@ -17,7 +17,15 @@ extension URLRequest {
     static func makeHttpRequest(path: String,
                                 httpMethod: String,
                                 baseURL: URL = DefaultBaseURL) -> URLRequest {
-        var request = URLRequest(url: URL(string: path, relativeTo: baseURL)!)
+        
+        let url: URL = {
+            guard let url = URL(string: path, relativeTo: baseURL) else {
+                assertionFailure("Invalid DefaultBaseURL")
+                return URL(string: "")!
+            }
+            return url
+        }()
+        var request = URLRequest(url: url)
         request.httpMethod = httpMethod
         return request
     }
@@ -90,7 +98,6 @@ final class OAuth2Service {
     
     func authTokenRequest(code: String) -> URLRequest {
 
-        
         let path = "/oauth/token" +
                    "?client_id=\(AccessKey)" +
                    "&&client_secret=\(SecretKey)" +
@@ -98,12 +105,12 @@ final class OAuth2Service {
                    "&&code=\(code)" +
                    "&&grant_type=authorization_code"
         
+        guard let url = URL(string: "https://unsplash.com") else { fatalError("Invalid base URL") }
+                
         return URLRequest.makeHttpRequest(path: path,
                     httpMethod: "POST",
-                    baseURL: URL(string: "https://unsplash.com")!
-        )
+                    baseURL: url)
     }
-    
 }
 
 extension OAuth2Service {
