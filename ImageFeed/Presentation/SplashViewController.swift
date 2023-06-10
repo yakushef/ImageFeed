@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ProgressHUD
 
 final class SplashViewController: UIViewController {
     
@@ -47,7 +48,8 @@ final class SplashViewController: UIViewController {
 
 extension SplashViewController: AuthViewControllerDelegae {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
-            fetchAuthToken(code)
+        ProgressHUD.show()
+        fetchAuthToken(code)
     }
     
     private func fetchAuthToken(_ code: String) {
@@ -56,8 +58,10 @@ extension SplashViewController: AuthViewControllerDelegae {
             switch result {
             case .success(_):
                 self.authDone()
+                ProgressHUD.dismiss()
             case .failure(let error):
                 // TODO: Handle error
+                ProgressHUD.dismiss()
                 assertionFailure("\(error)")
             }
         }
