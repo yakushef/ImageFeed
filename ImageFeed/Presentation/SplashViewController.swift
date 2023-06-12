@@ -48,7 +48,7 @@ final class SplashViewController: UIViewController {
 
 extension SplashViewController: AuthViewControllerDelegae {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
-        ProgressHUD.show()
+        UIBlockingProgressHUD.show()
         fetchAuthToken(code)
     }
     
@@ -58,10 +58,10 @@ extension SplashViewController: AuthViewControllerDelegae {
             switch result {
             case .success(_):
                 self.authDone()
-                ProgressHUD.dismiss()
+                UIBlockingProgressHUD.dismiss()
             case .failure(let error):
                 // TODO: Handle error
-                ProgressHUD.dismiss()
+                UIBlockingProgressHUD.dismiss()
                 assertionFailure("\(error)")
             }
         }
