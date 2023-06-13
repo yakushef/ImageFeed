@@ -15,6 +15,9 @@ final class ProfileViewController: UIViewController {
     private var usernameLabel: UILabel!
     private var statusLabel: UILabel!
     
+    private var currentProfile: Profile = Profile(username: "", firstName: "", lastName: "")
+    private var profileImage: UIImage = UIImage(named: "Stub") ?? UIImage()
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
     }
@@ -44,17 +47,74 @@ final class ProfileViewController: UIViewController {
         view.addSubview(statusLabel)
         
         configureUI()
+        
+        getProfileData()
+        
+        ProfileImageService.shared.fetchProfileImageURL(username: currentProfile.username) { [weak self] (result: Result<String, Error>) in
+            
+            switch result {
+            case .success(let imageURLstring):
+                guard let imageURL = URL(string: imageURLstring) else { assertionFailure("wrongImageUrl"); return }
+                
+                var imageData = Data()
+                DispatchQueue.main.async {
+                    do {
+                        imageData = try Data(contentsOf: imageURL)
+                        self?.profileImage = UIImage(data: imageData) ?? UIImage()
+                        UIView.animate(withDuration: 0.2) {
+                            self?.userPicView.image = self?.profileImage
+                        }
+                    }
+                    catch {}
+                }
+                
+            case .failure(let error):
+                assertionFailure("\(error)")
+            }
+        }
+        
+        userPicView.image = profileImage
+    }
+    
+//    func getProfile(for token: String) {
+//        ProfileService.shared.fetchProfile(token) { result in
+//            switch result {
+//            case .success(let profile):
+//                ProfileService.shared.profile = profile
+//                UIBlockingProgressHUD.dismiss()
+//            case .failure(let error):
+//                assertionFailure("\(error)")
+//            }
+//        }
+//    }
+    
+    private func getProfileData() {
+//        guard let token = OAuth2TokenStorage().token else { return }
+        
+//        getProfile(for: token)
+        
+        guard let profile = ProfileService.shared.profile else { return }
+        
+        currentProfile = profile
+        
+        fullNameLabel.text = currentProfile.name
+        usernameLabel.text = currentProfile.loginName
+        statusLabel.text = currentProfile.bio
     }
     
     private func configureUI() {
         // MARK: - userpic
-        userPicView.image = UIImage(named: "Photo")
+        userPicView.image = profileImage
         userPicView.clipsToBounds = true
         userPicView.layer.cornerRadius = 35
         userPicView.translatesAutoresizingMaskIntoConstraints = false
+        userPicView.contentMode = .scaleAspectFill
         
         userPicView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30).isActive = true
         userPicView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
+        
+        userPicView.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        userPicView.widthAnchor.constraint(equalTo: userPicView.heightAnchor, multiplier: 1).isActive = true
         
         // MARK: - logout button
         let logoutImage = UIImage(named: "Logout") ?? UIImage()

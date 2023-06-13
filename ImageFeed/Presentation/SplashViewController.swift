@@ -10,6 +10,9 @@ import ProgressHUD
 
 final class SplashViewController: UIViewController {
     
+    var profile: Profile? = nil
+    let profileService = ProfileService()
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
     }
@@ -34,12 +37,29 @@ final class SplashViewController: UIViewController {
         window.rootViewController = tabBarController
 
         UIView.transition(with: window, duration: 0.1, options: [.transitionCrossDissolve, .overrideInheritedOptions, .curveEaseIn], animations: nil)
+        
+        UIBlockingProgressHUD.dismiss()
+    }
+    
+    func getProfile(for token: String) {
+        ProfileService.shared.fetchProfile(token) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let profile):
+                ProfileService.shared.profile = profile
+                self.authDone()
+//                UIBlockingProgressHUD.dismiss()
+            case .failure(let error):
+                assertionFailure("\(error)")
+            }
+        }
     }
     
     func previousAuthCheck() {
-        
-        if OAuth2TokenStorage().token != nil {
-            authDone()
+        if let token = OAuth2TokenStorage().token {
+            UIBlockingProgressHUD.show()
+            getProfile(for: token)
+//            authDone()
         } else {
             performSegue(withIdentifier: "noAuthTokenFound", sender: nil)
         }
@@ -57,8 +77,9 @@ extension SplashViewController: AuthViewControllerDelegae {
             guard let self = self else { return }
             switch result {
             case .success(_):
-                self.authDone()
+//                self.authDone()
                 UIBlockingProgressHUD.dismiss()
+                self.previousAuthCheck()
             case .failure(let error):
                 // TODO: Handle error
                 UIBlockingProgressHUD.dismiss()
