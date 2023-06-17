@@ -47,8 +47,18 @@ final class SplashViewController: UIViewController {
             switch result {
             case .success(let profile):
                 ProfileService.shared.profile = profile
+                ProfileImageService.shared.fetchProfileImageURL(username: profile.username) { (result: Result<String, Error>) in
+                    switch result {
+                    case .success(let imageURLstring):
+                        if let url = URL(string: imageURLstring) {
+                            ProfileImageService.shared.fetchImage(fromURL: url)
+                        }
+                        case .failure(let error):
+                        assertionFailure("\(error.localizedDescription)")
+                        }
+                    }
                 self.authDone()
-//                UIBlockingProgressHUD.dismiss()
+                UIBlockingProgressHUD.dismiss()
             case .failure(let error):
                 assertionFailure("\(error)")
             }
@@ -57,10 +67,12 @@ final class SplashViewController: UIViewController {
     
     func previousAuthCheck() {
         if let token = OAuth2TokenStorage().token {
-            UIBlockingProgressHUD.show()
+//            UIBlockingProgressHUD.show()
             getProfile(for: token)
+//            ProfileImageService.shared.fetchImage(fromURL: url)
 //            authDone()
         } else {
+            UIBlockingProgressHUD.dismiss()
             performSegue(withIdentifier: "noAuthTokenFound", sender: nil)
         }
     }
@@ -78,7 +90,7 @@ extension SplashViewController: AuthViewControllerDelegae {
             switch result {
             case .success(_):
 //                self.authDone()
-                UIBlockingProgressHUD.dismiss()
+//                UIBlockingProgressHUD.dismiss()
                 self.previousAuthCheck()
             case .failure(let error):
                 // TODO: Handle error

@@ -8,8 +8,13 @@
 import UIKit
 
 final class ProfileImageService {
+    
+    static let DidChangeNotification = Notification.Name("ProfileImageProviderDidChange")
+    
     static let shared = ProfileImageService()
     var userPic: UIImage?
+    var userPicURL: String?
+    var imageURL: URL?
     
     private let urlSession = URLSession.shared
     
@@ -26,11 +31,33 @@ final class ProfileImageService {
                 return Result {
                     let userpicResponse = try decoder.decode(UserResult.self, from: data)
                     print(userpicResponse)
+                    self.userPicURL = userpicResponse.profileImage.large
+                    if let url = URL(string: userpicResponse.profileImage.large) {
+                        self.imageURL = url
+                    }
                     return userpicResponse.profileImage.large
                 }
+                
             }
             completion(response)
+            NotificationCenter.default.post(name: ProfileImageService.DidChangeNotification,
+                                            object: self, userInfo: ["URL" : self.userPicURL])
         }
+    }
+    
+    func fetchImage(fromURL imageURL: URL) {
+        let imageRequest = URLRequest(url: imageURL)
+        
+        let imageTask = URLSession.shared.dataTask(with: imageRequest) { data, response, error in
+            guard let imageData = data else { return }
+            
+            DispatchQueue.main.async  { [weak self] in
+                guard let self = self else { return }
+                self.userPic = UIImage(data: imageData) ?? UIImage()
+            }
+            
+        }
+            imageTask.resume()
     }
 }
 

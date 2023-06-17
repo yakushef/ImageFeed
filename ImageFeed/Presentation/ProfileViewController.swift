@@ -16,7 +16,22 @@ final class ProfileViewController: UIViewController {
     private var statusLabel: UILabel!
     
     private var currentProfile: Profile = Profile(username: "", firstName: "", lastName: "")
-    private var profileImage: UIImage = UIImage(named: "Stub") ?? UIImage()
+//    private var profileImage: UIImage?
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        
+        addObserver()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        addObserver()
+    }
+    
+    deinit {
+        removeObserver()
+    }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
@@ -47,46 +62,27 @@ final class ProfileViewController: UIViewController {
         view.addSubview(statusLabel)
         
         configureUI()
-        
         getProfileData()
         
-        ProfileImageService.shared.fetchProfileImageURL(username: currentProfile.username) { [weak self] (result: Result<String, Error>) in
+        if let userPic = ProfileImageService.shared.userPic {
+            userPicView.image = userPic
+        } else {
             
-            switch result {
-            case .success(let imageURLstring):
-                guard let imageURL = URL(string: imageURLstring) else { assertionFailure("wrongImageUrl"); return }
-                
-                var imageData = Data()
-                DispatchQueue.main.async {
-                    do {
-                        imageData = try Data(contentsOf: imageURL)
-                        self?.profileImage = UIImage(data: imageData) ?? UIImage()
-                        UIView.animate(withDuration: 0.2) {
-                            self?.userPicView.image = self?.profileImage
-                        }
-                    }
-                    catch {}
-                }
-                
-            case .failure(let error):
-                assertionFailure("\(error)")
-            }
         }
         
-        userPicView.image = profileImage
+        
+        
+//        ProfileImageService.shared.fetchProfileImageURL(username: currentProfile.username) { (result: Result<String, Error>) in
+//            switch result {
+//            case .success(let imageURLstring):
+//                ProfileImageService.shared.userPicURL = imageURLstring
+//                case .failure(let error):
+//                assertionFailure("\(error.localizedDescription)")
+//                }
+//            }
+        
     }
     
-//    func getProfile(for token: String) {
-//        ProfileService.shared.fetchProfile(token) { result in
-//            switch result {
-//            case .success(let profile):
-//                ProfileService.shared.profile = profile
-//                UIBlockingProgressHUD.dismiss()
-//            case .failure(let error):
-//                assertionFailure("\(error)")
-//            }
-//        }
-//    }
     
     private func getProfileData() {
 //        guard let token = OAuth2TokenStorage().token else { return }
@@ -104,7 +100,7 @@ final class ProfileViewController: UIViewController {
     
     private func configureUI() {
         // MARK: - userpic
-        userPicView.image = profileImage
+        userPicView.image = UIImage(named: "Stub") ?? UIImage()
         userPicView.clipsToBounds = true
         userPicView.layer.cornerRadius = 35
         userPicView.translatesAutoresizingMaskIntoConstraints = false
@@ -168,4 +164,31 @@ final class ProfileViewController: UIViewController {
         
     }
     
+}
+
+// MARK: - Observer
+extension ProfileViewController {
+    private func addObserver() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateUserPic(notification:)),
+                                               name: ProfileImageService.DidChangeNotification,
+                                               object: nil)
+    }
+    
+    private func removeObserver() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: ProfileImageService.DidChangeNotification,
+                                                  object: nil)
+    }
+    
+    @objc private func updateUserPic(notification: Notification) {
+        guard isViewLoaded,
+              let userInfo = notification.userInfo,
+              let userPicUrlString = userInfo["URL"] as? String,
+              let imageURL = URL(string: userPicUrlString)
+        else { return }
+        
+        ProfileImageService.shared.fetchImage(fromURL: imageURL)
+        
+    }
 }
