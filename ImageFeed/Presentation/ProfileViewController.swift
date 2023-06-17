@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
@@ -15,23 +16,25 @@ final class ProfileViewController: UIViewController {
     private var usernameLabel: UILabel!
     private var statusLabel: UILabel!
     
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
     private var currentProfile: Profile = Profile(username: "", firstName: "", lastName: "")
 //    private var profileImage: UIImage?
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        
-        addObserver()
-    }
+//    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+//        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+//
+//        addObserver()
+//    }
+//
+//    required init?(coder: NSCoder) {
+//        super.init(coder: coder)
+//        addObserver()
+//    }
     
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        addObserver()
-    }
-    
-    deinit {
-        removeObserver()
-    }
+//    deinit {
+//        removeObserver()
+//    }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
@@ -45,6 +48,12 @@ final class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(forName: ProfileImageService.DidChangeNotification,
+                                               object: nil, queue: .main) { [weak self] _ in
+            guard let self = self else { return }
+            self.updateUserPic()
+        }
         
         userPicView = UIImageView()
         view.addSubview(userPicView)
@@ -64,11 +73,13 @@ final class ProfileViewController: UIViewController {
         configureUI()
         getProfileData()
         
-        if let userPic = ProfileImageService.shared.userPic {
-            userPicView.image = userPic
-        } else {
-            
-        }
+        updateUserPic()
+        
+//        if let userPic = ProfileImageService.shared.userPic {
+//            userPicView.image = userPic
+//        } else {
+//            updateUserPic()
+//        }
         
         
         
@@ -168,27 +179,31 @@ final class ProfileViewController: UIViewController {
 
 // MARK: - Observer
 extension ProfileViewController {
-    private func addObserver() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(updateUserPic(notification:)),
-                                               name: ProfileImageService.DidChangeNotification,
-                                               object: nil)
-    }
-    
-    private func removeObserver() {
-        NotificationCenter.default.removeObserver(self,
-                                                  name: ProfileImageService.DidChangeNotification,
-                                                  object: nil)
-    }
-    
-    @objc private func updateUserPic(notification: Notification) {
-        guard isViewLoaded,
-              let userInfo = notification.userInfo,
-              let userPicUrlString = userInfo["URL"] as? String,
-              let imageURL = URL(string: userPicUrlString)
-        else { return }
-        
-        ProfileImageService.shared.fetchImage(fromURL: imageURL)
-        
+//    private func addObserver() {
+//        NotificationCenter.default.addObserver(self,
+//                                               selector: #selector(updateUserPic(notification:)),
+//                                               name: ProfileImageService.DidChangeNotification,
+//                                               object: nil)
+//    }
+//
+//    private func removeObserver() {
+//        NotificationCenter.default.removeObserver(self,
+//                                                  name: ProfileImageService.DidChangeNotification,
+//                                                  object: nil)
+//    }
+//
+//    @objc private func updateUserPic(notification: Notification) {
+//        guard isViewLoaded,
+//              let userInfo = notification.userInfo,
+//              let userPicUrlString = userInfo["URL"] as? String,
+//              let imageURL = URL(string: userPicUrlString)
+//        else { return }
+//
+//        ProfileImageService.shared.fetchImage(fromURL: imageURL)
+//
+//    }
+    private func updateUserPic() {
+        guard let imageURL = ProfileImageService.shared.imageURL else { return }
+        userPicView.kf.setImage(with: imageURL)
     }
 }
