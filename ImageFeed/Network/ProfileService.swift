@@ -51,22 +51,38 @@ final class ProfileService {
     static let shared = ProfileService()
     var profile: Profile?
     
-    private let urlSession = URLSession.shared
+    private let session = URLSession.shared
     
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
+        
         var profileRequest = URLRequest.makeHttpRequest(path: "/me", httpMethod: "GET")
         profileRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
         let decoder = JSONDecoder()
         
-        urlSession.data(for: profileRequest) { (result: Result<Data, Error>) in
-            let response = result.flatMap { data -> Result<Profile, Error> in
-                return Result {
-                        let profileResponse = try decoder.decode(ProfileResult.self, from: data)
-                        return Profile(username: profileResponse.username, firstName: profileResponse.firstName, lastName: profileResponse.lastName, bio: profileResponse.bio ?? "")
-                }
+        let task = session.objectTask(for: profileRequest, completion: { [weak self] (result: Result<ProfileResult, Error>) in
+            guard let self = self else { return }
+            assert(Thread.isMainThread)
+            switch result {
+            case .success(let profileResponse):
+                // проверки?
+                let profile = Profile(username: profileResponse.username, firstName: profileResponse.firstName, lastName: profileResponse.lastName, bio: profileResponse.bio ?? "")
+                self.profile = profile
+                completion(.success(profile))
+            case .failure(let error):
+                completion(.failure(error))
             }
-            completion(response)
-        }
+        })
+        
+//        urlSession.data(for: profileRequest) { (result: Result<Data, Error>) in
+//            let response = result.flatMap { data -> Result<Profile, Error> in
+//                return Result {
+//                        let profileResponse = try decoder.decode(ProfileResult.self, from: data)
+//                        return Profile(username: profileResponse.username, firstName: profileResponse.firstName, lastName: profileResponse.lastName, bio: profileResponse.bio ?? "")
+//                }
+//            }
+//            completion(response)
+//        }
+        task.resume()
     }
 }

@@ -51,9 +51,9 @@ final class SplashViewController: UIViewController {
                     switch result {
                     case .success(let imageURLstring):
                         if let url = URL(string: imageURLstring) {
-                            ProfileImageService.shared.fetchImage(fromURL: url)
+                            ProfileImageService.shared.imageURL = url
                         }
-                        case .failure(let error):
+                    case .failure(let error):
                         assertionFailure("\(error.localizedDescription)")
                         }
                     }
