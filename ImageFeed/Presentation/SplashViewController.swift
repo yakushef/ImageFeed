@@ -12,6 +12,7 @@ final class SplashViewController: UIViewController {
     
     var profile: Profile? = nil
     let profileService = ProfileService()
+    var alertPresenter: AlertPresenterProtocol!
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
@@ -60,7 +61,11 @@ final class SplashViewController: UIViewController {
                 self.authDone()
                 UIBlockingProgressHUD.dismiss()
             case .failure(let error):
-                assertionFailure("\(error)")
+//                assertionFailure("\(error)")
+                alertPresenter.presentAlert(title: "Что-то пошло не так(", message: "Не удалось получить данные профиля:\n\n \(error.localizedDescription)", buttonText: "OK", completion: { [weak self] in
+                    guard let self = self else { return }
+                    dismiss(animated: true)
+                })
             }
         }
     }
@@ -95,7 +100,12 @@ extension SplashViewController: AuthViewControllerDelegae {
             case .failure(let error):
                 // TODO: Handle error
                 UIBlockingProgressHUD.dismiss()
-                assertionFailure("\(error)")
+                alertPresenter.presentAlert(title: "Что-то пошло не так(", message: "Не удалось войти в систему:\n\n \(error.localizedDescription)", buttonText: "OK", completion: { [weak self] in
+                    guard let self = self else { return }
+                    dismiss(animated: true)
+                })
+//                assertionFailure("\(error)")
+                
             }
         }
     }
@@ -115,5 +125,17 @@ extension SplashViewController {
             super.prepare(for: segue, sender: sender)
         }
 
+    }
+}
+
+extension SplashViewController: AlertPresenterDelegate {
+    func show(alert: UIAlertController) {
+        self.present(alert, animated: true)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        alertPresenter = AlertPresenter(delegate: self)
     }
 }
