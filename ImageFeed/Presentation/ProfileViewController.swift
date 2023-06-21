@@ -19,22 +19,6 @@ final class ProfileViewController: UIViewController {
     private var profileImageServiceObserver: NSObjectProtocol?
     
     private var currentProfile: Profile = Profile(username: "", firstName: "", lastName: "")
-//    private var profileImage: UIImage?
-    
-//    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-//        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-//
-//        addObserver()
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        super.init(coder: coder)
-//        addObserver()
-//    }
-    
-//    deinit {
-//        removeObserver()
-//    }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
@@ -55,6 +39,8 @@ final class ProfileViewController: UIViewController {
             self.updateUserPic()
         }
         
+        view.backgroundColor = .ypBlack()
+        
         userPicView = UIImageView()
         view.addSubview(userPicView)
         
@@ -74,32 +60,10 @@ final class ProfileViewController: UIViewController {
         getProfileData()
         
         updateUserPic()
-        
-//        if let userPic = ProfileImageService.shared.userPic {
-//            userPicView.image = userPic
-//        } else {
-//            updateUserPic()
-//        }
-        
-        
-        
-//        ProfileImageService.shared.fetchProfileImageURL(username: currentProfile.username) { (result: Result<String, Error>) in
-//            switch result {
-//            case .success(let imageURLstring):
-//                ProfileImageService.shared.userPicURL = imageURLstring
-//                case .failure(let error):
-//                assertionFailure("\(error.localizedDescription)")
-//                }
-//            }
-        
     }
     
     
     private func getProfileData() {
-//        guard let token = OAuth2TokenStorage().token else { return }
-        
-//        getProfile(for: token)
-        
         guard let profile = ProfileService.shared.profile else { return }
         
         currentProfile = profile
@@ -179,29 +143,6 @@ final class ProfileViewController: UIViewController {
 
 // MARK: - Observer
 extension ProfileViewController {
-//    private func addObserver() {
-//        NotificationCenter.default.addObserver(self,
-//                                               selector: #selector(updateUserPic(notification:)),
-//                                               name: ProfileImageService.DidChangeNotification,
-//                                               object: nil)
-//    }
-//
-//    private func removeObserver() {
-//        NotificationCenter.default.removeObserver(self,
-//                                                  name: ProfileImageService.DidChangeNotification,
-//                                                  object: nil)
-//    }
-//
-//    @objc private func updateUserPic(notification: Notification) {
-//        guard isViewLoaded,
-//              let userInfo = notification.userInfo,
-//              let userPicUrlString = userInfo["URL"] as? String,
-//              let imageURL = URL(string: userPicUrlString)
-//        else { return }
-//
-//        ProfileImageService.shared.fetchImage(fromURL: imageURL)
-//
-//    }
     private func updateUserPic() {
         guard let imageURL = ProfileImageService.shared.imageURL else { return }
         userPicView.kf.setImage(with: imageURL)

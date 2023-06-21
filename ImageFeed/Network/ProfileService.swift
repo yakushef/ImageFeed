@@ -58,8 +58,6 @@ final class ProfileService {
         var profileRequest = URLRequest.makeHttpRequest(path: "/me", httpMethod: "GET")
         profileRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
-        let decoder = JSONDecoder()
-        
         let task = session.objectTask(for: profileRequest, completion: { [weak self] (result: Result<ProfileResult, Error>) in
             guard let self = self else { return }
             assert(Thread.isMainThread)

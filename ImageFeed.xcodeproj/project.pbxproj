@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BC1AE98D2A4218D800ACC705 /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = BC1AE98C2A4218D800ACC705 /* SwiftKeychainWrapper */; };
+		BC1AE98F2A4237A400ACC705 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1AE98E2A4237A400ACC705 /* TabBarController.swift */; };
 		BC2A22C42A0D5AF30096E22B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2A22C32A0D5AF30096E22B /* ProfileViewController.swift */; };
 		BC2A22C62A0D6ADB0096E22B /* SingleImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2A22C52A0D6ADA0096E22B /* SingleImageViewController.swift */; };
 		BC38FB182A3E30A0006C6462 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = BC38FB172A3E30A0006C6462 /* Kingfisher */; };
@@ -38,6 +39,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BC1AE98E2A4237A400ACC705 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		BC2A22C32A0D5AF30096E22B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		BC2A22C52A0D6ADA0096E22B /* SingleImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleImageViewController.swift; sourceTree = "<group>"; };
 		BC38FB192A3F8CFA006C6462 /* URLSession+URLRequest Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+URLRequest Extensions.swift"; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 			isa = PBXGroup;
 			children = (
 				BC718F152A2666C100F5E746 /* SplashViewController.swift */,
+				BC1AE98E2A4237A400ACC705 /* TabBarController.swift */,
 				BC718F172A286B1C00F5E746 /* Auth */,
 				BC311BCF2A1699AE005AE0BC /* Image List */,
 				BC2A22C32A0D5AF30096E22B /* ProfileViewController.swift */,
@@ -281,6 +284,7 @@
 				BC576C392A0237C2003C36C7 /* UIColor+Extentions.swift in Sources */,
 				BC2A22C42A0D5AF30096E22B /* ProfileViewController.swift in Sources */,
 				BC97A91D2A38E2610038A0FD /* ProfileImageService.swift in Sources */,
+				BC1AE98F2A4237A400ACC705 /* TabBarController.swift in Sources */,
 				BC718F162A2666C100F5E746 /* SplashViewController.swift in Sources */,
 				BC4CA0EB29FC30B4005DBCDE /* AppDelegate.swift in Sources */,
 				BC2A22C62A0D6ADB0096E22B /* SingleImageViewController.swift in Sources */,

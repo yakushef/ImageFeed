@@ -24,16 +24,10 @@ final class ProfileImageService {
         var userpicRequest = URLRequest.makeHttpRequest(path: "/users/\(username)", httpMethod: "GET")
         userpicRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
-//        let decoder = JSONDecoder()
-        
-        let task = session.objectTask(for: userpicRequest, completion: { [weak self] (result: Result<UserResult, Error>) in
-            guard let self = self else { return }
+        let task = session.objectTask(for: userpicRequest, completion: { (result: Result<UserResult, Error>) in
             
             switch result {
             case .success(let userpicResponse):
-//                if let url = URL(string: imageURLString) {
-//                    self.imageURL = url
-//                }
                 completion(.success(userpicResponse.profileImage.large))
             case.failure(let error):
                 completion(.failure(error))
@@ -41,40 +35,7 @@ final class ProfileImageService {
         })
         
         task.resume()
-        
-//        urlSession.data(for: userpicRequest) { (result: Result<Data, Error>) in
-//            let response = result.flatMap {  data -> Result<String, Error> in
-//                return Result {
-//                    let userpicResponse = try decoder.decode(UserResult.self, from: data)
-//                    print(userpicResponse)
-//                    self.userPicURL = userpicResponse.profileImage.large
-//                    if let url = URL(string: userpicResponse.profileImage.large) {
-//                        self.imageURL = url
-//                    }
-//                    return userpicResponse.profileImage.large
-//                }
-//
-//            }
-//            completion(response)
-//            NotificationCenter.default.post(name: ProfileImageService.DidChangeNotification,
-//                                            object: self, userInfo: ["URL" : self.userPicURL])
-//        }
     }
-    
-//    func fetchImage(fromURL imageURL: URL) {
-//        let imageRequest = URLRequest(url: imageURL)
-//
-//        let imageTask = URLSession.shared.dataTask(with: imageRequest) { data, response, error in
-//            guard let imageData = data else { return }
-//
-//            DispatchQueue.main.async  { [weak self] in
-//                guard let self = self else { return }
-//                self.userPic = UIImage(data: imageData) ?? UIImage()
-//            }
-//
-//        }
-//            imageTask.resume()
-//    }
 }
 
 // MARK: - UserResult

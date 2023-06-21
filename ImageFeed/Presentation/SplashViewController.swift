@@ -10,24 +10,38 @@ import ProgressHUD
 
 final class SplashViewController: UIViewController {
     
+    private var logoView: UIImageView!
+    
     var profile: Profile? = nil
     let profileService = ProfileService()
     var alertPresenter: AlertPresenterProtocol!
-    
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        .lightContent
-    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         previousAuthCheck()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        setNeedsStatusBarAppearanceUpdate()
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        sleep(5)
+        
+        logoView = UIImageView()
+        configureUI()
     }
     
+    func configureUI() {
+        view.backgroundColor = .ypBlack()
+        
+        let logo = UIImage(named: "Vector") ?? UIImage()
+        logoView.image = logo
+        
+        logoView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
+        logoView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
+        logoView.widthAnchor.constraint(equalToConstant: 78).isActive = true
+        logoView.heightAnchor.constraint(equalToConstant: 75).isActive = true
+    }
+
     func authDone() {
         guard let window = UIApplication.shared.windows.first else {
             fatalError("Invalid window config")
@@ -61,7 +75,6 @@ final class SplashViewController: UIViewController {
                 self.authDone()
                 UIBlockingProgressHUD.dismiss()
             case .failure(let error):
-//                assertionFailure("\(error)")
                 alertPresenter.presentAlert(title: "Что-то пошло не так(", message: "Не удалось получить данные профиля:\n\n \(error.localizedDescription)", buttonText: "OK", completion: { [weak self] in
                     guard let self = self else { return }
                     dismiss(animated: true)
@@ -78,10 +91,18 @@ final class SplashViewController: UIViewController {
 //            authDone()
         } else {
             UIBlockingProgressHUD.dismiss()
-            performSegue(withIdentifier: "noAuthTokenFound", sender: nil)
+//            performSegue(withIdentifier: "noAuthTokenFound", sender: nil)
+            guard let authVC = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(identifier: "AuthViewController") as? AuthViewController else {
+                fatalError("Cat't instantiate AuthVC")
+            }
+            authVC.delegate = self
+            authVC.modalPresentationStyle = .fullScreen
+            self.present(authVC, animated: true)
         }
     }
 }
+
+// MARK: - Auth VC delegate
 
 extension SplashViewController: AuthViewControllerDelegae {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
@@ -111,22 +132,24 @@ extension SplashViewController: AuthViewControllerDelegae {
     }
 }
 
-extension SplashViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.identifier == "noAuthTokenFound" {
-            guard let navVC = segue.destination as? UINavigationController,
-                  let authVC = navVC.viewControllers[0] as? AuthViewController
-            else {
-                fatalError("faild to prepare for auth segue")
-            }
-            authVC.delegate = self
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
+//extension SplashViewController {
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//
+//        if segue.identifier == "noAuthTokenFound" {
+//            guard let navVC = segue.destination as? UINavigationController,
+//                  let authVC = navVC.viewControllers[0] as? AuthViewController
+//            else {
+//                fatalError("faild to prepare for auth segue")
+//            }
+//            authVC.delegate = self
+//        } else {
+//            super.prepare(for: segue, sender: sender)
+//        }
+//
+//    }
+//}
 
-    }
-}
+// MARK: - Alert presenter delegate
 
 extension SplashViewController: AlertPresenterDelegate {
     func show(alert: UIAlertController) {
@@ -137,5 +160,18 @@ extension SplashViewController: AlertPresenterDelegate {
         super.viewDidLoad()
         
         alertPresenter = AlertPresenter(delegate: self)
+    }
+}
+
+// MARK: - Status bar style
+
+extension SplashViewController {
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setNeedsStatusBarAppearanceUpdate()
     }
 }
