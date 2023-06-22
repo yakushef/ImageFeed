@@ -13,8 +13,10 @@ final class SplashViewController: UIViewController {
     private var logoView: UIImageView!
     
     var profile: Profile? = nil
-    let profileService = ProfileService()
-    var alertPresenter: AlertPresenterProtocol!
+    
+    private let profileImageService = ProfileImageService.shared
+    private let profileService = ProfileService.shared
+    private var alertPresenter: AlertPresenterProtocol!
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -30,6 +32,8 @@ final class SplashViewController: UIViewController {
         configureUI()
     }
     
+    // MARK: - UI
+    
     func configureUI() {
         view.backgroundColor = .ypBlack()
         
@@ -39,11 +43,21 @@ final class SplashViewController: UIViewController {
         
         view.addSubview(logoView)
         
-        logoView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
-        logoView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
-        logoView.widthAnchor.constraint(equalToConstant: 78).isActive = true
-        logoView.heightAnchor.constraint(equalToConstant: 75).isActive = true
+        logoView.centerXAnchor
+            .constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)
+            .isActive = true
+        logoView.centerYAnchor
+            .constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
+            .isActive = true
+        logoView.widthAnchor
+            .constraint(equalToConstant: 78)
+            .isActive = true
+        logoView.heightAnchor
+            .constraint(equalToConstant: 75)
+            .isActive = true
     }
+    
+    // MARK: - Auth and Profile
 
     func authDone() {
         guard let window = UIApplication.shared.windows.first else {
@@ -54,22 +68,27 @@ final class SplashViewController: UIViewController {
         
         window.rootViewController = tabBarController
 
-        UIView.transition(with: window, duration: 0.1, options: [.transitionCrossDissolve, .overrideInheritedOptions, .curveEaseIn], animations: nil)
+        UIView.transition(with: window,
+                          duration: 0.1,
+                          options: [.transitionCrossDissolve,
+                            .overrideInheritedOptions,
+                            .curveEaseIn],
+                          animations: nil)
         
         UIBlockingProgressHUD.dismiss()
     }
     
     func getProfile(for token: String) {
-        ProfileService.shared.fetchProfile(token) { [weak self] result in
+        profileService.fetchProfile(token) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let profile):
-                ProfileService.shared.profile = profile
-                ProfileImageService.shared.fetchProfileImageURL(username: profile.username) { (result: Result<String, Error>) in
+                self.profileService.profile = profile
+                self.profileImageService.fetchProfileImageURL(username: profile.username) { (result: Result<String, Error>) in
                     switch result {
                     case .success(let imageURLstring):
                         if let url = URL(string: imageURLstring) {
-                            ProfileImageService.shared.imageURL = url
+                            self.profileImageService.imageURL = url
                         }
                     case .failure(let error):
                         assertionFailure("\(error.localizedDescription)")
@@ -79,7 +98,10 @@ final class SplashViewController: UIViewController {
                 self.authDone()
                 UIBlockingProgressHUD.dismiss()
             case .failure(let error):
-                alertPresenter.presentAlert(title: "Что-то пошло не так(", message: "Не удалось получить данные профиля:\n\n \(error.localizedDescription)", buttonText: "OK", completion: { [weak self] in
+                alertPresenter.presentAlert(title: "Что-то пошло не так(",
+                                            message: "Не удалось получить данные профиля:\n\n \(error.localizedDescription)",
+                                            buttonText: "OK",
+                                            completion: { [weak self] in
                     guard let self = self else { return }
                     dismiss(animated: true)
                 })
@@ -122,7 +144,10 @@ extension SplashViewController: AuthViewControllerDelegae {
                 self.previousAuthCheck()
             case .failure(let error):
                 UIBlockingProgressHUD.dismiss()
-                alertPresenter.presentAlert(title: "Что-то пошло не так(", message: "Не удалось войти в систему:\n\n \(error.localizedDescription)", buttonText: "OK", completion: { [weak self] in
+                alertPresenter.presentAlert(title: "Что-то пошло не так(",
+                                            message: "Не удалось войти в систему:\n\n \(error.localizedDescription)",
+                                            buttonText: "OK",
+                                            completion: { [weak self] in
                     guard let self = self else { return }
                     dismiss(animated: true)
                 })
@@ -135,7 +160,7 @@ extension SplashViewController: AuthViewControllerDelegae {
 
 extension SplashViewController: AlertPresenterDelegate {
     func show(alert: UIAlertController) {
-        self.present(alert, animated: true)
+        present(alert, animated: true)
     }
 }
 

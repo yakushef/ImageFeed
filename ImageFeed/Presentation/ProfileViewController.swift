@@ -147,7 +147,12 @@ final class ProfileViewController: UIViewController {
         window.rootViewController = splashVC
         window.makeKeyAndVisible()
         
-        UIView.transition(with: window, duration: 0.1, options: [.transitionCrossDissolve, .overrideInheritedOptions, .curveEaseIn], animations: nil)
+        UIView.transition(with: window,
+                          duration: 0.1,
+                          options: [.transitionCrossDissolve,
+                            .overrideInheritedOptions,
+                            .curveEaseIn],
+                          animations: nil)
     }
     
 }
@@ -157,6 +162,8 @@ extension ProfileViewController {
     private func updateUserPic() {
         guard let imageURL = ProfileImageService.shared.imageURL else { return }
         let placeholder = UIImage(named: "ProfilePlaceholder") ?? UIImage()
-        userPicView.kf.setImage(with: imageURL, placeholder: placeholder, options: [.transition(.fade(0.5))])
+        userPicView.kf.setImage(with: imageURL,
+                                placeholder: placeholder,
+                                options: [.transition(.fade(0.5))])
     }
 }

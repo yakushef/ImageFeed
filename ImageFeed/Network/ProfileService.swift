@@ -21,16 +21,6 @@ struct ProfileResult: Codable {
     }
 }
 
-//struct Links: Codable {
-//    let linksSelf, html, photos, likes: String
-//    let portfolio: String
-//
-//    enum CodingKeys: String, CodingKey {
-//        case linksSelf = "self"
-//        case html, photos, likes, portfolio
-//    }
-//}
-
 struct Profile {
     
     let username: String

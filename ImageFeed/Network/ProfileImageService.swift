@@ -15,7 +15,6 @@ final class ProfileImageService {
     
     private var task: URLSessionTask?
     
-    var userPic: UIImage?
     var userPicURL: String?
     var imageURL: URL?
     
@@ -29,7 +28,8 @@ final class ProfileImageService {
         var userpicRequest = URLRequest.makeHttpRequest(path: "/users/\(username)", httpMethod: "GET")
         userpicRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
-        let task = session.objectTask(for: userpicRequest, completion: { (result: Result<UserResult, Error>) in
+        let task = session.objectTask(for: userpicRequest, completion: { [weak self] (result: Result<UserResult, Error>) in
+            guard let self = self else { return }
             
             switch result {
             case .success(let userpicResponse):
@@ -40,6 +40,7 @@ final class ProfileImageService {
             
             self.task = nil
         })
+        
         self.task = task
         task.resume()
     }
