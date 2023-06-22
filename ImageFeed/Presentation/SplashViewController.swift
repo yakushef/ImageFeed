@@ -21,10 +21,10 @@ final class SplashViewController: UIViewController {
         previousAuthCheck()
     }
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
-        sleep(5)
+        alertPresenter = AlertPresenter(delegate: self)
         
         logoView = UIImageView()
         configureUI()
@@ -35,6 +35,9 @@ final class SplashViewController: UIViewController {
         
         let logo = UIImage(named: "Vector") ?? UIImage()
         logoView.image = logo
+        logoView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(logoView)
         
         logoView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
         logoView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
@@ -72,6 +75,7 @@ final class SplashViewController: UIViewController {
                         assertionFailure("\(error.localizedDescription)")
                         }
                     }
+                dismiss(animated: true)
                 self.authDone()
                 UIBlockingProgressHUD.dismiss()
             case .failure(let error):
@@ -80,23 +84,22 @@ final class SplashViewController: UIViewController {
                     dismiss(animated: true)
                 })
             }
+            UIBlockingProgressHUD.dismiss()
         }
     }
     
     func previousAuthCheck() {
-        if let token = OAuth2TokenStorage().token {
-//            UIBlockingProgressHUD.show()
+        if let token = OAuth2TokenStorage().token,
+           !token.isEmpty {
             getProfile(for: token)
-//            ProfileImageService.shared.fetchImage(fromURL: url)
-//            authDone()
         } else {
-            UIBlockingProgressHUD.dismiss()
-//            performSegue(withIdentifier: "noAuthTokenFound", sender: nil)
             guard let authVC = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(identifier: "AuthViewController") as? AuthViewController else {
                 fatalError("Cat't instantiate AuthVC")
             }
             authVC.delegate = self
             authVC.modalPresentationStyle = .fullScreen
+            authVC.modalTransitionStyle = .crossDissolve
+            UIBlockingProgressHUD.dismiss()
             self.present(authVC, animated: true)
         }
     }
@@ -107,6 +110,7 @@ final class SplashViewController: UIViewController {
 extension SplashViewController: AuthViewControllerDelegae {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
         UIBlockingProgressHUD.show()
+        dismiss(animated: true)
         fetchAuthToken(code)
     }
     
@@ -115,51 +119,23 @@ extension SplashViewController: AuthViewControllerDelegae {
             guard let self = self else { return }
             switch result {
             case .success(_):
-//                self.authDone()
-//                UIBlockingProgressHUD.dismiss()
                 self.previousAuthCheck()
             case .failure(let error):
-                // TODO: Handle error
                 UIBlockingProgressHUD.dismiss()
                 alertPresenter.presentAlert(title: "Что-то пошло не так(", message: "Не удалось войти в систему:\n\n \(error.localizedDescription)", buttonText: "OK", completion: { [weak self] in
                     guard let self = self else { return }
                     dismiss(animated: true)
                 })
-//                assertionFailure("\(error)")
-                
             }
         }
     }
 }
-
-//extension SplashViewController {
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//
-//        if segue.identifier == "noAuthTokenFound" {
-//            guard let navVC = segue.destination as? UINavigationController,
-//                  let authVC = navVC.viewControllers[0] as? AuthViewController
-//            else {
-//                fatalError("faild to prepare for auth segue")
-//            }
-//            authVC.delegate = self
-//        } else {
-//            super.prepare(for: segue, sender: sender)
-//        }
-//
-//    }
-//}
 
 // MARK: - Alert presenter delegate
 
 extension SplashViewController: AlertPresenterDelegate {
     func show(alert: UIAlertController) {
         self.present(alert, animated: true)
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        alertPresenter = AlertPresenter(delegate: self)
     }
 }
 

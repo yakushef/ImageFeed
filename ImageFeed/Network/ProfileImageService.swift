@@ -12,6 +12,9 @@ final class ProfileImageService {
     static let DidChangeNotification = Notification.Name("ProfileImageProviderDidChange")
     
     static let shared = ProfileImageService()
+    
+    private var task: URLSessionTask?
+    
     var userPic: UIImage?
     var userPicURL: String?
     var imageURL: URL?
@@ -20,6 +23,8 @@ final class ProfileImageService {
     
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         guard let token = OAuth2TokenStorage().token else { return }
+        
+        self.task?.cancel()
         
         var userpicRequest = URLRequest.makeHttpRequest(path: "/users/\(username)", httpMethod: "GET")
         userpicRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
@@ -32,8 +37,10 @@ final class ProfileImageService {
             case.failure(let error):
                 completion(.failure(error))
             }
+            
+            self.task = nil
         })
-        
+        self.task = task
         task.resume()
     }
 }

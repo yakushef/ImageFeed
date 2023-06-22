@@ -30,10 +30,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         )
         sceneConfiguration.delegateClass = SceneDelegate.self
         
-        print(sceneConfiguration.delegateClass)
-        print(sceneConfiguration.name)
-        print(sceneConfiguration.role)
-        
         return sceneConfiguration
     }
 

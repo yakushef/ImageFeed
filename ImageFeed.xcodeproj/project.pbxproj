@@ -83,19 +83,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		BC311BCE2A1694E0005AE0BC /* Interface Builder */ = {
+		BC311BCE2A1694E0005AE0BC /* Interface Builder + Resources */ = {
 			isa = PBXGroup;
 			children = (
+				BC4CA0EA29FC30B4005DBCDE /* AppDelegate.swift */,
+				BC4CA0EC29FC30B4005DBCDE /* SceneDelegate.swift */,
 				BC4CA0F029FC30B4005DBCDE /* Main.storyboard */,
 				BCCA7E172A0EBEC6007D7102 /* ImageListCell.xib */,
 				BC4CA0F529FC30B6005DBCDE /* LaunchScreen.storyboard */,
 			);
-			path = "Interface Builder";
+			path = "Interface Builder + Resources";
 			sourceTree = "<group>";
 		};
 		BC311BCF2A1699AE005AE0BC /* Image List */ = {
 			isa = PBXGroup;
 			children = (
+				BC2A22C52A0D6ADA0096E22B /* SingleImageViewController.swift */,
 				BC4CA0EE29FC30B4005DBCDE /* ImagesListViewController.swift */,
 				BC6E7C8029FFD412007D5688 /* ImagesListCell.swift */,
 			);
@@ -121,15 +124,14 @@
 		BC4CA0E929FC30B4005DBCDE /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
+				BC4CA0F329FC30B6005DBCDE /* Assets.xcassets */,
+				BC4CA0F829FC30B6005DBCDE /* Info.plist */,
+				BC8995B62A43639400D19364 /* Services */,
 				BCB75F502A208741007197F4 /* Network */,
-				BC4CA0EA29FC30B4005DBCDE /* AppDelegate.swift */,
-				BC4CA0EC29FC30B4005DBCDE /* SceneDelegate.swift */,
-				BC311BCE2A1694E0005AE0BC /* Interface Builder */,
+				BC311BCE2A1694E0005AE0BC /* Interface Builder + Resources */,
 				BCF0D5AA2A06D127009D7CC5 /* UI Customizations */,
 				BCB75F4D2A1FDE11007197F4 /* AuthServices */,
 				BC576C372A023797003C36C7 /* Presentation */,
-				BC4CA0F329FC30B6005DBCDE /* Assets.xcassets */,
-				BC4CA0F829FC30B6005DBCDE /* Info.plist */,
 			);
 			path = ImageFeed;
 			sourceTree = "<group>";
@@ -137,14 +139,11 @@
 		BC576C372A023797003C36C7 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
-				BC718F152A2666C100F5E746 /* SplashViewController.swift */,
 				BC1AE98E2A4237A400ACC705 /* TabBarController.swift */,
+				BC718F152A2666C100F5E746 /* SplashViewController.swift */,
 				BC718F172A286B1C00F5E746 /* Auth */,
-				BC311BCF2A1699AE005AE0BC /* Image List */,
 				BC2A22C32A0D5AF30096E22B /* ProfileViewController.swift */,
-				BC2A22C52A0D6ADA0096E22B /* SingleImageViewController.swift */,
-				BC97A9182A375E170038A0FD /* UIBlockingProgressHUD.swift */,
-				BC38FB1B2A403050006C6462 /* AlertPresenter.swift */,
+				BC311BCF2A1699AE005AE0BC /* Image List */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -157,6 +156,15 @@
 				BC718F182A286E3200F5E746 /* LightStatusBarNavController.swift */,
 			);
 			path = Auth;
+			sourceTree = "<group>";
+		};
+		BC8995B62A43639400D19364 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				BC38FB1B2A403050006C6462 /* AlertPresenter.swift */,
+				BC97A9182A375E170038A0FD /* UIBlockingProgressHUD.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		BCB75F4D2A1FDE11007197F4 /* AuthServices */ = {

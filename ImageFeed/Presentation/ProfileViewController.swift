@@ -75,7 +75,8 @@ final class ProfileViewController: UIViewController {
     
     private func configureUI() {
         // MARK: - userpic
-        userPicView.image = UIImage(named: "Stub") ?? UIImage()
+        userPicView.backgroundColor = .ypWhite()
+        userPicView.image = UIImage(named: "ProfilePlaceholder") ?? UIImage()
         userPicView.clipsToBounds = true
         userPicView.layer.cornerRadius = 35
         userPicView.translatesAutoresizingMaskIntoConstraints = false
@@ -136,7 +137,17 @@ final class ProfileViewController: UIViewController {
     // MARK: - Actions
     
     @objc private func logoutButtonTapped() {
+        let splashVC = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(withIdentifier: "AuthViewController")
+        guard let window = UIApplication.shared.windows.first else {
+            fatalError("Invalid window config")
+        }
         
+        OAuth2TokenStorage().clearTokenStorage()
+        
+        window.rootViewController = splashVC
+        window.makeKeyAndVisible()
+        
+        UIView.transition(with: window, duration: 0.1, options: [.transitionCrossDissolve, .overrideInheritedOptions, .curveEaseIn], animations: nil)
     }
     
 }
@@ -145,6 +156,7 @@ final class ProfileViewController: UIViewController {
 extension ProfileViewController {
     private func updateUserPic() {
         guard let imageURL = ProfileImageService.shared.imageURL else { return }
-        userPicView.kf.setImage(with: imageURL)
+        let placeholder = UIImage(named: "ProfilePlaceholder") ?? UIImage()
+        userPicView.kf.setImage(with: imageURL, placeholder: placeholder, options: [.transition(.fade(0.5))])
     }
 }

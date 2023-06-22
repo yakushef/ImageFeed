@@ -35,24 +35,7 @@ final class OAuth2Service {
         lastCode = code
 
         let request = authTokenRequest(code: code)
-//        let task = object(for: request) { [weak self] result in
-//            guard let self = self else { return }
-//            assert(Thread.isMainThread)
-//            var taskError: Error?
-//            switch result {
-//            case .success(let body):
-//                let authToken = body.accessToken
-//                self.authToken = authToken
-//                completion(.success(authToken))
-//            case .failure(let error):
-//                taskError = error
-//                completion(.failure(error))
-//            }
-//            self.task = nil
-//            if taskError != nil {
-//                self.lastCode = nil
-//            }
-//        }
+
         let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
             guard let self = self else { return }
             assert(Thread.isMainThread)

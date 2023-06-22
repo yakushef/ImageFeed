@@ -30,4 +30,9 @@ final class OAuth2TokenStorage {
             }
         }
     }
+    
+    func clearTokenStorage() {
+        wrapper.remove(forKey: KeychainWrapper.Key(rawValue: Keys.AuthToken.rawValue))
+        // TODO: убедиться что при повторном запуске не будет автоматической авторизации
+    }
 }
