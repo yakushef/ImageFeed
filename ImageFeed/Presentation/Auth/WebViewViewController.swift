@@ -31,18 +31,6 @@ final class WebViewViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .darkContent
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-//        webView.addObserver(self,
-//                            forKeyPath: #keyPath(WKWebView.estimatedProgress),
-//                            options: .new,
-//                            context: nil)
-    }
-    
-//    override func viewWillDisappear(_ animated: Bool) {
-//        webView.removeObserver(self,
-//                               forKeyPath: #keyPath(WKWebView.estimatedProgress))
-//    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

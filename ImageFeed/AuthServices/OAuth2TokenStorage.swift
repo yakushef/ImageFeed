@@ -13,17 +13,17 @@ final class OAuth2TokenStorage {
     private let wrapper = KeychainWrapper.standard
     
     private enum Keys: String {
-        case AuthToken
+        case authToken
     }
     
     var token: String? {
         get {
-            let token = wrapper.string(forKey: Keys.AuthToken.rawValue)
+            let token = wrapper.string(forKey: Keys.authToken.rawValue)
             return token
         }
         set {
             guard let newToken = newValue else { return }
-            let isSuccess = wrapper.set(newToken, forKey: Keys.AuthToken.rawValue)
+            let isSuccess = wrapper.set(newToken, forKey: Keys.authToken.rawValue)
 
             if !isSuccess {
                 assertionFailure("Failed to save token")
@@ -32,7 +32,7 @@ final class OAuth2TokenStorage {
     }
     
     func clearTokenStorage() {
-        wrapper.remove(forKey: KeychainWrapper.Key(rawValue: Keys.AuthToken.rawValue))
+        wrapper.remove(forKey: KeychainWrapper.Key(rawValue: Keys.authToken.rawValue))
         // TODO: проверить, точно ли нет странного поведения при попытке повторной авторизации после выхода
     }
 }

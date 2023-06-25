@@ -43,28 +43,37 @@ final class ProfileService {
     var profile: Profile?
     
     private var task: URLSessionTask?
+    private var ongoingRequest = false
     
     private let session = URLSession.shared
     
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         
+        if profile != nil { return }
+        
         var profileRequest = URLRequest.makeHttpRequest(path: "/me", httpMethod: "GET")
         profileRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
+        if ongoingRequest { return }
         self.task?.cancel()
+        ongoingRequest = true
         
         let task = session.objectTask(for: profileRequest, completion: { [weak self] (result: Result<ProfileResult, Error>) in
             guard let self = self else { return }
             assert(Thread.isMainThread)
             switch result {
             case .success(let profileResponse):
-                let profile = Profile(username: profileResponse.username, firstName: profileResponse.firstName, lastName: profileResponse.lastName, bio: profileResponse.bio ?? "")
+                let profile = Profile(username: profileResponse.username,
+                                      firstName: profileResponse.firstName,
+                                      lastName: profileResponse.lastName,
+                                      bio: profileResponse.bio ?? "")
                 self.profile = profile
                 completion(.success(profile))
             case .failure(let error):
                 completion(.failure(error))
             }
             self.task = nil
+            ongoingRequest = false
         })
         self.task = task
         task.resume()

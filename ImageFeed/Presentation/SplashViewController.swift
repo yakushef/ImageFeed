@@ -20,6 +20,7 @@ final class SplashViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
         previousAuthCheck()
     }
     
@@ -30,6 +31,8 @@ final class SplashViewController: UIViewController {
         
         logoView = UIImageView()
         configureUI()
+        
+
     }
     
     // MARK: - UI
@@ -94,25 +97,21 @@ final class SplashViewController: UIViewController {
                         assertionFailure("\(error.localizedDescription)")
                         }
                     }
-                dismiss(animated: true)
+                self.dismiss(animated: true)
                 self.authDone()
-                UIBlockingProgressHUD.dismiss()
             case .failure(let error):
-                alertPresenter.presentAlert(title: "Что-то пошло не так(",
-                                            message: "Не удалось получить данные профиля:\n\n \(error.localizedDescription)",
-                                            buttonText: "OK",
-                                            completion: { [weak self] in
-                    guard let self = self else { return }
-                    dismiss(animated: true)
-                })
+                self.showAlert(with: "Не удалось войти в систему:\n\n \(error.localizedDescription)")
             }
-            UIBlockingProgressHUD.dismiss()
         }
     }
     
     func previousAuthCheck() {
+        if profileService.profile != nil {
+            return
+        }
         if let token = OAuth2TokenStorage().token,
            !token.isEmpty {
+            UIBlockingProgressHUD.show()
             getProfile(for: token)
         } else {
             guard let authVC = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(identifier: "AuthViewController") as? AuthViewController else {
@@ -121,7 +120,6 @@ final class SplashViewController: UIViewController {
             authVC.delegate = self
             authVC.modalPresentationStyle = .fullScreen
             authVC.modalTransitionStyle = .crossDissolve
-            UIBlockingProgressHUD.dismiss()
             self.present(authVC, animated: true)
         }
     }
@@ -140,17 +138,11 @@ extension SplashViewController: AuthViewControllerDelegae {
         OAuth2Service.shared.fetchAuthToken(code: code) { [weak self] result in
             guard let self = self else { return }
             switch result {
-            case .success(_):
-                self.previousAuthCheck()
+            case .success(let token):
+                guard !token.isEmpty else { assertionFailure("broken token"); return }
+                self.getProfile(for: token)
             case .failure(let error):
-                UIBlockingProgressHUD.dismiss()
-                alertPresenter.presentAlert(title: "Что-то пошло не так(",
-                                            message: "Не удалось войти в систему:\n\n \(error.localizedDescription)",
-                                            buttonText: "OK",
-                                            completion: { [weak self] in
-                    guard let self = self else { return }
-                    dismiss(animated: true)
-                })
+                self.showAlert(with: "Не удалось войти в систему:\n\n \(error.localizedDescription)")
             }
         }
     }
@@ -161,6 +153,17 @@ extension SplashViewController: AuthViewControllerDelegae {
 extension SplashViewController: AlertPresenterDelegate {
     func show(alert: UIAlertController) {
         present(alert, animated: true)
+    }
+    
+    func showAlert(with message: String) {
+        UIBlockingProgressHUD.dismiss()
+        alertPresenter.presentAlert(title: "Что-то пошло не так(",
+                                    message: message,
+                                    buttonText: "OK",
+                                    completion: { [weak self] in
+            guard let self = self else { return }
+            self.dismiss(animated: true)
+        })
     }
 }
 

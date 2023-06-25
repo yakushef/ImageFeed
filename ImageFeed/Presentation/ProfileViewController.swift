@@ -16,6 +16,8 @@ final class ProfileViewController: UIViewController {
     private var usernameLabel: UILabel!
     private var statusLabel: UILabel!
     
+    private let profileService = ProfileService.shared
+    
     private var profileImageServiceObserver: NSObjectProtocol?
     
     private var currentProfile: Profile = Profile(username: "", firstName: "", lastName: "")
@@ -64,7 +66,7 @@ final class ProfileViewController: UIViewController {
     
     
     private func getProfileData() {
-        guard let profile = ProfileService.shared.profile else { return }
+        guard let profile = profileService.profile else { return }
         
         currentProfile = profile
         
@@ -142,6 +144,7 @@ final class ProfileViewController: UIViewController {
             fatalError("Invalid window config")
         }
         
+        profileService.profile = nil
         OAuth2TokenStorage().clearTokenStorage()
         
         window.rootViewController = splashVC
