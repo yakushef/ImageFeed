@@ -49,8 +49,6 @@ final class ProfileService {
     
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         
-        if profile != nil { return }
-        
         var profileRequest = URLRequest.makeHttpRequest(path: "/me", httpMethod: "GET")
         profileRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         

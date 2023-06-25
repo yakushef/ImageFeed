@@ -31,7 +31,6 @@ final class SplashViewController: UIViewController {
         
         logoView = UIImageView()
         configureUI()
-        
 
     }
     
@@ -106,9 +105,6 @@ final class SplashViewController: UIViewController {
     }
     
     func previousAuthCheck() {
-        if profileService.profile != nil {
-            return
-        }
         if let token = OAuth2TokenStorage().token,
            !token.isEmpty {
             UIBlockingProgressHUD.show()
@@ -130,7 +126,6 @@ final class SplashViewController: UIViewController {
 extension SplashViewController: AuthViewControllerDelegae {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
         UIBlockingProgressHUD.show()
-        dismiss(animated: true)
         fetchAuthToken(code)
     }
     
@@ -140,7 +135,7 @@ extension SplashViewController: AuthViewControllerDelegae {
             switch result {
             case .success(let token):
                 guard !token.isEmpty else { assertionFailure("broken token"); return }
-                self.getProfile(for: token)
+                dismiss(animated: true)
             case .failure(let error):
                 self.showAlert(with: "Не удалось войти в систему:\n\n \(error.localizedDescription)")
             }
@@ -157,6 +152,7 @@ extension SplashViewController: AlertPresenterDelegate {
     
     func showAlert(with message: String) {
         UIBlockingProgressHUD.dismiss()
+        self.dismiss(animated: true)
         alertPresenter.presentAlert(title: "Что-то пошло не так(",
                                     message: message,
                                     buttonText: "OK",

@@ -67,14 +67,6 @@ final class WebViewViewController: UIViewController {
         webView.load(request)
     }
     
-//    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-//        if keyPath == #keyPath(WKWebView.estimatedProgress) {
-//            updateProgress()
-//        } else {
-//            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-//        }
-//    }
-    
     private func updateProgress() {
         let progress = Float(webView.estimatedProgress)
         progressBar.setProgress(progress, animated: false)
