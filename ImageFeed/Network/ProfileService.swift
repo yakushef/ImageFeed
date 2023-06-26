@@ -9,7 +9,8 @@ import Foundation
 
 struct ProfileResult: Codable {
     let id: String
-    let username, firstName, lastName: String
+    let username, firstName: String
+    let lastName: String?
     let bio: String?
 
     enum CodingKeys: String, CodingKey {
@@ -28,11 +29,11 @@ struct Profile {
     let loginName: String
     let bio: String
     
-    init(username: String, firstName: String, lastName: String, bio: String = "") {
+    init(username: String, firstName: String, lastName: String?, bio: String?) {
         self.username = username
-        self.name = firstName + " " + lastName
+        self.name = firstName + ( " \(lastName ?? "")")
         self.loginName = "@" + username
-        self.bio = bio
+        self.bio = bio ?? ""
     }
 }
 

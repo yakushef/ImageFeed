@@ -20,7 +20,7 @@ final class ProfileViewController: UIViewController {
     
     private var profileImageServiceObserver: NSObjectProtocol?
     
-    private var currentProfile: Profile = Profile(username: "", firstName: "", lastName: "")
+    private var currentProfile: Profile = Profile(username: "", firstName: "", lastName: "", bio: "")
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
