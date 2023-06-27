@@ -14,6 +14,6 @@ let AccessScope: String = "public+read_user+write_likes"
 
 let DefaultBaseURL: URL = {
     guard let url = URL(string: "https://api.unsplash.com/") else { assertionFailure("Invalid Base URL"); return URL(string: "")! }
-    return url
+    return url 
 }()
 

@@ -20,6 +20,7 @@ final class WebViewViewController: UIViewController {
     @IBOutlet private weak var webView: WKWebView!
     @IBOutlet private weak var progressBar: UIProgressView!
     
+    private var estimatedProgressObservation: NSKeyValueObservation?
     var delegate: WebViewViewControllerDelegate?
     
     override func viewWillAppear(_ animated: Bool) {
@@ -30,24 +31,18 @@ final class WebViewViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .darkContent
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        webView.addObserver(self,
-                            forKeyPath: #keyPath(WKWebView.estimatedProgress),
-                            options: .new,
-                            context: nil)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        webView.removeObserver(self,
-                               forKeyPath: #keyPath(WKWebView.estimatedProgress))
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         progressBar.progress = 0
         webView.navigationDelegate = self
+        
+        estimatedProgressObservation = webView.observe(\.estimatedProgress,
+                                                        changeHandler: { [weak self] _, _ in
+            guard let self = self else { return }
+            updateProgress()
+        })
         
         let UnsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
 
@@ -70,14 +65,6 @@ final class WebViewViewController: UIViewController {
         let request = URLRequest(url: url)
         
         webView.load(request)
-    }
-    
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == #keyPath(WKWebView.estimatedProgress) {
-            updateProgress()
-        } else {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-        }
     }
     
     private func updateProgress() {

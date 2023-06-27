@@ -6,23 +6,33 @@
 //
 
 import Foundation
+import SwiftKeychainWrapper
 
 final class OAuth2TokenStorage {
-
-    private let userDefaults = UserDefaults.standard
+    
+    private let wrapper = KeychainWrapper.standard
+    
     private enum Keys: String {
-        case token
+        case authToken
     }
     
     var token: String? {
         get {
-            guard let token = userDefaults.string(forKey: Keys.token.rawValue) else { return nil }
-            // TODO: отработать ошибку?
+            let token = wrapper.string(forKey: Keys.authToken.rawValue)
             return token
         }
         set {
-            let newToken = newValue
-            userDefaults.set(newToken, forKey: Keys.token.rawValue)
+            guard let newToken = newValue else { return }
+            let isSuccess = wrapper.set(newToken, forKey: Keys.authToken.rawValue)
+
+            if !isSuccess {
+                assertionFailure("Failed to save token")
+            }
         }
+    }
+    
+    func clearTokenStorage() {
+        wrapper.remove(forKey: KeychainWrapper.Key(rawValue: Keys.authToken.rawValue))
+        // TODO: проверить, точно ли нет странного поведения при попытке повторной авторизации после выхода
     }
 }
