@@ -60,9 +60,13 @@ final class ImagesListService {
     func fetchPhotosNextPage() {
         guard let token = OAuth2TokenStorage().token else { return }
         
+        print("PAGE: \((photos.count / 10) + 1)")
+        
         var photoRequest = URLRequest.makeHttpRequest(path: "/photos", httpMethod: "GET")
         photoRequest.setValue("\((photos.count / 10) + 1)", forHTTPHeaderField: "page")
         photoRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        
+        self.task?.cancel()
         
         let task = session.objectTask(for: photoRequest) { [weak self] (result: Result<PhotoResults, Error>) in
             guard let self = self else { return }
