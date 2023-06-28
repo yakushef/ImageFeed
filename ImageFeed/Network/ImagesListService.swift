@@ -10,10 +10,10 @@ import Foundation
 // MARK: - PhotoResult
 struct PhotoResult: Decodable {
     let id: String
-    let createdAt: Date
+    let createdAt: String
     let width, height, likes: Int
     let likedByUser: Bool
-    let description: String
+    let description: String?
     let urls: PhotoURLs
 
     enum CodingKeys: String, CodingKey {
@@ -25,9 +25,11 @@ struct PhotoResult: Decodable {
     }
 }
 
+typealias PhotoResults = [PhotoResult]
+
 // MARK: - PhotoURLs
 struct PhotoURLs: Decodable {
-    let raw, full, regular, small: String
+    let raw, full, regular, small: String?
     let thumb: String
 }
 
@@ -36,10 +38,10 @@ struct PhotoURLs: Decodable {
 struct Photo {
     let id: String
     let size: CGSize
-    let createdAt: Date?
+    let createdAt: String?
     let welcomeDescription: String?
     let thumbImageURL: String
-    let largeImageURL: String
+    let largeImageURL: String?
     let isLiked: Bool
 }
 
@@ -56,10 +58,13 @@ final class ImagesListService {
     // MARK: - Fetch Photos Next Page
     
     func fetchPhotosNextPage() {
+        guard let token = OAuth2TokenStorage().token else { return }
+        
         var photoRequest = URLRequest.makeHttpRequest(path: "/photos", httpMethod: "GET")
         photoRequest.setValue("\((photos.count / 10) + 1)", forHTTPHeaderField: "page")
+        photoRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
-        let task = session.objectTask(for: photoRequest) { [weak self] (result: Result<[PhotoResult], Error>) in
+        let task = session.objectTask(for: photoRequest) { [weak self] (result: Result<PhotoResults, Error>) in
             guard let self = self else { return }
             assert(Thread.isMainThread)
             
@@ -71,7 +76,7 @@ final class ImagesListService {
                                                    height: photoResult.height),
                                       createdAt: photoResult.createdAt,
                                       welcomeDescription: photoResult.description,
-                                      thumbImageURL: photoResult.urls.small,
+                                      thumbImageURL: photoResult.urls.thumb,
                                       largeImageURL: photoResult.urls.full,
                                       isLiked: photoResult.likedByUser)
                     self.photos.append(photo)
