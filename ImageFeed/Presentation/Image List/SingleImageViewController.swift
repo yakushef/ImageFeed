@@ -6,16 +6,20 @@
 //
 
 import UIKit
+import ProgressHUD
+import Kingfisher
 
 final class SingleImageViewController: UIViewController {
-    var image: UIImage! {
-        didSet {
-            guard isViewLoaded else {
-                return
-            }
-            fullScreenImageView.image = image
-        }
-    }
+//    var image: UIImage! {
+//        didSet {
+//            guard isViewLoaded else {
+//                return
+//            }
+//            fullScreenImageView.image = image
+//        }
+//    }
+    var imageURL: URL?
+    var image: UIImage?
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
@@ -28,6 +32,9 @@ final class SingleImageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        UIBlockingProgressHUD.show()
+        
         fullScreenImageView.contentMode = .center
         scrollView.minimumZoomScale = 0.1 // для картинок высокого разрешения
         scrollView.maximumZoomScale = 1.25 // для картинок высокого разрешения
@@ -37,7 +44,18 @@ final class SingleImageViewController: UIViewController {
         doubleTapRecognizer.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTapRecognizer)
         
-        rescaleAndCenterImageInScrollView(image: image)
+        fullScreenImageView.kf.setImage(with: imageURL) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let imageResult):
+                let image = imageResult.image
+                self.rescaleAndCenterImageInScrollView(image: image)
+                UIBlockingProgressHUD.dismiss()
+            case .failure(let error):
+                // TODO: Handle Error
+                assertionFailure(error.localizedDescription)
+            }
+        }
     }
     
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
@@ -118,7 +136,7 @@ final class SingleImageViewController: UIViewController {
     @objc private func handleDoubleTap() {
         
         let visibleRectSize = scrollView.bounds.size
-        let imageSize = image.size
+        let imageSize = image?.size ?? visibleRectSize
         
         let vScale = visibleRectSize.height / imageSize.height
         let hScale = visibleRectSize.width / imageSize.width
