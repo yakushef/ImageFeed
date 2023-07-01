@@ -44,7 +44,6 @@ final class ImagesListViewController: UIViewController {
                   let urlString = photos[indexPath.row].largeImageURL,
                   let imageURL = URL(string: urlString)
             else { return }
-//            viewController.image = image
             viewController.imageURL = imageURL
         } else {
             super.prepare(for: segue, sender: sender)
@@ -55,8 +54,6 @@ final class ImagesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        imageService.fetchPhotosNextPage()
-        
         self.navigationController?.isNavigationBarHidden = true
         
         NotificationCenter.default.addObserver(
@@ -66,8 +63,19 @@ final class ImagesListViewController: UIViewController {
                 guard let self = self else {
                     return
                 }
+                let newCellsCount = imageService.photos.count - self.photos.count
+                
+                let currentRowNumber = tableView.numberOfRows(inSection: 0) - 1
+                
+                let newCellPaths = (currentRowNumber + 1...currentRowNumber + newCellsCount).map {
+                    IndexPath(row: $0, section: 0)
+                }
+                
                 self.photos = imageService.photos
-                tableView.reloadData()
+                
+                self.tableView.performBatchUpdates() {
+                    self.tableView.insertRows(at: newCellPaths, with: .automatic)
+                }
             }
         
         tableView.register(UINib(nibName: "ImageListCell", bundle: nil), forCellReuseIdentifier: ImagesListCell.reuseIdentifier)
@@ -77,13 +85,13 @@ final class ImagesListViewController: UIViewController {
                                               left: 0,
                                               bottom: 12,
                                               right: 0)
+        
+        imageService.fetchPhotosNextPage()
     }
     
     //MARK: Methods
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        var index = indexPath.row
-//        print(index)
-//        print(imageService.photos[index])
+        let index = indexPath.row
         
         if photos.count - indexPath.row == 3 {
             imageService.fetchPhotosNextPage()
@@ -101,8 +109,9 @@ final class ImagesListViewController: UIViewController {
         
         cell.cellImage.kf.setImage(with: imageURL, placeholder: UIImage(named: "PhotoLoaderFull")) { [weak self] _ in
             guard let self = self else { return }
-            tableView.beginUpdates()
-            tableView.endUpdates()
+//            tableView.beginUpdates()
+//            tableView.endUpdates()
+            self.tableView.reloadRows(at: [indexPath], with: .automatic)
         }
     }
 }

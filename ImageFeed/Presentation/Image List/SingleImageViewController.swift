@@ -10,16 +10,8 @@ import ProgressHUD
 import Kingfisher
 
 final class SingleImageViewController: UIViewController {
-//    var image: UIImage! {
-//        didSet {
-//            guard isViewLoaded else {
-//                return
-//            }
-//            fullScreenImageView.image = image
-//        }
-//    }
+
     var imageURL: URL?
-    var image: UIImage?
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
@@ -38,7 +30,6 @@ final class SingleImageViewController: UIViewController {
         fullScreenImageView.contentMode = .center
         scrollView.minimumZoomScale = 0.1 // для картинок высокого разрешения
         scrollView.maximumZoomScale = 1.25 // для картинок высокого разрешения
-        fullScreenImageView.image = image
         
         doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap))
         doubleTapRecognizer.numberOfTapsRequired = 2
@@ -127,7 +118,7 @@ final class SingleImageViewController: UIViewController {
     
     @IBAction private func didTapShareButton(_ sender: UIButton) {
         // TODO: отработать алерт ошибки
-        guard let image = image else { assertionFailure("Error loading image"); return }
+        guard let image = fullScreenImageView.image else { assertionFailure("Error loading image"); return }
         let activityVC = UIActivityViewController(activityItems: [image],
                                                   applicationActivities: nil)
         present(activityVC, animated: true)
@@ -136,7 +127,7 @@ final class SingleImageViewController: UIViewController {
     @objc private func handleDoubleTap() {
         
         let visibleRectSize = scrollView.bounds.size
-        let imageSize = image?.size ?? visibleRectSize
+        let imageSize = fullScreenImageView.image?.size ?? visibleRectSize
         
         let vScale = visibleRectSize.height / imageSize.height
         let hScale = visibleRectSize.width / imageSize.width
