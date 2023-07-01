@@ -20,12 +20,16 @@ final class SingleImageViewController: UIViewController {
     @IBOutlet private var fullScreenImageView: UIImageView!
     @IBOutlet private weak var scrollView: UIScrollView!
     
+    @IBOutlet private weak var shareButton: UIButton!
+    
     private var doubleTapRecognizer: UITapGestureRecognizer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         UIBlockingProgressHUD.show()
+        
+        shareButton.isEnabled = false
         
         fullScreenImageView.contentMode = .center
         scrollView.minimumZoomScale = 0.1 // для картинок высокого разрешения
@@ -42,6 +46,7 @@ final class SingleImageViewController: UIViewController {
                 let image = imageResult.image
                 self.rescaleAndCenterImageInScrollView(image: image)
                 UIBlockingProgressHUD.dismiss()
+                self.shareButton.isEnabled = true
             case .failure(let error):
                 // TODO: Handle Error
                 assertionFailure(error.localizedDescription)

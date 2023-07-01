@@ -239,6 +239,7 @@
                     <connections>
                         <outlet property="fullScreenImageView" destination="sdW-Rs-hH2" id="HBD-9Q-aMz"/>
                         <outlet property="scrollView" destination="ghi-cN-dNd" id="pbB-IY-5qm"/>
+                        <outlet property="shareButton" destination="uvX-Dz-lX6" id="9X4-Ze-Xrw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lPw-UF-Gwi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

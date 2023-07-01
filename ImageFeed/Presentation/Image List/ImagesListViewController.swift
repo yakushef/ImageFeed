@@ -93,6 +93,8 @@ final class ImagesListViewController: UIViewController {
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let index = indexPath.row
         
+        cell.delegate = self
+        
         if photos.count - indexPath.row == 3 {
             imageService.fetchPhotosNextPage()
         }
@@ -147,5 +149,22 @@ extension ImagesListViewController: UITableViewDataSource {
         configCell(for: imageListCell, with: indexPath)
 
         return imageListCell
+    }
+}
+
+extension ImagesListViewController: ImageListCellDelegate {
+    func processLike(photoIndex: Int) {
+        let photo = photos[photoIndex]
+        imageService.changeLike(photoId: photo.id,
+                                isLike: !photo.isLiked) { (result: Result<Photo, Error>) in
+            switch result {
+            case .success(let photo):
+                // TODO: - Handle like change
+                print("\(photo.isLiked)")
+            case .failure(let error):
+                // TODO: - Handle Error
+                assertionFailure(error.localizedDescription)
+            }
+        }
     }
 }
