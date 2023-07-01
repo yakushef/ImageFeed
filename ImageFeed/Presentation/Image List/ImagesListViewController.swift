@@ -89,7 +89,7 @@ final class ImagesListViewController: UIViewController {
         imageService.fetchPhotosNextPage()
     }
     
-    //MARK: Methods
+    //MARK: Cell Congiguration
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let index = indexPath.row
         
@@ -102,9 +102,12 @@ final class ImagesListViewController: UIViewController {
         cell.dateLabel.text = dateFormatter.string(from: Date())
         cell.selectionStyle = .none
         
-        let isLiked = indexPath.row % 2 == 0
-        let likeImage = UIImage(named: isLiked ? "likeButtonActive" : "likeButtonInactive")
-        cell.likeButton.setImage(likeImage, for: .normal)
+        let isLiked = photos[indexPath.row].isLiked//indexPath.row % 2 == 0
+//        let likeImage = UIImage(named: isLiked ? "likeButtonActive" : "likeButtonInactive")
+        cell.likeButton.isSelected = isLiked
+        cell.likeButton.setImage(UIImage(named: "likeButtonActive"), for: .selected)
+        cell.likeButton.setImage(UIImage(named: "likeButtonInactive"), for: .normal)
+//        cell.likeButton.state = isLiked ? .selected : .normal
         
         guard let imageURL = URL(string: imageService.photos[index].thumbImageURL)
         else { return }
@@ -152,15 +155,21 @@ extension ImagesListViewController: UITableViewDataSource {
     }
 }
 
+// MARK: - Cell Delegate
+
 extension ImagesListViewController: ImageListCellDelegate {
-    func processLike(photoIndex: Int) {
+    func processLike(photoIndex: Int, completion: () -> Void) {
         let photo = photos[photoIndex]
         imageService.changeLike(photoId: photo.id,
-                                isLike: !photo.isLiked) { (result: Result<Photo, Error>) in
+                                isLike: !photo.isLiked) {[weak self] (result: Result<Photo, Error>) in
+            guard let self = self else { return }
+            
             switch result {
             case .success(let photo):
                 // TODO: - Handle like change
                 print("\(photo.isLiked)")
+                guard let cell = self.tableView.cellForRow(at: IndexPath(row: photoIndex, section: 0)) as? ImagesListCell else { return }
+                cell.likeButton.isSelected = photo.isLiked
             case .failure(let error):
                 // TODO: - Handle Error
                 assertionFailure(error.localizedDescription)

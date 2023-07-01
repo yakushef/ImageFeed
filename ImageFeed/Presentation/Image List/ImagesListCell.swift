@@ -9,7 +9,7 @@ import UIKit
 import Kingfisher
 
 protocol ImageListCellDelegate {
-    func processLike(photoIndex: Int)
+    func processLike(photoIndex: Int, completion: @escaping () -> Void)
 }
 
 final class ImagesListCell: UITableViewCell {
@@ -40,8 +40,11 @@ final class ImagesListCell: UITableViewCell {
     @IBAction func likeButtonTapped() {
 //        print("INDEX:\(String(describing: getIndexPath()))")
         guard let indexPath = getIndexPath() else { return }
-        
-        delegate?.processLike(photoIndex: indexPath.row)
+        likeButton.isSelected.toggle()
+//        sender?.isEnabled = false
+        delegate?.processLike(photoIndex: indexPath.row) {
+            
+        }
     }
     
 }
