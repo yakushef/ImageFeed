@@ -8,13 +8,13 @@
 import UIKit
 import Kingfisher
 
-protocol ImageListCellDelegate {
+protocol ImageListCellDelegate: AnyObject {
     func processLike(photoIndex: Int, completion: @escaping () -> Void)
 }
 
 final class ImagesListCell: UITableViewCell {
     
-    var delegate: ImageListCellDelegate?
+    weak var delegate: ImageListCellDelegate?
     
     @IBOutlet var cellImage: UIImageView!
     @IBOutlet var dateLabel: UILabel!

@@ -7,6 +7,8 @@
 
 import Foundation
 
+import WebKit
+
 struct ProfileResult: Codable {
     let id: String
     let username, firstName: String
@@ -77,4 +79,19 @@ final class ProfileService {
         self.task = task
         task.resume()
     }
+}
+
+// MARK: - Logout
+
+extension ProfileService {
+    func clean() {
+        profile = nil
+        
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+           records.forEach { record in
+              WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+           }
+        }
+     }
 }

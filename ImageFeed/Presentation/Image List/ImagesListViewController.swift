@@ -167,7 +167,8 @@ extension ImagesListViewController: ImageListCellDelegate {
             switch result {
             case .success(let photo):
                 // TODO: - Handle like change
-                print("\(photo.isLiked)")
+                self.photos[photoIndex] = photo
+//                print("\(photo.isLiked)")
                 guard let cell = self.tableView.cellForRow(at: IndexPath(row: photoIndex, section: 0)) as? ImagesListCell else { return }
                 cell.likeButton.isSelected = photo.isLiked
             case .failure(let error):

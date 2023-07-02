@@ -139,12 +139,12 @@ final class ProfileViewController: UIViewController {
     // MARK: - Actions
     
     @objc private func logoutButtonTapped() {
-        let splashVC = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(withIdentifier: "AuthViewController")
+        let splashVC = SplashViewController() //UIStoryboard(name: "Main", bundle: .main).instantiateViewController(withIdentifier: "AuthViewController")
         guard let window = UIApplication.shared.windows.first else {
             fatalError("Invalid window config")
         }
         
-        profileService.profile = nil
+        profileService.clean()
         OAuth2TokenStorage().clearTokenStorage()
         
         window.rootViewController = splashVC
