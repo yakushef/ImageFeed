@@ -44,10 +44,7 @@ final class ProfileService {
     static let shared = ProfileService()
     
     var profile: Profile?
-    
     private var task: URLSessionTask?
-    private var ongoingRequest = false
-    
     private let session = URLSession.shared
     
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
@@ -55,9 +52,7 @@ final class ProfileService {
         var profileRequest = URLRequest.makeHttpRequest(path: "/me", httpMethod: "GET")
         profileRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
-        if ongoingRequest { return }
         self.task?.cancel()
-        ongoingRequest = true
         
         let task = session.objectTask(for: profileRequest, completion: { [weak self] (result: Result<ProfileResult, Error>) in
             guard let self = self else { return }
@@ -74,7 +69,6 @@ final class ProfileService {
                 completion(.failure(error))
             }
             self.task = nil
-            ongoingRequest = false
         })
         self.task = task
         task.resume()

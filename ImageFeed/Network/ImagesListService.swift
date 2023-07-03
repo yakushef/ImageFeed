@@ -54,7 +54,7 @@ struct Photo {
     let id: String
     let size: CGSize
     let aspectRatio: Double
-    let createdAt: String?
+    let createdAt: Date?
     let welcomeDescription: String?
     let thumbImageURL: String
     let largeImageURL: String?
@@ -64,7 +64,11 @@ struct Photo {
         self.id = id
         self.size = size
         self.aspectRatio = size.width / size.height
-        self.createdAt = createdAt
+        
+        let dateFormatter = ISO8601DateFormatter()
+        let date = dateFormatter.date(from: createdAt ?? "")
+        
+        self.createdAt = date
         self.welcomeDescription = welcomeDescription
         self.thumbImageURL = thumbImageURL
         self.largeImageURL = largeImageURL
@@ -87,10 +91,9 @@ final class ImagesListService {
     
     func fetchPhotosNextPage() {
         guard let token = OAuth2TokenStorage().token else { return }
-        let page = (photos.count / 10) + 1
         
+        let page = (photos.count / 10) + 1
         var photoRequest = URLRequest.makeHttpRequest(path: "/photos" + "?page=\(page)", httpMethod: "GET")
-//        photoRequest.setValue("\((photos.count / 10) + 1)", forHTTPHeaderField: "page")
         photoRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
         let task = session.objectTask(for: photoRequest) { [weak self] (result: Result<PhotoResults, Error>) in
@@ -100,14 +103,6 @@ final class ImagesListService {
             switch result {
             case .success(let photoResults):
                 for photoResult in photoResults {
-//                    let photo = Photo(id: photoResult.id,
-//                                      size: CGSize(width: photoResult.width,
-//                                                   height: photoResult.height),
-//                                      createdAt: photoResult.createdAt,
-//                                      welcomeDescription: photoResult.description,
-//                                      thumbImageURL: photoResult.urls.small,
-//                                      largeImageURL: photoResult.urls.full,
-//                                      isLiked: photoResult.likedByUser)
                     self.photos.append(photoResult.convertToPhoto())
                 }
                 NotificationCenter.default.post(Notification(name: ImagesListService.DidChangeNotification))

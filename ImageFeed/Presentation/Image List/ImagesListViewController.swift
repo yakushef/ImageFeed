@@ -92,6 +92,7 @@ final class ImagesListViewController: UIViewController {
     //MARK: Cell Congiguration
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let index = indexPath.row
+        let photo = imageService.photos[index]
         
         cell.delegate = self
         
@@ -99,23 +100,23 @@ final class ImagesListViewController: UIViewController {
             imageService.fetchPhotosNextPage()
         }
         
-        cell.dateLabel.text = dateFormatter.string(from: Date())
+        if let date = photo.createdAt {
+            cell.dateLabel.text = dateFormatter.string(from: date)
+        } else {
+            cell.dateLabel.text = ""
+        }
         cell.selectionStyle = .none
         
-        let isLiked = photos[indexPath.row].isLiked//indexPath.row % 2 == 0
-//        let likeImage = UIImage(named: isLiked ? "likeButtonActive" : "likeButtonInactive")
+        let isLiked = photos[indexPath.row].isLiked
         cell.likeButton.isSelected = isLiked
         cell.likeButton.setImage(UIImage(named: "likeButtonActive"), for: .selected)
         cell.likeButton.setImage(UIImage(named: "likeButtonInactive"), for: .normal)
-//        cell.likeButton.state = isLiked ? .selected : .normal
         
-        guard let imageURL = URL(string: imageService.photos[index].thumbImageURL)
+        guard let imageURL = URL(string: photo.thumbImageURL)
         else { return }
         
         cell.cellImage.kf.setImage(with: imageURL, placeholder: UIImage(named: "PhotoLoaderFull")) { [weak self] _ in
             guard let self = self else { return }
-//            tableView.beginUpdates()
-//            tableView.endUpdates()
             self.tableView.reloadRows(at: [indexPath], with: .automatic)
         }
     }
@@ -158,7 +159,7 @@ extension ImagesListViewController: UITableViewDataSource {
 // MARK: - Cell Delegate
 
 extension ImagesListViewController: ImageListCellDelegate {
-    func processLike(photoIndex: Int, completion: () -> Void) {
+    func processLike(photoIndex: Int) {
         let photo = photos[photoIndex]
         imageService.changeLike(photoId: photo.id,
                                 isLike: !photo.isLiked) {[weak self] (result: Result<Photo, Error>) in
