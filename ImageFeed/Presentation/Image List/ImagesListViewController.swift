@@ -16,6 +16,8 @@ final class ImagesListViewController: UIViewController {
     private let imageService = ImagesListService.shared
     private var photos: [Photo] = []
     
+    private var alertPresenter: AlertPresenterProtocol!
+    
     private let photosName: [String] = Array(0...20).map { "\($0)" }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -54,15 +56,24 @@ final class ImagesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        alertPresenter = AlertPresenter(delegate: self)
+        
         self.navigationController?.isNavigationBarHidden = true
+        
+        NotificationCenter.default.addObserver(
+            forName: ImagesListService.ErrorNotification,
+            object: nil,
+            queue: .main) { [weak self] _ in
+                guard let self = self else { return }
+                
+                self.showAlert(with: "Ошибка загрузки изображений")
+            }
         
         NotificationCenter.default.addObserver(
             forName: ImagesListService.DidChangeNotification,
             object: nil,
             queue: .main) { [weak self] _ in
-                guard let self = self else {
-                    return
-                }
+                guard let self = self else { return }
                 let newCellsCount = imageService.photos.count - self.photos.count
                 
                 let currentRowNumber = tableView.numberOfRows(inSection: 0) - 1
@@ -87,6 +98,18 @@ final class ImagesListViewController: UIViewController {
                                               right: 0)
         
         imageService.fetchPhotosNextPage()
+    }
+    
+    // MARK: - Prepare Alert
+    
+    func showAlert(with message: String) {
+        alertPresenter.presentAlert(title: "Что-то пошло не так(",
+                                    message: message,
+                                    buttonText: "OK",
+                                    completion: { [weak self] in
+            guard let self = self else { return }
+            self.dismiss(animated: true)
+        })
     }
     
     //MARK: Cell Congiguration
@@ -115,9 +138,14 @@ final class ImagesListViewController: UIViewController {
         guard let imageURL = URL(string: photo.thumbImageURL)
         else { return }
         
-        cell.cellImage.kf.setImage(with: imageURL, placeholder: UIImage(named: "PhotoLoaderFull")) { [weak self] _ in
+        cell.cellImage.kf.setImage(with: imageURL, placeholder: UIImage(named: "PhotoLoaderFull")) { [weak self] didLoad in
             guard let self = self else { return }
-            self.tableView.reloadRows(at: [indexPath], with: .automatic)
+            switch didLoad {
+            case .success(_):
+                self.tableView.reloadRows(at: [indexPath], with: .automatic)
+            case .failure(_):
+                return
+            }
         }
     }
 }
@@ -160,22 +188,30 @@ extension ImagesListViewController: UITableViewDataSource {
 
 extension ImagesListViewController: ImageListCellDelegate {
     func processLike(photoIndex: Int) {
+        UIBlockingProgressHUD.show()
         let photo = photos[photoIndex]
         imageService.changeLike(photoId: photo.id,
-                                isLike: !photo.isLiked) {[weak self] (result: Result<Photo, Error>) in
+                                isLike: !photo.isLiked) {[weak self] (result: Result<Void, Error>) in
             guard let self = self else { return }
             
             switch result {
-            case .success(let photo):
-                // TODO: - Handle like change
-                self.photos[photoIndex] = photo
-//                print("\(photo.isLiked)")
+            case .success():
+                self.photos = imageService.photos
                 guard let cell = self.tableView.cellForRow(at: IndexPath(row: photoIndex, section: 0)) as? ImagesListCell else { return }
-                cell.likeButton.isSelected = photo.isLiked
+                cell.likeButton.isSelected = self.photos[photoIndex].isLiked
+                UIBlockingProgressHUD.dismiss()
             case .failure(let error):
-                // TODO: - Handle Error
-                assertionFailure(error.localizedDescription)
+                UIBlockingProgressHUD.dismiss()
+                showAlert(with: "Не получилось изменить лайк \(error.localizedDescription)")
             }
         }
     }
+}
+
+extension ImagesListViewController: AlertPresenterDelegate {
+    
+    func show(alert: UIAlertController) {
+        present(alert, animated: true)
+    }
+    
 }

@@ -39,7 +39,6 @@ final class ImagesListCell: UITableViewCell {
     
     @IBAction func likeButtonTapped() {
         guard let indexPath = getIndexPath() else { return }
-        likeButton.isSelected.toggle()
         delegate?.processLike(photoIndex: indexPath.row)
     }
 }

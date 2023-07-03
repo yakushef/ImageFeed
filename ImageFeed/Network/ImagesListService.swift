@@ -79,6 +79,7 @@ struct Photo {
 final class ImagesListService {
     static let shared = ImagesListService()
     static let DidChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
+    static let ErrorNotification = Notification.Name(rawValue: "ImagesListServiceError")
     
     private var task: URLSessionTask? = nil
     private var likeTask: URLSessionTask? = nil
@@ -106,9 +107,8 @@ final class ImagesListService {
                     self.photos.append(photoResult.convertToPhoto())
                 }
                 NotificationCenter.default.post(Notification(name: ImagesListService.DidChangeNotification))
-            case .failure(let error):
-                // TODO: Handle Error
-                assertionFailure(error.localizedDescription)
+            case .failure(_):
+                NotificationCenter.default.post(Notification(name: ImagesListService.ErrorNotification))
             }
             self.task = nil
         }
@@ -118,7 +118,7 @@ final class ImagesListService {
     
     //MARK: - Change Like
     
-    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Photo, Error>) -> Void) {
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
         guard let token = OAuth2TokenStorage().token else { return }
         
         self.likeTask?.cancel()
@@ -134,8 +134,12 @@ final class ImagesListService {
             
             switch result {
             case .success(let likeResult):
-                let photo = likeResult.photo.convertToPhoto()
-                completion(.success(photo))
+                let newPhoto = likeResult.photo.convertToPhoto()
+                
+                if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
+                    self.photos[index] = newPhoto
+                }
+                completion(.success(()))
             case .failure(let error):
                 completion(.failure(error))
             }

@@ -8,14 +8,12 @@
 import UIKit
 
 protocol AlertPresenterDelegate {
-
-//    var alertPresenter: AlertPresenterProtocol! { get <#set#> }
-//
     func show(alert: UIAlertController)
 }
 
 protocol AlertPresenterProtocol {
     var delegate: AlertPresenterDelegate { get }
+    func presentAlert(alert: UIAlertController)
     func presentAlert(title: String, message: String, buttonText: String, completion: @escaping () -> Void)
 }
 
@@ -32,6 +30,10 @@ final class AlertPresenter: AlertPresenterProtocol {
             completion()
         }
         alert.addAction(action)
+        delegate.show(alert: alert)
+    }
+    
+    func presentAlert(alert: UIAlertController) {
         delegate.show(alert: alert)
     }
 }
