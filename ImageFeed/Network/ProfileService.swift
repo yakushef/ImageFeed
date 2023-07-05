@@ -9,36 +9,6 @@ import Foundation
 
 import WebKit
 
-struct ProfileResult: Codable {
-    let id: String
-    let username, firstName: String
-    let lastName: String?
-    let bio: String?
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case username
-        case firstName = "first_name"
-        case lastName = "last_name"
-        case bio
-    }
-}
-
-struct Profile {
-    
-    let username: String
-    let name: String
-    let loginName: String
-    let bio: String
-    
-    init(username: String, firstName: String, lastName: String?, bio: String?) {
-        self.username = username
-        self.name = firstName + ( " \(lastName ?? "")")
-        self.loginName = "@" + username
-        self.bio = bio ?? ""
-    }
-}
-
 final class ProfileService {
     
     static let shared = ProfileService()
@@ -46,6 +16,11 @@ final class ProfileService {
     var profile: Profile?
     private var task: URLSessionTask?
     private let session = URLSession.shared
+    
+    private init(profile: Profile? = nil, task: URLSessionTask? = nil) {
+        self.profile = profile
+        self.task = task
+    }
     
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         

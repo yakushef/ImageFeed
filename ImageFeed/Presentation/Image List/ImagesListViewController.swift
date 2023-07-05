@@ -24,7 +24,8 @@ final class ImagesListViewController: UIViewController {
         .lightContent
     }
     
-    private lazy var dateFormatter: DateFormatter = {
+    private lazy var photoDateFormatter = ISO8601DateFormatter()
+    private lazy var listDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
         formatter.timeStyle = .none
@@ -123,8 +124,9 @@ final class ImagesListViewController: UIViewController {
             imageService.fetchPhotosNextPage()
         }
         
-        if let date = photo.createdAt {
-            cell.dateLabel.text = dateFormatter.string(from: date)
+        if let date = photo.createdAt,
+           let photoDate = photoDateFormatter.date(from: date) {
+            cell.dateLabel.text = listDateFormatter.string(from: photoDate)
         } else {
             cell.dateLabel.text = ""
         }

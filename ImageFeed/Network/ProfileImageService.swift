@@ -20,6 +20,12 @@ final class ProfileImageService {
     
     private let session = URLSession.shared
     
+    private init(task: URLSessionTask? = nil, userPicURL: String? = nil, imageURL: URL? = nil) {
+        self.task = task
+        self.userPicURL = userPicURL
+        self.imageURL = imageURL
+    }
+    
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         guard let token = OAuth2TokenStorage().token else { return }
         
@@ -45,18 +51,4 @@ final class ProfileImageService {
         self.task = task
         task.resume()
     }
-}
-
-// MARK: - UserResult
-struct UserResult: Codable {
-    let profileImage: ProfileImage
-
-    enum CodingKeys: String, CodingKey {
-        case profileImage = "profile_image"
-    }
-}
-
-// MARK: - ProfileImage
-struct ProfileImage: Codable {
-    let small, medium, large: String
 }

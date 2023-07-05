@@ -13,7 +13,7 @@ final class SingleImageViewController: UIViewController {
 
     var imageURL: URL?
     
-    var alertPresenter: AlertPresenter!
+    var alertPresenter: AlertPresenterProtocol!
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
