@@ -22,6 +22,13 @@ final class ProfileViewController: UIViewController {
     
     private var currentProfile: Profile = Profile(username: "", firstName: "", lastName: "", bio: "")
     
+    
+    
+    var animationLayers = [CALayer]()
+    let gradient = CAGradientLayer()
+    
+    
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
     }
@@ -61,6 +68,34 @@ final class ProfileViewController: UIViewController {
         view.addSubview(statusLabel)
         
         configureUI()
+        
+        
+        
+        
+        gradient.frame = CGRect(origin: .zero, size: CGSize(width: 70, height: 70))
+        gradient.locations = [-0.01, 0.25, 0.5]
+        gradient.colors = [
+            UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor,
+//            UIColor(red: 0.531, green: 0.533, blue: 0.553, alpha: 1).cgColor,
+            UIColor(red: 0.431, green: 0.433, blue: 0.453, alpha: 1).cgColor,
+            UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor
+        ]
+        gradient.startPoint = CGPoint(x: 0, y: 0.5)
+        gradient.endPoint = CGPoint(x: 1, y: 0.5)
+        gradient.cornerRadius = 35
+        gradient.masksToBounds = true
+        animationLayers.append(gradient)
+        
+        userPicView.layer.addSublayer(gradient)
+        let gradientChangeAnimation = CABasicAnimation(keyPath: "locations")
+        gradientChangeAnimation.duration = 1.5
+        gradientChangeAnimation.repeatCount = .infinity
+        gradientChangeAnimation.fromValue = [-2, -1, 0]
+        gradientChangeAnimation.toValue = [1, 2, 3]
+        gradient.add(gradientChangeAnimation, forKey: "locationsChange")
+        
+        
+        
         getProfileData()
         
         updateUserPic()
@@ -180,11 +215,24 @@ final class ProfileViewController: UIViewController {
 // MARK: - Observer
 extension ProfileViewController {
     private func updateUserPic() {
+        userPicView.kf.cancelDownloadTask()
         guard let imageURL = ProfileImageService.shared.imageURL else { return }
         let placeholder = UIImage(named: "ProfilePlaceholder") ?? UIImage()
         userPicView.kf.setImage(with: imageURL,
                                 placeholder: placeholder,
-                                options: [.transition(.fade(0.5))])
+                                options: [.transition(.fade(0.5))]) { _ in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4, execute: {
+                UIView.transition(with: self.userPicView,
+                                  duration: 0.5,
+                                  options: .transitionCrossDissolve,
+                                  animations: {
+                    self.gradient.isHidden = true
+                                  },
+                                  completion: { _ in
+                    self.gradient.removeFromSuperlayer()
+                                  })
+            })
+        }
     }
 }
 
