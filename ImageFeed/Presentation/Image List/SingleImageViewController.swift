@@ -6,16 +6,14 @@
 //
 
 import UIKit
+import ProgressHUD
+import Kingfisher
 
 final class SingleImageViewController: UIViewController {
-    var image: UIImage! {
-        didSet {
-            guard isViewLoaded else {
-                return
-            }
-            fullScreenImageView.image = image
-        }
-    }
+
+    var imageURL: URL?
+    
+    var alertPresenter: AlertPresenterProtocol!
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
@@ -24,20 +22,57 @@ final class SingleImageViewController: UIViewController {
     @IBOutlet private var fullScreenImageView: UIImageView!
     @IBOutlet private weak var scrollView: UIScrollView!
     
+    @IBOutlet private weak var shareButton: UIButton!
+    
     private var doubleTapRecognizer: UITapGestureRecognizer!
+    
+    func loadImage() {
+        fullScreenImageView.kf.setImage(with: imageURL) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let imageResult):
+                let image = imageResult.image
+                self.rescaleAndCenterImageInScrollView(image: image)
+                UIBlockingProgressHUD.dismiss()
+                self.shareButton.isEnabled = true
+            case .failure(_):
+                UIBlockingProgressHUD.dismiss()
+                let alert = UIAlertController(title: "Что-то пошло не так",
+                                              message: "Попробовать еще раз?",
+                                              preferredStyle: .alert)
+                let noAction = UIAlertAction(title: "Не надо", style: .cancel) { _ in
+                    self.dismiss(animated: true)
+                }
+                let retryAction = UIAlertAction(title: "Повторить", style: .default) { _ in
+                    self.loadImage()
+                }
+                alert.addAction(noAction)
+                alert.addAction(retryAction)
+                alertPresenter.presentAlert(alert: alert)
+            }
+        }
+    }
+    
+    // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        alertPresenter = AlertPresenter(delegate: self)
+        
+        UIBlockingProgressHUD.show()
+        
+        shareButton.isEnabled = false
+        
         fullScreenImageView.contentMode = .center
         scrollView.minimumZoomScale = 0.1 // для картинок высокого разрешения
         scrollView.maximumZoomScale = 1.25 // для картинок высокого разрешения
-        fullScreenImageView.image = image
         
         doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap))
         doubleTapRecognizer.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTapRecognizer)
         
-        rescaleAndCenterImageInScrollView(image: image)
+        loadImage()
     }
     
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
@@ -49,12 +84,10 @@ final class SingleImageViewController: UIViewController {
         
         let vScale = visibleRectSize.height / imageSize.height
         let hScale = visibleRectSize.width / imageSize.width
-        let scale = max(hScale, vScale) // для тестовых картинок
-        //let scale = min(scrollView.maximumZoomScale, max(minimumZoomScale, min(hScale, vScale))) //для картинок в высоком разрешении
+        let scale = max(hScale, vScale)
         
-        // для тестовых картинок в низком разрешении
         scrollView.minimumZoomScale = min(hScale, vScale)
-        scrollView.maximumZoomScale = scale * 5
+        scrollView.maximumZoomScale = scale * 3
         
         scrollView.setZoomScale(scale, animated: false)
         
@@ -108,8 +141,7 @@ final class SingleImageViewController: UIViewController {
     }
     
     @IBAction private func didTapShareButton(_ sender: UIButton) {
-        // TODO: отработать алерт ошибки
-        guard let image = image else { assertionFailure("Error loading image"); return }
+        guard let image = fullScreenImageView.image else { assertionFailure("Error loading image"); return }
         let activityVC = UIActivityViewController(activityItems: [image],
                                                   applicationActivities: nil)
         present(activityVC, animated: true)
@@ -118,7 +150,7 @@ final class SingleImageViewController: UIViewController {
     @objc private func handleDoubleTap() {
         
         let visibleRectSize = scrollView.bounds.size
-        let imageSize = image.size
+        let imageSize = fullScreenImageView.image?.size ?? visibleRectSize
         
         let vScale = visibleRectSize.height / imageSize.height
         let hScale = visibleRectSize.width / imageSize.width
@@ -155,4 +187,14 @@ extension SingleImageViewController: UIScrollViewDelegate {
     func scrollViewDidEndZooming(_ scrollView: UIScrollView,with view: UIView?, atScale scale: CGFloat) {
         centerImage()
     }
+}
+
+// MARK: - Alert Presenter Delegate
+
+extension SingleImageViewController: AlertPresenterDelegate {
+    
+    func show(alert: UIAlertController) {
+        present(alert, animated: true)
+    }
+    
 }

@@ -7,12 +7,20 @@
 
 import UIKit
 
+import ProgressHUD
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    private func setupProgressHUD() {
+      ProgressHUD.animationType = .systemActivityIndicator
+      ProgressHUD.colorHUD = .black
+      ProgressHUD.colorAnimation = .white
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        setupProgressHUD()
         
         return true
     }

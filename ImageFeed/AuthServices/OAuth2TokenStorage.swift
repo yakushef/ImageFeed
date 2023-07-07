@@ -33,6 +33,5 @@ final class OAuth2TokenStorage {
     
     func clearTokenStorage() {
         wrapper.remove(forKey: KeychainWrapper.Key(rawValue: Keys.authToken.rawValue))
-        // TODO: проверить, точно ли нет странного поведения при попытке повторной авторизации после выхода
     }
 }

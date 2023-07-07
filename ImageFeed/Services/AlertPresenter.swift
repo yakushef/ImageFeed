@@ -7,20 +7,18 @@
 
 import UIKit
 
-protocol AlertPresenterDelegate {
-
-//    var alertPresenter: AlertPresenterProtocol! { get <#set#> }
-//
+protocol AlertPresenterDelegate: AnyObject {
     func show(alert: UIAlertController)
 }
 
-protocol AlertPresenterProtocol {
-    var delegate: AlertPresenterDelegate { get }
+protocol AlertPresenterProtocol: AnyObject {
+    var delegate: AlertPresenterDelegate? { get }
+    func presentAlert(alert: UIAlertController)
     func presentAlert(title: String, message: String, buttonText: String, completion: @escaping () -> Void)
 }
 
 final class AlertPresenter: AlertPresenterProtocol {
-    let delegate: AlertPresenterDelegate
+    weak var delegate: AlertPresenterDelegate?
     
     init(delegate: AlertPresenterDelegate) {
         self.delegate = delegate
@@ -31,7 +29,16 @@ final class AlertPresenter: AlertPresenterProtocol {
         let action = UIAlertAction(title: buttonText, style: .default) { _ in
             completion()
         }
+        
+        guard let delegate = delegate else { return }
+        
         alert.addAction(action)
+        delegate.show(alert: alert)
+    }
+    
+    func presentAlert(alert: UIAlertController) {
+        guard let delegate = delegate else { return }
+        
         delegate.show(alert: alert)
     }
 }

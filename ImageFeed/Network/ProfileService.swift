@@ -7,55 +7,27 @@
 
 import Foundation
 
-struct ProfileResult: Codable {
-    let id: String
-    let username, firstName: String
-    let lastName: String?
-    let bio: String?
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case username
-        case firstName = "first_name"
-        case lastName = "last_name"
-        case bio
-    }
-}
-
-struct Profile {
-    
-    let username: String
-    let name: String
-    let loginName: String
-    let bio: String
-    
-    init(username: String, firstName: String, lastName: String?, bio: String?) {
-        self.username = username
-        self.name = firstName + ( " \(lastName ?? "")")
-        self.loginName = "@" + username
-        self.bio = bio ?? ""
-    }
-}
+import WebKit
 
 final class ProfileService {
     
     static let shared = ProfileService()
     
     var profile: Profile?
-    
     private var task: URLSessionTask?
-    private var ongoingRequest = false
-    
     private let session = URLSession.shared
+    
+    private init(profile: Profile? = nil, task: URLSessionTask? = nil) {
+        self.profile = profile
+        self.task = task
+    }
     
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         
         var profileRequest = URLRequest.makeHttpRequest(path: "/me", httpMethod: "GET")
         profileRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
-        if ongoingRequest { return }
         self.task?.cancel()
-        ongoingRequest = true
         
         let task = session.objectTask(for: profileRequest, completion: { [weak self] (result: Result<ProfileResult, Error>) in
             guard let self = self else { return }
@@ -72,9 +44,23 @@ final class ProfileService {
                 completion(.failure(error))
             }
             self.task = nil
-            ongoingRequest = false
         })
         self.task = task
         task.resume()
     }
+}
+
+// MARK: - Logout
+
+extension ProfileService {
+    func clean() {
+        profile = nil
+        
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+           records.forEach { record in
+              WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+           }
+        }
+     }
 }

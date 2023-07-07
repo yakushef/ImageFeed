@@ -18,7 +18,7 @@ final class ProfileViewController: UIViewController {
     
     private let profileService = ProfileService.shared
     
-    private var profileImageServiceObserver: NSObjectProtocol?
+    private var alertPresenter: AlertPresenterProtocol!
     
     private var currentProfile: Profile = Profile(username: "", firstName: "", lastName: "", bio: "")
     
@@ -34,6 +34,8 @@ final class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        alertPresenter = AlertPresenter(delegate: self)
         
         NotificationCenter.default.addObserver(forName: ProfileImageService.DidChangeNotification,
                                                object: nil, queue: .main) { [weak self] _ in
@@ -136,15 +138,15 @@ final class ProfileViewController: UIViewController {
         statusLabel.trailingAnchor.constraint(equalTo: fullNameLabel.trailingAnchor).isActive = true
     }
     
-    // MARK: - Actions
+    // MARK: - Logout
     
-    @objc private func logoutButtonTapped() {
-        let splashVC = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(withIdentifier: "AuthViewController")
+    private func logout() {
+        let splashVC = SplashViewController()
         guard let window = UIApplication.shared.windows.first else {
             fatalError("Invalid window config")
         }
         
-        profileService.profile = nil
+        profileService.clean()
         OAuth2TokenStorage().clearTokenStorage()
         
         window.rootViewController = splashVC
@@ -153,11 +155,26 @@ final class ProfileViewController: UIViewController {
         UIView.transition(with: window,
                           duration: 0.1,
                           options: [.transitionCrossDissolve,
-                            .overrideInheritedOptions,
-                            .curveEaseIn],
+                                    .overrideInheritedOptions,
+                                    .curveEaseIn],
                           animations: nil)
     }
+
     
+    @objc private func logoutButtonTapped() {
+        let logoutAlert = UIAlertController(title: "Пока, пока!", message: "Уверены что хотите выйти?", preferredStyle: .alert)
+        let yesAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            self.logout()
+        }
+        let noAction = UIAlertAction(title: "Нет", style: .cancel) { [weak self] _ in
+            guard let self = self else { return }
+            self.dismiss(animated: true)
+        }
+        logoutAlert.addAction(noAction)
+        logoutAlert.addAction(yesAction)
+        alertPresenter.presentAlert(alert: logoutAlert)
+    }
 }
 
 // MARK: - Observer
@@ -168,5 +185,12 @@ extension ProfileViewController {
         userPicView.kf.setImage(with: imageURL,
                                 placeholder: placeholder,
                                 options: [.transition(.fade(0.5))])
+    }
+}
+
+// MARK: - Alert Presenter
+extension ProfileViewController: AlertPresenterDelegate {
+    func show(alert: UIAlertController) {
+        present(alert, animated: true)
     }
 }
