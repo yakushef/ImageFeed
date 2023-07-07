@@ -25,7 +25,8 @@ final class ProfileViewController: UIViewController {
     
     
     var animationLayers = [CALayer]()
-    let gradient = CAGradientLayer()
+    var gradient: CAGradientLayer!
+    var usernameGradient: CAGradientLayer!
     
     
     
@@ -59,33 +60,22 @@ final class ProfileViewController: UIViewController {
         view.addSubview(logoutButton)
         
         fullNameLabel = UILabel()
+//        fullNameLabel.alpha = 0
         view.addSubview(fullNameLabel)
         
         usernameLabel = UILabel()
+//        usernameLabel.alpha = 0
         view.addSubview(usernameLabel)
         
         statusLabel = UILabel()
+//        statusLabel.alpha = 0
         view.addSubview(statusLabel)
         
         configureUI()
         
+        gradient = configureGradient(ofSize: CGSize(width: 70, height: 70))
         
-        
-        
-        gradient.frame = CGRect(origin: .zero, size: CGSize(width: 70, height: 70))
-        gradient.locations = [-0.01, 0.25, 0.5]
-        gradient.colors = [
-            UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor,
-//            UIColor(red: 0.531, green: 0.533, blue: 0.553, alpha: 1).cgColor,
-            UIColor(red: 0.431, green: 0.433, blue: 0.453, alpha: 1).cgColor,
-            UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor
-        ]
-        gradient.startPoint = CGPoint(x: 0, y: 0.5)
-        gradient.endPoint = CGPoint(x: 1, y: 0.5)
-        gradient.cornerRadius = 35
-        gradient.masksToBounds = true
         animationLayers.append(gradient)
-        
         userPicView.layer.addSublayer(gradient)
         let gradientChangeAnimation = CABasicAnimation(keyPath: "locations")
         gradientChangeAnimation.duration = 1.5
@@ -96,11 +86,39 @@ final class ProfileViewController: UIViewController {
         
         
         
-        getProfileData()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+            self.usernameGradient = self.configureGradient(ofSize: self.usernameLabel.frame.size)
+            
+            self.animationLayers.append(self.usernameGradient)
+            self.usernameLabel.layer.addSublayer(self.usernameGradient)
+            self.usernameGradient.add(gradientChangeAnimation, forKey: "locationsChange")
+        })
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4, execute: {
+            self.getProfileData()
+            self.usernameLabel.alpha = 1
+            self.fullNameLabel.alpha = 1
+            self.statusLabel.alpha = 1
+        })
         
         updateUserPic()
     }
     
+    func configureGradient(ofSize size: CGSize) -> CAGradientLayer {
+        let gradient = CAGradientLayer()
+        gradient.frame = CGRect(origin: .zero, size: size)
+        gradient.locations = [-0.01, 0.25, 0.5]
+        gradient.colors = [
+            UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor,
+            UIColor(red: 0.431, green: 0.433, blue: 0.453, alpha: 1).cgColor,
+            UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor
+        ]
+        gradient.startPoint = CGPoint(x: 0, y: 0.5)
+        gradient.endPoint = CGPoint(x: 1, y: 0.5)
+        gradient.cornerRadius = size.height / 2
+        gradient.masksToBounds = true
+        return gradient
+    }
     
     private func getProfileData() {
         guard let profile = profileService.profile else { return }
@@ -110,6 +128,8 @@ final class ProfileViewController: UIViewController {
         fullNameLabel.text = currentProfile.name
         usernameLabel.text = currentProfile.loginName
         statusLabel.text = currentProfile.bio
+        
+        print(statusLabel.frame.size)
     }
     
     private func configureUI() {
