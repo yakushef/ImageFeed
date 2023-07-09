@@ -45,7 +45,8 @@ final class ImagesListService {
                 NotificationCenter.default.post(Notification(name: ImagesListService.DidChangeNotification))
             case .failure(let error):
                 if error.localizedDescription != "cancelled" {
-                    NotificationCenter.default.post(Notification(name: ImagesListService.ErrorNotification))
+                    //TODO: - Handle Error?? Check page numbers!
+//                    NotificationCenter.default.post(Notification(name: ImagesListService.ErrorNotification))
                 }
             }
             self.photosTask = nil

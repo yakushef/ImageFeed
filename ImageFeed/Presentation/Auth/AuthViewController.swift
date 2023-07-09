@@ -12,15 +12,13 @@ protocol AuthViewControllerDelegae {
 }
 
 final class AuthViewController: UIViewController {
-    
     var delegate: SplashViewController?
-    
+    private let ShowWebViewSegueId = "ShowWebView"
     private let authSegueID = "ShowWebView"
     let oAuth2Service = OAuth2Service()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         setNeedsStatusBarAppearanceUpdate()
     }
     
@@ -29,10 +27,17 @@ final class AuthViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let webViewVC = segue.destination as? WebViewViewController else {
-            return
+        guard segue.identifier == ShowWebViewSegueId else {
+            fatalError("Faild to prepare for \(String(describing: segue.identifier))")
         }
-        webViewVC.delegate = self
+        if let webViewVC = segue.destination as? WebViewViewController {
+            let webViewPresenter = WebViewPresenter()
+            webViewPresenter.view = webViewVC
+            webViewVC.presenter = webViewPresenter
+            webViewVC.delegate = self
+        } else {
+            super.prepare(for: segue, sender: sender)
+        }
     }
 }
 
@@ -44,6 +49,4 @@ extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         vc.dismiss(animated: true)
     }
-    
-    
 }

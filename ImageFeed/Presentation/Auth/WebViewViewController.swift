@@ -8,6 +8,13 @@
 import UIKit
 import WebKit
 
+public protocol WebViewViewControllerProtocol: AnyObject {
+    var presenter: WebViewViewPresenterProtocol? { get set }
+    func load(request: URLRequest)
+    func setProgressValue(_ newValue: Float)
+    func setProgressHidden(_ isHidden: Bool)
+}
+
 protocol WebViewViewControllerDelegate {
     
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
@@ -15,10 +22,12 @@ protocol WebViewViewControllerDelegate {
     func webViewViewControllerDidCancel(_ vc: WebViewViewController)
 }
 
-final class WebViewViewController: UIViewController {
-    
+final class WebViewViewController: UIViewController & WebViewViewControllerProtocol {
+
     @IBOutlet private weak var webView: WKWebView!
     @IBOutlet private weak var progressBar: UIProgressView!
+    
+    var presenter: WebViewViewPresenterProtocol?
     
     private var estimatedProgressObservation: NSKeyValueObservation?
     var delegate: WebViewViewControllerDelegate?
@@ -38,39 +47,24 @@ final class WebViewViewController: UIViewController {
         progressBar.progress = 0
         webView.navigationDelegate = self
         
+        presenter?.viewDidLoad()
+        
         estimatedProgressObservation = webView.observe(\.estimatedProgress,
                                                         changeHandler: { [weak self] _, _ in
             guard let self = self else { return }
-            updateProgress()
+            self.presenter?.didUpdateProgressValue(webView.estimatedProgress)
         })
-        
-        let UnsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
-
-        var urlComponents: URLComponents = { guard let components = URLComponents(string: UnsplashAuthorizeURLString) else { assertionFailure("Invalid Authorize URLComonents"); return URLComponents() }
-            return components }()
-        
-        urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: AccessKey),
-            URLQueryItem(name: "redirect_uri", value: RedirectURI),
-            URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: AccessScope)
-        ]
-        let url: URL = {
-            guard let url = urlComponents.url else {
-                assertionFailure("Invalid Authorize URL")
-                return URL(string: "")!
-            }
-            return url
-        }()
-        let request = URLRequest(url: url)
-        
+    }
+    
+    func load(request: URLRequest) {
         webView.load(request)
     }
     
-    private func updateProgress() {
-        let progress = Float(webView.estimatedProgress)
-        progressBar.setProgress(progress, animated: false)
-        progressBar.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
+    func setProgressValue(_ newValue: Float) {
+        progressBar.setProgress(newValue, animated: false)
+    }
+    func setProgressHidden(_ isHidden: Bool) {
+        progressBar.isHidden = isHidden
     }
     
     @IBAction private func bacButtonTapped(_ sender: Any?) {
@@ -90,14 +84,8 @@ extension WebViewViewController: WKNavigationDelegate {
     
     private func code(from navifationAction: WKNavigationAction) -> String? {
         
-        if
-            let url = navifationAction.request.url,
-            let urlComponents = URLComponents(string: url.absoluteString),
-            urlComponents.path == "/oauth/authorize/native",
-            let items = urlComponents.queryItems,
-            let codeItem = items.first(where: { $0.name == "code" })
-        {
-            return codeItem.value
+        if let url = navifationAction.request.url {
+            return presenter?.code(from: url)
         } else {
             return nil
         }
