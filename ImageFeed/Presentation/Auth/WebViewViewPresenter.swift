@@ -5,7 +5,7 @@
 //  Created by Aleksey Yakushev on 09.07.2023.
 //
 
-import UIKit
+import Foundation
 
 public protocol WebViewViewPresenterProtocol: AnyObject {
     var view: WebViewViewControllerProtocol? { get set }
@@ -19,27 +19,15 @@ final class WebViewPresenter: WebViewViewPresenterProtocol {
     
     let authConfig = AuthConfiguration.standard
     
+    var authHelper: AuthHelperProtocol
+    
+    init(authHelper: AuthHelperProtocol = AuthHelper()) {
+        self.authHelper = authHelper
+    }
+    
     func viewDidLoad() {
-        var urlComponents: URLComponents = { guard let components = URLComponents(string: authConfig.authURLString) else { assertionFailure("Invalid Authorize URLComonents"); return URLComponents() }
-            return components }()
-        
-        urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: authConfig.accesssKey),
-            URLQueryItem(name: "redirect_uri", value: authConfig.redirectURI),
-            URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: authConfig.accessScope)
-        ]
-        let url: URL = {
-            guard let url = urlComponents.url else {
-                assertionFailure("Invalid Authorize URL")
-                return URL(string: "")!
-            }
-            return url
-        }()
-        let request = URLRequest(url: url)
-        
+        let request = authHelper.authRequest()
         view?.load(request: request)
-        
         didUpdateProgressValue(0)
     }
     
@@ -56,14 +44,6 @@ final class WebViewPresenter: WebViewViewPresenterProtocol {
     }
     
     func code(from url: URL) -> String? {
-        if let urlComponents = URLComponents(string: url.absoluteString),
-           urlComponents.path == "/oauth/authorize/native",
-           let items = urlComponents.queryItems,
-           let codeItem = items.first(where: { $0.name == "code" })
-        {
-            return codeItem.value
-        } else {
-            return nil
-        }
+        authHelper.code(from: url)
     }
 }
