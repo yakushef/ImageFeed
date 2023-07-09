@@ -17,17 +17,17 @@ public protocol WebViewViewPresenterProtocol: AnyObject {
 final class WebViewPresenter: WebViewViewPresenterProtocol {
     weak var view: WebViewViewControllerProtocol?
     
-    private let UnsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
+    let authConfig = AuthConfiguration.standard
     
     func viewDidLoad() {
-        var urlComponents: URLComponents = { guard let components = URLComponents(string: UnsplashAuthorizeURLString) else { assertionFailure("Invalid Authorize URLComonents"); return URLComponents() }
+        var urlComponents: URLComponents = { guard let components = URLComponents(string: authConfig.authURLString) else { assertionFailure("Invalid Authorize URLComonents"); return URLComponents() }
             return components }()
         
         urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: AccessKey),
-            URLQueryItem(name: "redirect_uri", value: RedirectURI),
+            URLQueryItem(name: "client_id", value: authConfig.accesssKey),
+            URLQueryItem(name: "redirect_uri", value: authConfig.redirectURI),
             URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: AccessScope)
+            URLQueryItem(name: "scope", value: authConfig.accessScope)
         ]
         let url: URL = {
             guard let url = urlComponents.url else {
