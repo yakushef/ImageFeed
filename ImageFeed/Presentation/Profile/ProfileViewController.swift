@@ -41,15 +41,15 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         
         alertPresenter = AlertPresenter(delegate: self)
         
-        // MARK: - Observer
-        NotificationCenter.default.addObserver(forName: ProfileImageService.DidChangeNotification,
-                                               object: nil, queue: .main) { [weak self] _ in
-            guard let self = self else { return }
-            self.presenter?.updateUserPic()
-        }
+        addUI()
+        configureUI()
         
-        view.backgroundColor = .ypBlack()
-        
+        presenter?.getProfileData()
+        presenter?.updateUserPic()
+    }
+    
+    // MARK: - UI Config
+    private func addUI() {
         userPicView = UIImageView()
         view.addSubview(userPicView)
         
@@ -64,16 +64,11 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         
         statusLabel = UILabel()
         view.addSubview(statusLabel)
-        
-        configureUI()
-        
-        presenter?.getProfileData()
-        presenter?.updateUserPic()
     }
     
-    // MARK: - UI Config
-    
     private func configureUI() {
+        view.backgroundColor = .ypBlack()
+        
         // MARK: - userpic
         userPicView.backgroundColor = .ypWhite()
         userPicView.image = UIImage(named: "ProfilePlaceholder") ?? UIImage()

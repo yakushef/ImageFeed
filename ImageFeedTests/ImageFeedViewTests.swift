@@ -42,7 +42,7 @@ final class WebViewVCSpy: WebViewViewControllerProtocol {
     }
 }
 
-final class ImageFeedTests: XCTestCase {
+final class ImageFeedWebViewTests: XCTestCase {
     
     func testViewControllerCallsViewDidLoad() {
         //given

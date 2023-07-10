@@ -25,6 +25,13 @@ final class ProfileViewPresenter: ProfileViewPresenterProtocol {
     
     init(logoutHelper: LogoutHelperProtocol = LogoutHelper()) {
         self.logoutHelper = logoutHelper
+        
+        // MARK: - Observer
+        NotificationCenter.default.addObserver(forName: ProfileImageService.DidChangeNotification,
+                                               object: nil, queue: .main) { [weak self] _ in
+            guard let self = self else { return }
+                self.updateUserPic()
+        }
     }
     
     // MARK: - Profile Info
