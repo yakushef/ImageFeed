@@ -8,7 +8,15 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+protocol ProfileViewControllerProtocol: AnyObject {
+    var presenter: ProfileViewPresenterProtocol? { get set }
+    
+    func updateProfileInfo(for profile: Profile)
+    func updateUserPic(with imageURL: URL, placeholder: UIImage)
+}
+
+final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
+    var presenter: ProfileViewPresenterProtocol?
     
     private var userPicView: UIImageView!
     private var logoutButton: UIButton!
@@ -16,19 +24,15 @@ final class ProfileViewController: UIViewController {
     private var usernameLabel: UILabel!
     private var statusLabel: UILabel!
     
-    private let profileService = ProfileService.shared
-    
     private var alertPresenter: AlertPresenterProtocol!
-    
-    private var currentProfile: Profile = Profile(username: "", firstName: "", lastName: "", bio: "")
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
     }
     
+    // MARK: - Lifecycle
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         setNeedsStatusBarAppearanceUpdate()
     }
     
@@ -37,10 +41,11 @@ final class ProfileViewController: UIViewController {
         
         alertPresenter = AlertPresenter(delegate: self)
         
+        // MARK: - Observer
         NotificationCenter.default.addObserver(forName: ProfileImageService.DidChangeNotification,
                                                object: nil, queue: .main) { [weak self] _ in
             guard let self = self else { return }
-            self.updateUserPic()
+            self.presenter?.updateUserPic()
         }
         
         view.backgroundColor = .ypBlack()
@@ -61,21 +66,12 @@ final class ProfileViewController: UIViewController {
         view.addSubview(statusLabel)
         
         configureUI()
-        getProfileData()
         
-        updateUserPic()
+        presenter?.getProfileData()
+        presenter?.updateUserPic()
     }
     
-    
-    private func getProfileData() {
-        guard let profile = profileService.profile else { return }
-        
-        currentProfile = profile
-        
-        fullNameLabel.text = currentProfile.name
-        usernameLabel.text = currentProfile.loginName
-        statusLabel.text = currentProfile.bio
-    }
+    // MARK: - UI Config
     
     private func configureUI() {
         // MARK: - userpic
@@ -104,7 +100,7 @@ final class ProfileViewController: UIViewController {
         logoutButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -12).isActive = true
         
         // MARK: - full name label
-        fullNameLabel.text = "Екатерина Новикова"
+        fullNameLabel.text = "..."
         fullNameLabel.font = UIFont.systemFont(ofSize: 23, weight: .semibold)
         fullNameLabel.textColor = .ypWhite()
         fullNameLabel.numberOfLines = 0
@@ -116,7 +112,7 @@ final class ProfileViewController: UIViewController {
         
         // MARK: - username label
         
-        usernameLabel.text = "@ekaterina_nov"
+        usernameLabel.text = "@..."
         usernameLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         usernameLabel.textColor = .ypGrey()
         fullNameLabel.numberOfLines = 0
@@ -127,7 +123,7 @@ final class ProfileViewController: UIViewController {
         usernameLabel.trailingAnchor.constraint(equalTo: fullNameLabel.trailingAnchor).isActive = true
         
         // MARK: - status label
-        statusLabel.text = "Hello, world!"
+        statusLabel.text = "..."
         statusLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         statusLabel.textColor = .ypWhite()
         fullNameLabel.numberOfLines = 0
@@ -138,34 +134,27 @@ final class ProfileViewController: UIViewController {
         statusLabel.trailingAnchor.constraint(equalTo: fullNameLabel.trailingAnchor).isActive = true
     }
     
-    // MARK: - Logout
+    // MARK: - info update
     
-    private func logout() {
-        let splashVC = SplashViewController()
-        guard let window = UIApplication.shared.windows.first else {
-            fatalError("Invalid window config")
-        }
-        
-        profileService.clean()
-        OAuth2TokenStorage().clearTokenStorage()
-        
-        window.rootViewController = splashVC
-        window.makeKeyAndVisible()
-        
-        UIView.transition(with: window,
-                          duration: 0.1,
-                          options: [.transitionCrossDissolve,
-                                    .overrideInheritedOptions,
-                                    .curveEaseIn],
-                          animations: nil)
+    func updateProfileInfo(for profile: Profile) {
+        fullNameLabel.text = profile.name
+        usernameLabel.text = profile.loginName
+        statusLabel.text = profile.bio
     }
-
+    
+    func updateUserPic(with imageURL: URL, placeholder: UIImage) {
+        userPicView.kf.setImage(with: imageURL,
+                                placeholder: placeholder,
+                                options: [.transition(.fade(0.5))])
+    }
+    
+    // MARK: - Logout
     
     @objc private func logoutButtonTapped() {
         let logoutAlert = UIAlertController(title: "Пока, пока!", message: "Уверены что хотите выйти?", preferredStyle: .alert)
         let yesAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
             guard let self = self else { return }
-            self.logout()
+            self.presenter?.logout()
         }
         let noAction = UIAlertAction(title: "Нет", style: .cancel) { [weak self] _ in
             guard let self = self else { return }
@@ -174,17 +163,6 @@ final class ProfileViewController: UIViewController {
         logoutAlert.addAction(noAction)
         logoutAlert.addAction(yesAction)
         alertPresenter.presentAlert(alert: logoutAlert)
-    }
-}
-
-// MARK: - Observer
-extension ProfileViewController {
-    private func updateUserPic() {
-        guard let imageURL = ProfileImageService.shared.imageURL else { return }
-        let placeholder = UIImage(named: "ProfilePlaceholder") ?? UIImage()
-        userPicView.kf.setImage(with: imageURL,
-                                placeholder: placeholder,
-                                options: [.transition(.fade(0.5))])
     }
 }
 

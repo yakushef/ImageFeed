@@ -18,14 +18,17 @@ final class TabBarController: UITabBarController {
             withIdentifier: "ImagesListViewController"
         )
             
-        let profileViewController = ProfileViewController()
-        profileViewController.tabBarItem = UITabBarItem(
+        let profileVC = ProfileViewController()
+        let profileVP = ProfileViewPresenter()
+        profileVP.profileVC = profileVC
+        profileVC.presenter = profileVP
+        profileVC.tabBarItem = UITabBarItem(
                     title: "",
                     image: UIImage(named: "Active"),
                     selectedImage: nil
                 )
            
-       self.viewControllers = [imagesListViewController, profileViewController]
+       self.viewControllers = [imagesListViewController, profileVC]
         
        }
 
