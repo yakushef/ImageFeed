@@ -8,9 +8,27 @@
 import UIKit
 import Kingfisher
 
-final class ImagesListViewController: UIViewController {
+protocol ImageListViewControllerProtocol {
+    var presenter: ImageListViewPresenterProtocol? { get set }
+    
+    func addCells()
+    func presentAlert()
+}
+
+final class ImagesListViewController: UIViewController & ImageListViewControllerProtocol {
+    
+    func addCells() {
+        
+    }
+    
+    func presentAlert() {
+        
+    }
+    
 
     @IBOutlet private weak var tableView: UITableView!
+    
+    var presenter: ImageListViewPresenterProtocol?
     
     private let ShowSingleImageSegueIdentifier = "ShowSingleImage"
     private let imageService = ImagesListService.shared
@@ -160,8 +178,6 @@ extension ImagesListViewController: UITableViewDelegate {
         performSegue(withIdentifier: ShowSingleImageSegueIdentifier, sender: indexPath)
     }
     
-
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
@@ -215,5 +231,4 @@ extension ImagesListViewController: AlertPresenterDelegate {
     func show(alert: UIAlertController) {
         present(alert, animated: true)
     }
-    
 }

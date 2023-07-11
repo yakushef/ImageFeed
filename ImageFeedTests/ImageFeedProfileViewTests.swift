@@ -8,6 +8,10 @@
 import XCTest
 
 final class ImageFeedProfileViewTests: XCTestCase {
+    // helper logout is called
+    
+    //        presenter?.getProfileData()
+//    presenter?.updateUserPic()
     
 }
 
