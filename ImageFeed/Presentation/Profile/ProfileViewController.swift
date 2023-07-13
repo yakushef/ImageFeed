@@ -48,6 +48,13 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         presenter?.updateUserPic()
     }
     
+    //MARK: - Presenter config
+    
+    func configure(_ presenter: ProfileViewPresenterProtocol) {
+        self.presenter = presenter
+        presenter.profileVC = self
+    }
+    
     // MARK: - UI Config
     private func addUI() {
         userPicView = UIImageView()

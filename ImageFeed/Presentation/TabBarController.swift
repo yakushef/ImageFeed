@@ -19,14 +19,10 @@ final class TabBarController: UITabBarController {
         ) as? ImagesListViewController else {
             fatalError("Cannot instantiate ImagesListVC")
         }
-        let imageListVP = ImageListViewPresenter()
-        imageListVP.imageListVC = imagesListVC
-        imagesListVC.presenter = imageListVP
+        imagesListVC.configure(ImageListViewPresenter())
             
         let profileVC = ProfileViewController()
-        let profileVP = ProfileViewPresenter()
-        profileVP.profileVC = profileVC
-        profileVC.presenter = profileVP
+        profileVC.configure(ProfileViewPresenter())
         profileVC.tabBarItem = UITabBarItem(
                     title: "",
                     image: UIImage(named: "Active"),

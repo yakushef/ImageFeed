@@ -19,14 +19,6 @@ protocol ImageListViewControllerProtocol: AnyObject {
 
 final class ImagesListViewController: UIViewController & ImageListViewControllerProtocol {
     
-    func goToFullScreenView(senderIndexPath: IndexPath) {
-        performSegue(withIdentifier: ShowSingleImageSegueIdentifier, sender: senderIndexPath)
-    }
-    
-    func updateRow(at indexPath: IndexPath) {
-        tableView.reloadRows(at: [indexPath], with: .automatic)
-    }
-
     @IBOutlet private weak var tableView: UITableView!
     
     var presenter: ImageListViewPresenterProtocol?
@@ -38,13 +30,8 @@ final class ImagesListViewController: UIViewController & ImageListViewController
         .lightContent
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        setNeedsStatusBarAppearanceUpdate()
-    }
-    
     // MARK: Segue
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == ShowSingleImageSegueIdentifier {
             guard let viewController = segue.destination as? SingleImageViewController,
@@ -59,6 +46,13 @@ final class ImagesListViewController: UIViewController & ImageListViewController
     }
     
     // MARK: Lifecycle
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setNeedsStatusBarAppearanceUpdate()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -79,6 +73,22 @@ final class ImagesListViewController: UIViewController & ImageListViewController
         presenter?.fetchNextPageIfShould(fromIndex: nil)
     }
     
+    //MARK: - Presenter config
+    
+    func configure(_ presenter: ImageListViewPresenterProtocol) {
+        self.presenter = presenter
+        presenter.imageListVC = self
+    }
+    
+    //MARK: - Table View interaction
+    
+    func goToFullScreenView(senderIndexPath: IndexPath) {
+        performSegue(withIdentifier: ShowSingleImageSegueIdentifier, sender: senderIndexPath)
+    }
+    
+    func updateRow(at indexPath: IndexPath) {
+        tableView.reloadRows(at: [indexPath], with: .automatic)
+    }
     
     func addCells(newCellsCount: Int) {
         let currentRowNumber = tableView.numberOfRows(inSection: 0) - 1
@@ -92,7 +102,6 @@ final class ImagesListViewController: UIViewController & ImageListViewController
         }
     }
 
-    
     // MARK: - Prepare Alert
     
     func showAlert(with message: String) {
@@ -105,46 +114,6 @@ final class ImagesListViewController: UIViewController & ImageListViewController
         })
     }
 }
-
-// MARK: - UITableView
-
-extension ImagesListViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        performSegue(withIdentifier: ShowSingleImageSegueIdentifier, sender: indexPath)
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
-    }
-}
-
-// MARK: - Cell Delegate
-
-//extension ImagesListViewController: ImageListCellDelegate {
-//    func processLike(photoIndex: Int) {
-//        UIBlockingProgressHUD.show()
-//        
-//        presenter?.processLike(photoIndex: photoIndex)
-//        
-//        let photo = photos[photoIndex]
-//        imageService.changeLike(photoId: photo.id,
-//                                isLike: !photo.isLiked) {[weak self] (result: Result<Void, Error>) in
-//            guard let self = self else { return }
-//
-//            switch result {
-//            case .success():
-//                self.photos = imageService.photos
-//                guard let cell = self.tableView.cellForRow(at: IndexPath(row: photoIndex, section: 0)) as? ImagesListCell else { return }
-//                cell.likeButton.isSelected = self.photos[photoIndex].isLiked
-//                UIBlockingProgressHUD.dismiss()
-//            case .failure(let error):
-//                UIBlockingProgressHUD.dismiss()
-//                showAlert(with: "Не получилось изменить лайк \(error.localizedDescription)")
-//            }
-//        }
-//    }
-//}
 
 extension ImagesListViewController: AlertPresenterDelegate {
     

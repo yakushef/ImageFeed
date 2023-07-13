@@ -20,12 +20,7 @@ final class ImageListTableViewAdaper: UITableViewAdapter & NSObject {
     init(presenter: ImageListViewPresenterProtocol) {
         self.presenter = presenter
     }
-    
-    func configTable(_ table: UITableView) {
-        table.dataSource = self
-        table.delegate = self
-    }
-    
+
     //MARK: Cell Congiguration
     
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
@@ -57,6 +52,13 @@ final class ImageListTableViewAdaper: UITableViewAdapter & NSObject {
             }
         }
     }
+    
+    // MARK: - Table View
+    
+    func configTable(_ table: UITableView) {
+        table.dataSource = self
+        table.delegate = self
+    }
 }
 
 extension ImageListTableViewAdaper: UITableViewDataSource {
@@ -67,11 +69,9 @@ extension ImageListTableViewAdaper: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier,
                                                  for: indexPath)
-
         guard let imageListCell = cell as? ImagesListCell else {
             return UITableViewCell()
         }
-
         configCell(for: imageListCell, with: indexPath)
 
         return imageListCell
@@ -88,6 +88,8 @@ extension ImageListTableViewAdaper: UITableViewDelegate {
         return UITableView.automaticDimension
     }
 }
+
+// MARK: - Cell Delegate
 
 extension ImageListTableViewAdaper: ImageListCellDelegate {
     func processLike(for cell: ImagesListCell) {

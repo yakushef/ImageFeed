@@ -17,22 +17,13 @@ protocol ImageListViewPresenterProtocol: AnyObject {
     func getPhoto(withIndex index: Int) -> Photo
     func getFullSizeUrl(forIndex index: Int) -> String?
     func getCurrentPhotoCount() -> Int
+    func convertDate(_ date: String?) -> String
     
     func processLike(for cell: ImagesListCell)
     func fetchNextPageIfShould(fromIndex index: Int?)
-    
-    func convertDate(_ date: String?) -> String
 }
 
 final class ImageListViewPresenter: ImageListViewPresenterProtocol {
-    func didSelectRow(at indexPath: IndexPath) {
-        imageListVC?.goToFullScreenView(senderIndexPath: indexPath)
-    }
-    
-    func updateRow(at indexPath: IndexPath) {
-        imageListVC?.updateRow(at: indexPath)
-    }
-    
     var imageListTableAdapter: UITableViewAdapter?
     var imageListVC: ImageListViewControllerProtocol?
 
@@ -49,8 +40,9 @@ final class ImageListViewPresenter: ImageListViewPresenterProtocol {
     }()
     
     init() {
-
         self.imageListTableAdapter = ImageListTableViewAdaper(presenter: self)
+        
+        //MARK: - Notifications
         
         NotificationCenter.default.addObserver(
             forName: ImagesListService.ErrorNotification,
@@ -72,6 +64,22 @@ final class ImageListViewPresenter: ImageListViewPresenterProtocol {
                 imageListVC?.addCells(newCellsCount: newCellsCount)
             }
     }
+}
+
+extension ImageListViewPresenter {
+    
+    //MARK: - Date formatters
+    
+    func convertDate(_ date: String?) -> String {
+        var newDateString = ""
+        if  let date,
+            let photoDate = photoDateFormatter.date(from: date) {
+            newDateString = listDateFormatter.string(from: photoDate)
+        }
+        return newDateString
+    }
+    
+    //MARK: - Photo array interaction
     
     func fetchNextPageIfShould(fromIndex index: Int? = nil) {
         guard let index else {
@@ -82,18 +90,6 @@ final class ImageListViewPresenter: ImageListViewPresenterProtocol {
             imageService.fetchPhotosNextPage()
         }
     }
-    
-    func convertDate(_ date: String?) -> String {
-        var newDateString = ""
-        if  let date,
-            let photoDate = photoDateFormatter.date(from: date) {
-            newDateString = listDateFormatter.string(from: photoDate)
-        }
-        return newDateString
-    }
-}
-
-extension ImageListViewPresenter {
     
     func getCurrentPhotoCount() -> Int {
         return photos.count
@@ -107,7 +103,18 @@ extension ImageListViewPresenter {
         return photos[index]
     }
     
+    //MARK: - UITableView interaction
+    
+    func didSelectRow(at indexPath: IndexPath) {
+        imageListVC?.goToFullScreenView(senderIndexPath: indexPath)
+    }
+    
+    func updateRow(at indexPath: IndexPath) {
+        imageListVC?.updateRow(at: indexPath)
+    }
+    
     func processLike(for cell: ImagesListCell) {
+        UIBlockingProgressHUD.show()
         guard let photoIndex = cell.getIndexPath()?.row else { return }
         let photo = photos[photoIndex]
         
@@ -118,7 +125,6 @@ extension ImageListViewPresenter {
             switch result {
             case .success():
                 self.photos = imageService.photos
-//                guard let cell = self.tableView.cellForRow(at: IndexPath(row: photoIndex, section: 0)) as? ImagesListCell else { return }
                 cell.likeButton.isSelected = self.photos[photoIndex].isLiked
                 UIBlockingProgressHUD.dismiss()
             case .failure(let error):
