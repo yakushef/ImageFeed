@@ -9,7 +9,7 @@ import UIKit
 import Kingfisher
 
 protocol ImageListCellDelegate: AnyObject {
-    func processLike(photoIndex: Int)
+    func processLike(for cell: ImagesListCell)
 }
 
 final class ImagesListCell: UITableViewCell {
@@ -38,7 +38,6 @@ final class ImagesListCell: UITableViewCell {
     }
     
     @IBAction func likeButtonTapped() {
-        guard let indexPath = getIndexPath() else { return }
-        delegate?.processLike(photoIndex: indexPath.row)
+        delegate?.processLike(for: self)
     }
 }

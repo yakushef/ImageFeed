@@ -14,9 +14,14 @@ final class TabBarController: UITabBarController {
         
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
     
-        let imagesListViewController = storyboard.instantiateViewController(
+        guard let imagesListVC = storyboard.instantiateViewController(
             withIdentifier: "ImagesListViewController"
-        )
+        ) as? ImagesListViewController else {
+            fatalError("Cannot instantiate ImagesListVC")
+        }
+        let imageListVP = ImageListViewPresenter()
+        imageListVP.imageListVC = imagesListVC
+        imagesListVC.presenter = imageListVP
             
         let profileVC = ProfileViewController()
         let profileVP = ProfileViewPresenter()
@@ -28,8 +33,6 @@ final class TabBarController: UITabBarController {
                     selectedImage: nil
                 )
            
-       self.viewControllers = [imagesListViewController, profileVC]
-        
+       self.viewControllers = [imagesListVC, profileVC]
        }
-
 }
