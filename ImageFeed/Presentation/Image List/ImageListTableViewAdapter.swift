@@ -47,21 +47,11 @@ final class ImageListTableViewAdaper: UITableViewAdapterProtocol & NSObject {
         guard let imageURL = URL(string: photo.thumbImageURL)
         else { return }
         
-        let placeholder = UIImage(named: "PhotoLoader") ?? UIImage()
-        cell.cellImage.kf.setImage(with: imageURL,
-                                   placeholder: placeholder
-            .kf
-            .resize(to: displaySize,
-                    for: .none))
-        { [weak self] didLoad in
-            guard let self = self else { return }
-            switch didLoad {
-            case .success(_):
-                cell.removeGradient()
-            case .failure(_):
-                return
-            }
-        }
+        
+        //        { [weak self] didLoad in
+        //            guard let self = self else { return }
+        
+        cell.loadImage(from: imageURL, displaySize: displaySize)
     }
     
     // MARK: - Table View

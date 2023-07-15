@@ -24,6 +24,8 @@ final class ImagesListCell: UITableViewCell {
     private var gradient: CAGradientLayer!
     private var usernameGradient: CAGradientLayer!
     
+//    private var imageURL: URL?
+    
     static let reuseIdentifier = "ImagesListCell"
     
     override func prepareForReuse() {
@@ -34,10 +36,39 @@ final class ImagesListCell: UITableViewCell {
 //        cellImage.heightAnchor.constraint(equalToConstant: 0).isActive = false
     }
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
+//    override func awakeFromNib() {
+//        let cache = ImageCache.default
+//        let cached = cache.isCached(forKey: imageURL?.absoluteString ?? "")
+//        guard let _ = gradient?.superlayer else {
+//            return
+//        }
+//        if cached {
+//            removeGradient()
+//        } else {
+//            
+//        }
+//    }
+    
+    func loadImage(from url: URL, displaySize: CGSize) {
+//        imageURL = url
+        self.isUserInteractionEnabled = false
         
-//        addGradient(ofSize: cellImage.image?.size ?? cellImage.frame.size)
+        let placeholder = UIImage(named: "PhotoLoader") ?? UIImage()
+        cellImage.kf.setImage(with: url,
+                                   placeholder: placeholder
+            .kf
+            .resize(to: displaySize,
+                    for: .none)) { [weak self] didLoad in
+            guard let self else { return }
+            
+            switch didLoad {
+            case .success(_):
+                self.removeGradient()
+                self.isUserInteractionEnabled = true
+            case .failure(_):
+                return
+            }
+        }
     }
     
     func addGradient(ofSize size: CGSize) {
@@ -45,6 +76,7 @@ final class ImagesListCell: UITableViewCell {
         
         animationLayers.append(gradient)
         cellImage.layer.addSublayer(gradient)
+        
         let gradientChangeAnimation = CABasicAnimation(keyPath: "locations")
         gradientChangeAnimation.duration = 1.5
         gradientChangeAnimation.repeatCount = .infinity
@@ -65,6 +97,7 @@ final class ImagesListCell: UITableViewCell {
         gradient.startPoint = CGPoint(x: 0, y: 0.5)
         gradient.endPoint = CGPoint(x: 1, y: 0.5)
         gradient.masksToBounds = true
+        
         return gradient
     }
     

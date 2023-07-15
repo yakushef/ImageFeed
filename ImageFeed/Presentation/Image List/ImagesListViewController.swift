@@ -49,7 +49,6 @@ final class ImagesListViewController: UIViewController & ImageListViewController
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         setNeedsStatusBarAppearanceUpdate()
     }
     
