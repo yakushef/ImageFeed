@@ -50,6 +50,11 @@ final class ImagesListViewController: UIViewController & ImageListViewController
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNeedsStatusBarAppearanceUpdate()
+        
+        for cell in tableView.visibleCells {
+            guard let cell = cell as? ImagesListCell else { return }
+            cell.restartAnimations()
+        }
     }
     
     override func viewDidLoad() {

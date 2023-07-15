@@ -22,9 +22,11 @@ final class ImagesListCell: UITableViewCell {
     
     private var animationLayers = [CALayer]()
     private var gradient: CAGradientLayer!
+    private var gradientAnimation: CABasicAnimation!
     private var usernameGradient: CAGradientLayer!
     
-//    private var imageURL: URL?
+    var urlString = ""
+    var displaySize = CGSize(width: 0, height: 0)
     
     static let reuseIdentifier = "ImagesListCell"
     
@@ -32,46 +34,52 @@ final class ImagesListCell: UITableViewCell {
         super.prepareForReuse()
         
         cellImage.kf.cancelDownloadTask()
-//        cellImage.image = nil
-//        cellImage.heightAnchor.constraint(equalToConstant: 0).isActive = false
+        cellImage.image = nil
+        urlString = ""
+        gradient?.removeFromSuperlayer()
+        gradient = nil
+        
+        urlString = ""
+        displaySize = CGSize(width: 0, height: 0)
     }
     
-//    override func awakeFromNib() {
-//        let cache = ImageCache.default
-//        let cached = cache.isCached(forKey: imageURL?.absoluteString ?? "")
-//        guard let _ = gradient?.superlayer else {
-//            return
-//        }
-//        if cached {
-//            removeGradient()
-//        } else {
-//            
-//        }
-//    }
-    
     func loadImage(from url: URL, displaySize: CGSize) {
-//        imageURL = url
         self.isUserInteractionEnabled = false
         
         let placeholder = UIImage(named: "PhotoLoader") ?? UIImage()
+        let resizer = ResizingImageProcessor(referenceSize: displaySize)
         cellImage.kf.setImage(with: url,
-                                   placeholder: placeholder
-            .kf
-            .resize(to: displaySize,
-                    for: .none)) { [weak self] didLoad in
+                              placeholder: placeholder.kf.resize(to: displaySize,for: .none), options: [.transition(.none), .processor(resizer)]) { [weak self] didLoad in
             guard let self else { return }
             
             switch didLoad {
-            case .success(_):
-                self.removeGradient()
-                self.isUserInteractionEnabled = true
+            case .success(let value):
+                if value.image == cellImage.image {
+                    self.removeGradient()
+                    self.isUserInteractionEnabled = true
+                }
             case .failure(_):
                 return
             }
         }
     }
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        restartAnimations()
+    }
+    
+    func restartAnimations() {
+        
+        gradient?.add(gradientAnimation, forKey: "locationsChange")
+           
+        addGradient(ofSize: displaySize)
+            guard let url = URL(string: urlString) else { return }
+            loadImage(from: url, displaySize: displaySize)
+    }
+    
     func addGradient(ofSize size: CGSize) {
+        gradient?.removeFromSuperlayer()
         gradient = configureGradient(ofSize: size)
         
         animationLayers.append(gradient)
@@ -82,6 +90,7 @@ final class ImagesListCell: UITableViewCell {
         gradientChangeAnimation.repeatCount = .infinity
         gradientChangeAnimation.fromValue = [-2, -1, 0]
         gradientChangeAnimation.toValue = [1, 2, 3]
+        gradientAnimation = gradientChangeAnimation
         gradient.add(gradientChangeAnimation, forKey: "locationsChange")
     }
     

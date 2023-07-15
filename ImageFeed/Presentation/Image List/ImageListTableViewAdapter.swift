@@ -42,16 +42,9 @@ final class ImageListTableViewAdaper: UITableViewAdapterProtocol & NSObject {
         let scaleFactor = photo.size.width / cell.cellImage.frame.size.width
         let displaySize: CGSize = CGSize(width: photo.size.width / scaleFactor, height: photo.size.height / scaleFactor)
         
-        cell.addGradient(ofSize: displaySize)
-        
-        guard let imageURL = URL(string: photo.thumbImageURL)
-        else { return }
-        
-        
-        //        { [weak self] didLoad in
-        //            guard let self = self else { return }
-        
-        cell.loadImage(from: imageURL, displaySize: displaySize)
+        cell.displaySize = displaySize
+        cell.urlString = photo.thumbImageURL
+        cell.restartAnimations()
     }
     
     // MARK: - Table View
@@ -80,6 +73,11 @@ extension ImageListTableViewAdaper: UITableViewDataSource {
 }
 
 extension ImageListTableViewAdaper: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let cell = cell as? ImagesListCell else { return }
+        cell.restartAnimations()
+    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         presenter.didSelectRow(at: indexPath)

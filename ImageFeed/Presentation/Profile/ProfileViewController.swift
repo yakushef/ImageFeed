@@ -28,6 +28,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     
     private var animationLayers = [CALayer]()
     private var gradient: CAGradientLayer!
+    private var gradientAnimation: CABasicAnimation!
     private var usernameGradient: CAGradientLayer!
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -38,6 +39,8 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNeedsStatusBarAppearanceUpdate()
+        
+        gradient.add(gradientAnimation, forKey: "locationsChange")
     }
     
     override func viewDidLoad() {
@@ -48,6 +51,9 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         addUI()
         configureUI()
         
+        gradient = configureGradient(ofSize: CGSize(width: 70, height: 70))
+        configureAnimation(for: gradient, in: userPicView)
+        
         presenter?.getProfileData()
         presenter?.updateUserPic()
     }
@@ -57,6 +63,34 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     func configure(_ presenter: ProfileViewPresenterProtocol) {
         self.presenter = presenter
         presenter.profileVC = self
+    }
+    
+    func configureAnimation(for gradient: CAGradientLayer, in view: UIView) {
+        animationLayers.append(gradient)
+        view.layer.addSublayer(gradient)
+        let gradientChangeAnimation = CABasicAnimation(keyPath: "locations")
+        gradientChangeAnimation.duration = 1.5
+        gradientChangeAnimation.repeatCount = .infinity
+        gradientChangeAnimation.fromValue = [-2, -1, 0]
+        gradientChangeAnimation.toValue = [1, 2, 3]
+        gradientAnimation = gradientChangeAnimation
+        gradient.add(gradientChangeAnimation, forKey: "locationsChange")
+    }
+    
+    func configureGradient(ofSize size: CGSize) -> CAGradientLayer {
+        let gradient = CAGradientLayer()
+        gradient.frame = CGRect(origin: .zero, size: size)
+        gradient.locations = [-0.01, 0.25, 0.5]
+        gradient.colors = [
+            UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor,
+            UIColor(red: 0.431, green: 0.433, blue: 0.453, alpha: 1).cgColor,
+            UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor
+        ]
+        gradient.startPoint = CGPoint(x: 0, y: 0.5)
+        gradient.endPoint = CGPoint(x: 1, y: 0.5)
+        gradient.cornerRadius = size.height / 2
+        gradient.masksToBounds = true
+        return gradient
     }
     
     // MARK: - UI Config
@@ -151,7 +185,18 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     func updateUserPic(with imageURL: URL, placeholder: UIImage) {
         userPicView.kf.setImage(with: imageURL,
                                 placeholder: placeholder,
-                                options: [.transition(.fade(0.5))])
+                                options: [.transition(.fade(0.5))]) { [weak self] _ in
+            guard let self else { return }
+            UIView.transition(with: self.userPicView,
+                              duration: 0.5,
+                              options: .transitionCrossDissolve,
+                              animations: {
+                self.gradient.isHidden = true
+            },
+                              completion: { _ in
+                self.gradient.removeFromSuperlayer()
+            })
+        }
     }
     
     // MARK: - Logout
