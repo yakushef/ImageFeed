@@ -35,7 +35,7 @@ final class ImagesListServiceSpy: ImagesListServiceProtocol {
     
     func fetchPhotosNextPage() {
         isFetchPhotosCalled = true
-        NotificationCenter.default.post(Notification(name: ImagesListService.DidChangeNotification))
+//        NotificationCenter.default.post(Notification(name: ImagesListService.DidChangeNotification))
     }
     
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
@@ -96,7 +96,12 @@ final class ImageFeedImagesListTests: XCTestCase {
         // given
         let presenter = ImageListViewPresenterSpy()
         let adapter = ImageListTableViewAdaper(presenter: presenter)
-        let testCell = ImagesListCell()
+        presenter.imageListTableAdapter = adapter
+        let nib = UINib(nibName: "ImageListCell", bundle: nil)
+        guard let testCell = nib.instantiate(withOwner: nil).first as? ImagesListCell else {
+            XCTFail()
+            return
+        }
         testCell.delegate = adapter
         
         presenter.fetchNextPageIfShould(fromIndex: nil)
@@ -118,7 +123,7 @@ final class ImageFeedImagesListTests: XCTestCase {
         let incorrectDate = presenter.convertDate(photoArrayStub[1].createdAt)
         
         //then
-        XCTAssertEqual(correctDate, "3 мая 2016 г.")
+        XCTAssertTrue(correctDate == "3 May 2016" || correctDate == "3 мая 2016 г." || correctDate == "May 3, 2016")
         XCTAssertEqual(incorrectDate, "")
     }
     

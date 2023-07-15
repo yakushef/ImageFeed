@@ -8,13 +8,13 @@
 import XCTest
 
 final class ProfileViewPresenterSpy: ProfileViewPresenterProtocol {
+    func updateProfileData() {
+        isGetProfileDataCalled = true
+    }
+    
     var profileVC: ImageFeed.ProfileViewControllerProtocol?
     var isGetProfileDataCalled = false
     var isUpdateUserPicCalled = false
-    
-    func getProfileData() {
-        isGetProfileDataCalled = true
-    }
     
     func updateUserPic() {
         isUpdateUserPicCalled = true
