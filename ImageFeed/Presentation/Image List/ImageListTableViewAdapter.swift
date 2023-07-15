@@ -39,14 +39,25 @@ final class ImageListTableViewAdaper: UITableViewAdapterProtocol & NSObject {
         cell.likeButton.setImage(UIImage(named: "likeButtonActive"), for: .selected)
         cell.likeButton.setImage(UIImage(named: "likeButtonInactive"), for: .normal)
         
+        let scaleFactor = photo.size.width / cell.cellImage.frame.size.width
+        let displaySize: CGSize = CGSize(width: photo.size.width / scaleFactor, height: photo.size.height / scaleFactor)
+        
+        cell.addGradient(ofSize: displaySize)
+        
         guard let imageURL = URL(string: photo.thumbImageURL)
         else { return }
         
-        cell.cellImage.kf.setImage(with: imageURL, placeholder: UIImage(named: "PhotoLoaderFull")) { [weak self] didLoad in
+        let placeholder = UIImage(named: "PhotoLoader") ?? UIImage()
+        cell.cellImage.kf.setImage(with: imageURL,
+                                   placeholder: placeholder
+            .kf
+            .resize(to: displaySize,
+                    for: .none))
+        { [weak self] didLoad in
             guard let self = self else { return }
             switch didLoad {
             case .success(_):
-                self.presenter.updateRow(at: indexPath)
+                cell.removeGradient()
             case .failure(_):
                 return
             }
@@ -73,7 +84,7 @@ extension ImageListTableViewAdaper: UITableViewDataSource {
             return UITableViewCell()
         }
         configCell(for: imageListCell, with: indexPath)
-
+        
         return imageListCell
     }
 }

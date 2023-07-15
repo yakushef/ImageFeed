@@ -65,7 +65,7 @@ struct Photo {
     init(id: String, size: CGSize, createdAt: String?, welcomeDescription: String?, thumbImageURL: String, largeImageURL: String?, isLiked: Bool) {
         self.id = id
         self.size = size
-        self.aspectRatio = size.width / size.height
+        self.aspectRatio = size.height / size.width
         self.createdAt = createdAt
         self.welcomeDescription = welcomeDescription
         self.thumbImageURL = thumbImageURL

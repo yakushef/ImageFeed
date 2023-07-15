@@ -26,6 +26,10 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     
     private var alertPresenter: AlertPresenterProtocol!
     
+    private var animationLayers = [CALayer]()
+    private var gradient: CAGradientLayer!
+    private var usernameGradient: CAGradientLayer!
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
     }

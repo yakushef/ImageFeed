@@ -130,7 +130,7 @@ extension ImageListViewPresenter {
     //MARK: - Like
     
     func processLike(for cell: ImagesListCell) {
-        UIBlockingProgressHUD.show()
+//        UIBlockingProgressHUD.show()
         guard let photoIndex = cell.getIndexPath()?.row else { return }
         let photo = photos[photoIndex]
         
@@ -142,10 +142,11 @@ extension ImageListViewPresenter {
             case .success():
                 self.photos = imageService.photos
                 cell.changeLikeButtonStatus(liked: self.photos[photoIndex].isLiked)
-                UIBlockingProgressHUD.dismiss()
+//                UIBlockingProgressHUD.dismiss()
             case .failure(let error):
-                UIBlockingProgressHUD.dismiss()
-                    imageListVC?.showAlert(with: "Не получилось изменить лайк \(error.localizedDescription)")
+//                UIBlockingProgressHUD.dismiss()
+                cell.changeLikeButtonStatus(liked: self.photos[photoIndex].isLiked)
+                imageListVC?.showAlert(with: "Не получилось изменить лайк \(error.localizedDescription)")
             }
         }
     }
