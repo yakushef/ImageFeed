@@ -51,15 +51,14 @@ final class ImagesListCell: UITableViewCell {
         cellImage.kf.setImage(with: url,
                               placeholder: placeholder.kf.resize(to: displaySize,for: .none), options: [.transition(.none), .processor(resizer)]) { [weak self] didLoad in
             guard let self else { return }
-            
             switch didLoad {
-            case .success(let value):
-                if value.image == cellImage.image {
+            case .success(_):
                     self.removeGradient()
                     self.isUserInteractionEnabled = true
-                }
             case .failure(_):
-                return
+                self.cellImage.image = UIImage(named: "PhotoLoader") ?? UIImage()
+                self.cellImage.contentMode = .center
+                self.removeGradient()
             }
         }
     }

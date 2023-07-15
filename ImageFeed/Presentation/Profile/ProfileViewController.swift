@@ -28,6 +28,9 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     
     private var animationLayers = [CALayer]()
     private var gradient: CAGradientLayer!
+    private var topGradient: CAGradientLayer!
+    private var midGradient: CAGradientLayer!
+    private var bottomGradient: CAGradientLayer!
     private var gradientAnimation: CABasicAnimation!
     private var usernameGradient: CAGradientLayer!
     
@@ -41,20 +44,26 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         setNeedsStatusBarAppearanceUpdate()
         
         gradient.add(gradientAnimation, forKey: "locationsChange")
+        topGradient.add(gradientAnimation, forKey: "locationsChange")
+        bottomGradient.add(gradientAnimation, forKey: "locationsChange")
+        midGradient.add(gradientAnimation, forKey: "locationsChange")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         alertPresenter = AlertPresenter(delegate: self)
-        
+                
         addUI()
         configureUI()
+
         
         gradient = configureGradient(ofSize: CGSize(width: 70, height: 70))
         configureAnimation(for: gradient, in: userPicView)
         
-        presenter?.getProfileData()
+        configTextGradients()
+        
+        presenter?.updateProfileData()
         presenter?.updateUserPic()
     }
     
@@ -64,6 +73,8 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         self.presenter = presenter
         presenter.profileVC = self
     }
+    
+    // MARK: - Gradient Config
     
     func configureAnimation(for gradient: CAGradientLayer, in view: UIView) {
         animationLayers.append(gradient)
@@ -91,6 +102,22 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         gradient.cornerRadius = size.height / 2
         gradient.masksToBounds = true
         return gradient
+    }
+    
+    private func configTextGradients() {
+        let topLineWidth: CGFloat = 223
+        let midLineWidth: CGFloat = 89
+        let bottomLineWidth: CGFloat = 67
+        
+        view.layoutIfNeeded()
+        
+        topGradient = configureGradient(ofSize: CGSize(width: topLineWidth, height: fullNameLabel.frame.height))
+        midGradient = configureGradient(ofSize: CGSize(width: midLineWidth, height: usernameLabel.frame.size.height))
+        bottomGradient = configureGradient(ofSize: CGSize(width: bottomLineWidth, height: statusLabel.frame.size.height))
+        
+        configureAnimation(for: topGradient, in: fullNameLabel)
+        configureAnimation(for: midGradient, in: usernameLabel)
+        configureAnimation(for: bottomGradient, in: statusLabel)
     }
     
     // MARK: - UI Config
@@ -140,9 +167,9 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         logoutButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -12).isActive = true
         
         // MARK: - full name label
-        fullNameLabel.text = "..."
+        fullNameLabel.text = "loading..."
         fullNameLabel.font = UIFont.systemFont(ofSize: 23, weight: .semibold)
-        fullNameLabel.textColor = .ypWhite()
+        fullNameLabel.textColor = .ypBlack()
         fullNameLabel.numberOfLines = 0
         fullNameLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -152,9 +179,9 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         
         // MARK: - username label
         
-        usernameLabel.text = "@..."
+        usernameLabel.text = "@loading..."
         usernameLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        usernameLabel.textColor = .ypGrey()
+        usernameLabel.textColor = .ypBlack()
         fullNameLabel.numberOfLines = 0
         usernameLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -163,9 +190,9 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         usernameLabel.trailingAnchor.constraint(equalTo: fullNameLabel.trailingAnchor).isActive = true
         
         // MARK: - status label
-        statusLabel.text = "..."
+        statusLabel.text = "loading..."
         statusLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        statusLabel.textColor = .ypWhite()
+        statusLabel.textColor = .ypBlack()
         fullNameLabel.numberOfLines = 0
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -192,9 +219,19 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
                               options: .transitionCrossDissolve,
                               animations: {
                 self.gradient.isHidden = true
+                self.topGradient.isHidden = true
+                self.midGradient.isHidden = true
+                self.bottomGradient.isHidden = true
+                
+                self.fullNameLabel.textColor = .ypWhite()
+                self.usernameLabel.textColor = .ypGrey()
+                self.statusLabel.textColor = .ypWhite()
             },
                               completion: { _ in
                 self.gradient.removeFromSuperlayer()
+                self.topGradient.removeFromSuperlayer()
+                self.midGradient.removeFromSuperlayer()
+                self.bottomGradient.removeFromSuperlayer()
             })
         }
     }

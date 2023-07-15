@@ -10,7 +10,7 @@ import UIKit
 protocol ProfileViewPresenterProtocol: AnyObject {
     var profileVC: ProfileViewControllerProtocol? { get set }
     
-    func getProfileData()
+    func updateProfileData()
     func updateUserPic()
     
     func logout()
@@ -36,7 +36,7 @@ final class ProfileViewPresenter: ProfileViewPresenterProtocol {
     
     // MARK: - Profile Info
     
-    func getProfileData() {
+    func updateProfileData() {
         guard let profile = profileService.profile else { return }
         profileVC?.updateProfileInfo(for: profile)
     }
