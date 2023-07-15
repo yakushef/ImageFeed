@@ -8,13 +8,13 @@
 import UIKit
 import Kingfisher
 
-protocol UITableViewAdapter: AnyObject {
+protocol UITableViewAdapterProtocol: AnyObject {
     var presenter: ImageListViewPresenterProtocol! { get set }
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath)
     func configTable(_ table: UITableView)
 }
 
-final class ImageListTableViewAdaper: UITableViewAdapter & NSObject {
+final class ImageListTableViewAdaper: UITableViewAdapterProtocol & NSObject {
     var presenter: ImageListViewPresenterProtocol!
     
     init(presenter: ImageListViewPresenterProtocol) {

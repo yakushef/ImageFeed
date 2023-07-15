@@ -7,7 +7,13 @@
 
 import Foundation
 
-final class ImagesListService {
+protocol ImagesListServiceProtocol {
+    var photos: [Photo] { get set }
+    func fetchPhotosNextPage()
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void)
+}
+
+final class ImagesListService: ImagesListServiceProtocol {
     static let shared = ImagesListService()
     static let DidChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     static let ErrorNotification = Notification.Name(rawValue: "ImagesListServiceError")

@@ -24,6 +24,7 @@
 		BC579DA62A55DD0C00365177 /* PhotoModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC579DA52A55DD0C00365177 /* PhotoModels.swift */; };
 		BC579DA92A55DE6600365177 /* ProfileModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC579DA82A55DE6600365177 /* ProfileModels.swift */; };
 		BC6A43C32A5F26BE0045C50A /* ImageListTableViewAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6A43C22A5F26BE0045C50A /* ImageListTableViewAdapter.swift */; };
+		BC6A43C52A6127750045C50A /* ImageFeedImagesListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6A43C42A6127750045C50A /* ImageFeedImagesListTests.swift */; };
 		BC6E7C8129FFD412007D5688 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6E7C8029FFD412007D5688 /* ImagesListCell.swift */; };
 		BC718F162A2666C100F5E746 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC718F152A2666C100F5E746 /* SplashViewController.swift */; };
 		BC718F192A286E3200F5E746 /* LightStatusBarNavController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC718F182A286E3200F5E746 /* LightStatusBarNavController.swift */; };
@@ -77,6 +78,7 @@
 		BC579DA52A55DD0C00365177 /* PhotoModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoModels.swift; sourceTree = "<group>"; };
 		BC579DA82A55DE6600365177 /* ProfileModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModels.swift; sourceTree = "<group>"; };
 		BC6A43C22A5F26BE0045C50A /* ImageListTableViewAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageListTableViewAdapter.swift; sourceTree = "<group>"; };
+		BC6A43C42A6127750045C50A /* ImageFeedImagesListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFeedImagesListTests.swift; sourceTree = "<group>"; };
 		BC6E7C8029FFD412007D5688 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 		BC718F152A2666C100F5E746 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SplashViewController.swift; path = ImageFeed/Presentation/SplashViewController.swift; sourceTree = SOURCE_ROOT; };
 		BC718F182A286E3200F5E746 /* LightStatusBarNavController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightStatusBarNavController.swift; sourceTree = "<group>"; };
@@ -218,6 +220,7 @@
 			children = (
 				BC78E4372A5B371800A9B173 /* ImageFeedWebViewTests.swift */,
 				BC78E4482A5C72C500A9B173 /* ImageFeedProfileViewTests.swift */,
+				BC6A43C42A6127750045C50A /* ImageFeedImagesListTests.swift */,
 			);
 			path = ImageFeedTests;
 			sourceTree = "<group>";
@@ -432,6 +435,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BC78E4492A5C72C500A9B173 /* ImageFeedProfileViewTests.swift in Sources */,
+				BC6A43C52A6127750045C50A /* ImageFeedImagesListTests.swift in Sources */,
 				BC78E4382A5B371800A9B173 /* ImageFeedWebViewTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

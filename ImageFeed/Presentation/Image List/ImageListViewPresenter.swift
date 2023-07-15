@@ -5,12 +5,13 @@
 //  Created by Aleksey Yakushev on 11.07.2023.
 //
 
-import Foundation
+import UIKit
 
 protocol ImageListViewPresenterProtocol: AnyObject {
     var imageListVC: ImageListViewControllerProtocol? { get set }
-    var imageListTableAdapter: UITableViewAdapter? { get set }
+    var imageListTableAdapter: UITableViewAdapterProtocol? { get set }
     
+    func connectTable(_ table: UITableView)
     func updateRow(at indexPath: IndexPath)
     func didSelectRow(at indexPath: IndexPath)
     
@@ -24,10 +25,10 @@ protocol ImageListViewPresenterProtocol: AnyObject {
 }
 
 final class ImageListViewPresenter: ImageListViewPresenterProtocol {
-    var imageListTableAdapter: UITableViewAdapter?
+    var imageListTableAdapter: UITableViewAdapterProtocol?
     var imageListVC: ImageListViewControllerProtocol?
 
-    private var imageService = ImagesListService.shared
+    var imageService: ImagesListServiceProtocol!
     
     private var photos: [Photo] = []
     
@@ -39,8 +40,16 @@ final class ImageListViewPresenter: ImageListViewPresenterProtocol {
         return formatter
     }()
     
-    init() {
-        self.imageListTableAdapter = ImageListTableViewAdaper(presenter: self)
+    init(adapter: UITableViewAdapterProtocol? = nil,
+         service: ImagesListServiceProtocol = ImagesListService.shared) {
+        self.imageService = service
+        if adapter == nil {
+            self.imageListTableAdapter = ImageListTableViewAdaper(presenter: self)
+        }
+        else {
+            self.imageListTableAdapter = adapter
+        }
+        imageListTableAdapter?.presenter = self
         
         //MARK: - Notifications
         
@@ -83,6 +92,7 @@ extension ImageListViewPresenter {
     
     func fetchNextPageIfShould(fromIndex index: Int? = nil) {
         guard let index else {
+
             imageService.fetchPhotosNextPage()
             return
         }
@@ -105,6 +115,10 @@ extension ImageListViewPresenter {
     
     //MARK: - UITableView interaction
     
+    func connectTable(_ table: UITableView) {
+        imageListTableAdapter?.configTable(table)
+    }
+    
     func didSelectRow(at indexPath: IndexPath) {
         imageListVC?.goToFullScreenView(senderIndexPath: indexPath)
     }
@@ -112,6 +126,8 @@ extension ImageListViewPresenter {
     func updateRow(at indexPath: IndexPath) {
         imageListVC?.updateRow(at: indexPath)
     }
+    
+    //MARK: - Like
     
     func processLike(for cell: ImagesListCell) {
         UIBlockingProgressHUD.show()
@@ -125,7 +141,7 @@ extension ImageListViewPresenter {
             switch result {
             case .success():
                 self.photos = imageService.photos
-                cell.likeButton.isSelected = self.photos[photoIndex].isLiked
+                cell.changeLikeButtonStatus(liked: self.photos[photoIndex].isLiked)
                 UIBlockingProgressHUD.dismiss()
             case .failure(let error):
                 UIBlockingProgressHUD.dismiss()

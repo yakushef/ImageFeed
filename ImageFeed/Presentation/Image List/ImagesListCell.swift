@@ -28,6 +28,10 @@ final class ImagesListCell: UITableViewCell {
         cellImage.kf.cancelDownloadTask()
     }
     
+    func changeLikeButtonStatus(liked: Bool) {
+        likeButton.isSelected = liked
+    }
+    
     func getIndexPath() -> IndexPath? {
         guard let superView = self.superview as? UITableView else {
             print("superview is not a UITableView - getIndexPath")

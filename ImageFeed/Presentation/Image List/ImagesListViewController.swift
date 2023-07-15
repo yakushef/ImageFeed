@@ -61,9 +61,7 @@ final class ImagesListViewController: UIViewController & ImageListViewController
         self.navigationController?.isNavigationBarHidden = true
         
         tableView.register(UINib(nibName: "ImageListCell", bundle: nil), forCellReuseIdentifier: ImagesListCell.reuseIdentifier)
-        
-        guard let adapter = presenter?.imageListTableAdapter else { fatalError("No table adapter found") }
-        adapter.configTable(tableView)
+        presenter?.connectTable(tableView)
 
         tableView.contentInset = UIEdgeInsets(top: 12,
                                               left: 0,
