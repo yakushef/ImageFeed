@@ -30,6 +30,11 @@ final class ImagesListCell: UITableViewCell {
     
     static let reuseIdentifier = "ImagesListCell"
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        restartAnimations()
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         
@@ -47,25 +52,25 @@ final class ImagesListCell: UITableViewCell {
         self.isUserInteractionEnabled = false
         
         let placeholder = UIImage(named: "PhotoLoader") ?? UIImage()
-        let resizer = ResizingImageProcessor(referenceSize: displaySize)
+        let size = CGSize(width: placeholder.size.width * 0.5, height: placeholder.size.height * 0.5)
+        
+        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
+        placeholder.draw(in: CGRect(origin: CGPoint.zero, size: size))
+        let scaledPlaceholder: UIImage = UIGraphicsGetImageFromCurrentImageContext() ?? placeholder
+        UIGraphicsEndImageContext()
+        
+        let resizer = ResizingImageProcessor(referenceSize: self.displaySize)
         cellImage.kf.setImage(with: url,
-                              placeholder: placeholder.kf.resize(to: displaySize,for: .none), options: [.transition(.none), .processor(resizer)]) { [weak self] didLoad in
+                              placeholder: scaledPlaceholder.kf.resize(to: self.displaySize,for: .none), options: [.transition(.none), .processor(resizer)]) { [weak self] didLoad in
             guard let self else { return }
             switch didLoad {
             case .success(_):
                     self.removeGradient()
                     self.isUserInteractionEnabled = true
             case .failure(_):
-                self.cellImage.image = UIImage(named: "PhotoLoader") ?? UIImage()
-                self.cellImage.contentMode = .center
                 self.removeGradient()
             }
         }
-    }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        restartAnimations()
     }
     
     func restartAnimations() {

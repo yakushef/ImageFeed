@@ -29,6 +29,7 @@
                     </imageView>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K7E-5L-vIR">
                         <rect key="frame" x="330" y="4" width="44" height="44"/>
+                        <accessibility key="accessibilityConfiguration" identifier="LikeButton"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="44" id="MAm-Bi-q2j"/>
                             <constraint firstAttribute="width" constant="44" id="S17-VL-6gJ"/>

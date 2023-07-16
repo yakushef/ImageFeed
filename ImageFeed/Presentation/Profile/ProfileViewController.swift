@@ -126,6 +126,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         view.addSubview(userPicView)
         
         logoutButton = UIButton.systemButton(with: UIImage(), target: self, action: #selector(Self.logoutButtonTapped))
+        logoutButton.accessibilityIdentifier = "Logout Button"
         view.addSubview(logoutButton)
         
         fullNameLabel = UILabel()
@@ -244,12 +245,16 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
             guard let self = self else { return }
             self.presenter?.logout()
         }
+        yesAction.accessibilityIdentifier = "Yes"
         let noAction = UIAlertAction(title: "Нет", style: .cancel) { [weak self] _ in
             guard let self = self else { return }
             self.dismiss(animated: true)
         }
+        noAction.accessibilityIdentifier = "No"
+        
         logoutAlert.addAction(noAction)
         logoutAlert.addAction(yesAction)
+        logoutAlert.view.accessibilityIdentifier = "Logout Alert"
         alertPresenter.presentAlert(alert: logoutAlert)
     }
 }

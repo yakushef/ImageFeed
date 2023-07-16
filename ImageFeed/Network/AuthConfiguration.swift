@@ -7,8 +7,8 @@
 
 import Foundation
 
-private let SecretKey: String = "9mXLRPUqu5mOJlrceqRVYBF37XqfAB_PxxkXBt1Qt3U"//"Le_kRR4UkFbG6h9cFkHu0h_WYg6OznzTtOjrhJ-kHhk"
-private let AccessKey: String = "eE7l1owI6o3P-VryqH933HKWbmXxc-wB8UckSyuFfEw"//"p_m5lukMbcLgaAyOV70Q2hotyeYsAx66Y7CLzv1qqmk"
+private let SecretKey: String = "9mXLRPUqu5mOJlrceqRVYBF37XqfAB_PxxkXBt1Qt3U"//"Le_kRR4UkFbG6h9cFkHu0h_WYg6OznzTtOjrhJ-kHhk"//
+private let AccessKey: String = "eE7l1owI6o3P-VryqH933HKWbmXxc-wB8UckSyuFfEw"//"p_m5lukMbcLgaAyOV70Q2hotyeYsAx66Y7CLzv1qqmk"//
 private let RedirectURI: String = "urn:ietf:wg:oauth:2.0:oob"
 private let AccessScope: String = "public+read_user+write_likes"
 

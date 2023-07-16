@@ -64,6 +64,7 @@ final class ImagesListViewController: UIViewController & ImageListViewController
         
         self.navigationController?.isNavigationBarHidden = true
         
+        tableView.accessibilityIdentifier = "ImageList"
         tableView.register(UINib(nibName: "ImageListCell", bundle: nil), forCellReuseIdentifier: ImagesListCell.reuseIdentifier)
         presenter?.connectTable(tableView)
 
