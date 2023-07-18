@@ -91,14 +91,7 @@ extension ImageListViewPresenter {
     //MARK: - Photo array interaction
     
     func fetchNextPageIfShould(fromIndex index: Int? = nil) {
-        guard let index else {
-
             imageService.fetchPhotosNextPage()
-            return
-        }
-        if photos.count - index == 3 {
-            imageService.fetchPhotosNextPage()
-        }
     }
     
     func getCurrentPhotoCount() -> Int {
@@ -110,6 +103,9 @@ extension ImageListViewPresenter {
     }
     
     func getPhoto(withIndex index: Int) -> Photo {
+        if index == photos.count % 10 - 3 {
+            self.fetchNextPageIfShould(fromIndex: index)
+        }
         return photos[index]
     }
     

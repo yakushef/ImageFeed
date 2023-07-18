@@ -128,6 +128,7 @@ final class ImagesListCell: UITableViewCell {
     
     func changeLikeButtonStatus(liked: Bool) {
         likeButton.isSelected = liked
+        likeButton.accessibilityIdentifier = liked ? "likeButtonActive" : "likeButtonInactive"
         
         UIView.animateKeyframes(withDuration: 0.5, delay: 0) {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.2, animations: {

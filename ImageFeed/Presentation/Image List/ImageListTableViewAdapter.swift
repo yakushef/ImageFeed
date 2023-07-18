@@ -26,7 +26,6 @@ final class ImageListTableViewAdaper: UITableViewAdapterProtocol & NSObject {
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let index = indexPath.row
         let photo = presenter.getPhoto(withIndex: index)
-        presenter.fetchNextPageIfShould(fromIndex: index)
         
         cell.delegate = self
         
@@ -38,6 +37,7 @@ final class ImageListTableViewAdaper: UITableViewAdapterProtocol & NSObject {
         cell.likeButton.isSelected = isLiked
         cell.likeButton.setImage(UIImage(named: "likeButtonActive"), for: .selected)
         cell.likeButton.setImage(UIImage(named: "likeButtonInactive"), for: .normal)
+        cell.likeButton.accessibilityIdentifier = isLiked ? "likeButtonActive" : "likeButtonInactive"
         
         let scaleFactor = photo.size.width / cell.cellImage.frame.size.width
         let displaySize: CGSize = CGSize(width: photo.size.width / scaleFactor, height: photo.size.height / scaleFactor)

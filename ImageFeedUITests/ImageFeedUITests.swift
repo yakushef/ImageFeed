@@ -34,16 +34,19 @@ final class ImageFeedUITests: XCTestCase {
         let loginTextField = webView.descendants(matching: .textField).element
         XCTAssertTrue(loginTextField.waitForExistence(timeout: 5))
         loginTextField.tap()
-        loginTextField.typeText("")
+        loginTextField.typeText("email@e.mail")
+        
         webView.swipeUp()
         // MARK: - ACCOUNT PASSWORD
         let passwordTextField = webView.descendants(matching: .secureTextField).element
         XCTAssertTrue(passwordTextField.waitForExistence(timeout: 5))
         passwordTextField.tap()
-        passwordTextField.typeText("")
+        passwordTextField.typeText("password")
         webView.swipeUp()
         
         webView.buttons.matching(identifier: "Login").element.tap()
+        
+        sleep(5)
         
         let tablesQuery = app.tables
         let cell = tablesQuery.children(matching: .cell).element(boundBy: 0)
@@ -51,60 +54,32 @@ final class ImageFeedUITests: XCTestCase {
     }
     
     func testFeed() throws {
-        sleep(5)
-        let tablesQuery = app.tables.matching(identifier: "ImageList")
-        sleep(20)
-        let cells = tablesQuery.cells.allElementsBoundByIndex
-        sleep(20)
+        let table = app.tables.matching(identifier: "ImageList").element
+        XCTAssertTrue(table.waitForExistence(timeout: 10))
         
-        var exampleCell: XCUIElement!
-        var exampleCellButton: XCUIElement!
+        table.cells.element(boundBy: 0).swipeUp()
         
-        for cell in cells {
-            guard cell.exists,
-                  cell.buttons.element.exists else { return }
-            let likeButton = cell.buttons.element
-            if likeButton.isEnabled && cell.isEnabled {
-                if likeButton.isHittable && cell.isHittable {
-                    exampleCell = cell
-                    exampleCellButton = likeButton }
-                break
-            }
-        }
-        
-//        let cell = tablesQuery.children(matching: .cell).element(boundBy: 0)
-        XCTAssertTrue(exampleCell.waitForExistence(timeout: 10))
-        XCTAssertTrue(exampleCellButton.waitForExistence(timeout: 10))
-        
-        exampleCellButton.tap()
-        sleep(20)
-        exampleCell.tap()
-//        app.swipeUp()
-//        sleep(3)
-//        app.swipeDown()
-//        sleep(3)
-//
-//        let testCell = tablesQuery.children(matching: .cell).element(boundBy: 1)
-//        XCTAssertTrue(testCell.waitForExistence(timeout: 20))
-//        sleep(20)
-//        let likeButton = testCell.buttons.element
-//        XCTAssertTrue(likeButton.waitForExistence(timeout: 20))
-//        sleep(20)
-//        likeButton.tap()
-//        testCell.buttons.element.tap()
-//        sleep(5)
-//        testCell.buttons.matching(identifier: "likeButtonActive").element.tap()
-//        testCell.buttons.element.tap()
-//        sleep(2)
-//        sleep(20)
-//        testCell.tap()
+        let actualCell = table.cells.element(boundBy: 2)
+        XCTAssertTrue(actualCell.waitForExistence(timeout: 20))
 
+        let likeButton = actualCell.buttons["likeButtonInactive"]
+        XCTAssertTrue(likeButton.waitForExistence(timeout: 10))
+        likeButton.tap()
+        sleep(3)
+        
+        let dislikeButton = actualCell.buttons["likeButtonActive"]
+        XCTAssertTrue(dislikeButton.waitForExistence(timeout: 10))
+        dislikeButton.tap()
+        sleep(3)
+        
+        actualCell.tap()
+        
         let image = app.scrollViews.images.element(boundBy: 0)
         XCTAssertTrue(image.waitForExistence(timeout: 10))
-        
+
         image.pinch(withScale: 3, velocity: 1)
         image.pinch(withScale: 0.5, velocity: -1)
-        
+
         let backButton = app.buttons["SingleImageBackButton"]
         backButton.tap()
     }
@@ -114,8 +89,8 @@ final class ImageFeedUITests: XCTestCase {
         app.tabBars.buttons.element(boundBy: 1).tap()
        
         // MARK: - Name + Lastname + @username
-        XCTAssertTrue(app.staticTexts["Povar Vrach"].exists)
-        XCTAssertTrue(app.staticTexts["@yakushef"].exists)
+        XCTAssertTrue(app.staticTexts["Full Name"].exists)
+        XCTAssertTrue(app.staticTexts["@name"].exists)
         
         app.buttons["Logout Button"].tap()
         
