@@ -10,6 +10,7 @@ import Kingfisher
 
 protocol ImageListCellDelegate: AnyObject {
     func processLike(for cell: ImagesListCell)
+    func checkIfnewPageIsNeeded(for index: Int)
 }
 
 final class ImagesListCell: UITableViewCell {
@@ -27,12 +28,19 @@ final class ImagesListCell: UITableViewCell {
     
     var urlString = ""
     var displaySize = CGSize(width: 0, height: 0)
+    var index = 0
     
     static let reuseIdentifier = "ImagesListCell"
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        print("awakeFromNib() \(index)")
         restartAnimations()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        print("layoutSubviews() \(frame.size)")
     }
     
     override func prepareForReuse() {
@@ -46,6 +54,8 @@ final class ImagesListCell: UITableViewCell {
         
         urlString = ""
         displaySize = CGSize(width: 0, height: 0)
+        
+        print("REUSE index \(index)")
     }
     
     func loadImage(from url: URL, displaySize: CGSize) {

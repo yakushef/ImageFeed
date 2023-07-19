@@ -73,7 +73,7 @@ final class ImagesListViewController: UIViewController & ImageListViewController
                                               bottom: 12,
                                               right: 0)
         
-        presenter?.fetchNextPageIfShould(fromIndex: nil)
+        presenter?.fetchNextPageIfShould()
     }
     
     //MARK: - Presenter config

@@ -11,17 +11,21 @@ protocol ImageListViewPresenterProtocol: AnyObject {
     var imageListVC: ImageListViewControllerProtocol? { get set }
     var imageListTableAdapter: UITableViewAdapterProtocol? { get set }
     
+    var photoCount: Int { get }
+    var currentPage: Int { get }
+    
     func connectTable(_ table: UITableView)
     func updateRow(at indexPath: IndexPath)
     func didSelectRow(at indexPath: IndexPath)
     
     func getPhoto(withIndex index: Int) -> Photo
     func getFullSizeUrl(forIndex index: Int) -> String?
+    func checkIfnewPageIsNeeded(for index: Int)
     func getCurrentPhotoCount() -> Int
     func convertDate(_ date: String?) -> String
     
     func processLike(for cell: ImagesListCell)
-    func fetchNextPageIfShould(fromIndex index: Int?)
+    func fetchNextPageIfShould()
 }
 
 final class ImageListViewPresenter: ImageListViewPresenterProtocol {
@@ -30,7 +34,16 @@ final class ImageListViewPresenter: ImageListViewPresenterProtocol {
 
     var imageService: ImagesListServiceProtocol!
     
-    private var photos: [Photo] = []
+    var photoCount = 0
+    var currentPage = 0
+    var lastPageRequest = 0
+    
+    private var photos: [Photo] = [] {
+        didSet {
+            photoCount = photos.count
+            currentPage = (photos.count / 10) - 1
+        }
+    }
     
     private lazy var photoDateFormatter = ISO8601DateFormatter()
     private lazy var listDateFormatter: DateFormatter = {
@@ -49,7 +62,6 @@ final class ImageListViewPresenter: ImageListViewPresenterProtocol {
         else {
             self.imageListTableAdapter = adapter
         }
-        imageListTableAdapter?.presenter = self
         
         //MARK: - Notifications
         
@@ -90,12 +102,24 @@ extension ImageListViewPresenter {
     
     //MARK: - Photo array interaction
     
-    func fetchNextPageIfShould(fromIndex index: Int? = nil) {
+    func getCurrentPhotoCount() -> Int {
+        return photos.count
+    }
+    
+    func fetchNextPageIfShould() {
+        print("FETCH")
             imageService.fetchPhotosNextPage()
     }
     
-    func getCurrentPhotoCount() -> Int {
-        return photos.count
+    func checkIfnewPageIsNeeded(for index: Int) {
+        let count = photoCount
+        let fetchRemainder = 3
+        
+        if index == count - fetchRemainder,
+        lastPageRequest != count / 10 {
+            lastPageRequest = count / 10
+            self.fetchNextPageIfShould()
+        }
     }
     
     func getFullSizeUrl(forIndex index: Int) -> String? {
@@ -103,9 +127,6 @@ extension ImageListViewPresenter {
     }
     
     func getPhoto(withIndex index: Int) -> Photo {
-        if index == photos.count % 10 - 3 {
-            self.fetchNextPageIfShould(fromIndex: index)
-        }
         return photos[index]
     }
     

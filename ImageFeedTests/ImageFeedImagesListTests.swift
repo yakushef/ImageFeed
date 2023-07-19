@@ -35,7 +35,6 @@ final class ImagesListServiceSpy: ImagesListServiceProtocol {
     
     func fetchPhotosNextPage() {
         isFetchPhotosCalled = true
-//        NotificationCenter.default.post(Notification(name: ImagesListService.DidChangeNotification))
     }
     
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
@@ -46,11 +45,20 @@ final class ImagesListServiceSpy: ImagesListServiceProtocol {
 // MARK: Presenter Spy
 
 final class ImageListViewPresenterSpy: ImageListViewPresenterProtocol {
+    var photoCount: Int = 0
+    
+    var currentPage: Int = 0
+    
     var imageListVC: ImageFeed.ImageListViewControllerProtocol?
     var imageListTableAdapter: ImageFeed.UITableViewAdapterProtocol?
     var photos: [Photo] = []
     var isLikeProcessed = false
     var isConnectTableCalled = false
+    
+    
+    func checkIfnewPageIsNeeded(for index: Int) {
+        
+    }
 
     func connectTable(_ table: UITableView) {
         isConnectTableCalled = true
@@ -84,7 +92,7 @@ final class ImageListViewPresenterSpy: ImageListViewPresenterProtocol {
         isLikeProcessed = true
     }
 
-    func fetchNextPageIfShould(fromIndex index: Int?) {
+    func fetchNextPageIfShould() {
         photos += photoArrayStub
     }
 }
@@ -104,7 +112,7 @@ final class ImageFeedImagesListTests: XCTestCase {
         }
         testCell.delegate = adapter
         
-        presenter.fetchNextPageIfShould(fromIndex: nil)
+        presenter.fetchNextPageIfShould()
         presenter.imageListTableAdapter?.configCell(for: testCell, with: IndexPath(row: 0, section: 0))
         
         // when

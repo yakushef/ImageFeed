@@ -68,8 +68,6 @@ final class SingleImageViewController: UIViewController {
         fullScreenImageView.kf.indicatorType = .activity
         alertPresenter = AlertPresenter(delegate: self)
         
-//        UIBlockingProgressHUD.show()
-        
         shareButton.isEnabled = false
         
         fullScreenImageView.contentMode = .center

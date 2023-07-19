@@ -25,9 +25,12 @@ final class ImageListTableViewAdaper: UITableViewAdapterProtocol & NSObject {
     
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let index = indexPath.row
+        cell.index = index
         let photo = presenter.getPhoto(withIndex: index)
         
         cell.delegate = self
+        
+        cell.accessibilityIdentifier = "Cell \(index)"
         
         cell.selectionStyle = .none
         
@@ -44,6 +47,7 @@ final class ImageListTableViewAdaper: UITableViewAdapterProtocol & NSObject {
         
         cell.displaySize = displaySize
         cell.urlString = photo.thumbImageURL
+
         cell.restartAnimations()
     }
     
@@ -56,6 +60,7 @@ final class ImageListTableViewAdaper: UITableViewAdapterProtocol & NSObject {
 }
 
 extension ImageListTableViewAdaper: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         presenter.getCurrentPhotoCount()
     }
@@ -63,6 +68,17 @@ extension ImageListTableViewAdaper: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier,
                                                  for: indexPath)
+        print("cell for row at \(indexPath) \(String(describing: cell.reuseIdentifier))")
+        
+        let index = indexPath.row
+//        if presenter.currentPage * 10 + 7 == index {
+    
+        
+            
+
+
+//        }
+        
         guard let imageListCell = cell as? ImagesListCell else {
             return UITableViewCell()
         }
@@ -75,9 +91,26 @@ extension ImageListTableViewAdaper: UITableViewDataSource {
 extension ImageListTableViewAdaper: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        print("will display \(indexPath)")
+        
+        for cell in tableView.visibleCells {
+            print("will display: visible \(String(describing: cell.accessibilityIdentifier))")
+//            if cell.accessibilityIdentifier == "Cell \(indexPath.Row)"
+        }
+        
+        if  let visibleCells = tableView.indexPathsForVisibleRows,
+            visibleCells.contains(indexPath) {
+            print("called for fetch at: \(indexPath)")
+            presenter.checkIfnewPageIsNeeded(for: indexPath.row)
+        }
         guard let cell = cell as? ImagesListCell else { return }
         cell.restartAnimations()
     }
+    
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        print("did end displaying \(indexPath)")
+    }
+
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         presenter.didSelectRow(at: indexPath)
@@ -93,5 +126,9 @@ extension ImageListTableViewAdaper: UITableViewDelegate {
 extension ImageListTableViewAdaper: ImageListCellDelegate {
     func processLike(for cell: ImagesListCell) {
         presenter?.processLike(for: cell)
+    }
+    
+    func checkIfnewPageIsNeeded(for index: Int) {
+        presenter.checkIfnewPageIsNeeded(for: index)
     }
 }
