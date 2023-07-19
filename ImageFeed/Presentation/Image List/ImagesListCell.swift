@@ -44,7 +44,6 @@ final class ImagesListCell: UITableViewCell {
         cellImage.kf.cancelDownloadTask()
         cellImage.image = nil
 
-        urlString = ""
         gradient?.removeFromSuperlayer()
         gradient = nil
         
@@ -87,11 +86,10 @@ final class ImagesListCell: UITableViewCell {
             guard let self else { return }
             switch didLoad {
             case .success(_):
-                self.layoutSubviews()
-                    self.removeGradient()
+                self.removeGradient(duration: 0.2)
                     self.isUserInteractionEnabled = true
             case .failure(_):
-                self.removeGradient()
+                self.removeGradient(duration: 0.5)
             }
         }
     }
@@ -102,8 +100,8 @@ final class ImagesListCell: UITableViewCell {
         gradient?.add(gradientAnimation, forKey: "locationsChange")
            
         addGradient(ofSize: displaySize)
-            guard let url = URL(string: urlString) else { return }
-            loadImage(from: url, displaySize: displaySize)
+        guard let url = URL(string: urlString) else { return }
+        loadImage(from: url, displaySize: displaySize)
     }
     
     func addGradient(ofSize size: CGSize) {
@@ -133,17 +131,16 @@ final class ImagesListCell: UITableViewCell {
         ]
         gradient.startPoint = CGPoint(x: 0, y: 0.5)
         gradient.endPoint = CGPoint(x: 1, y: 0.5)
-        gradient.opacity = 1.0
         gradient.masksToBounds = true
         
         return gradient
     }
     
-    func removeGradient() {
+    func removeGradient(duration: CFTimeInterval = 0.0) {
         let fadeAnimation = CABasicAnimation(keyPath: "opacity")
         fadeAnimation.fromValue = 1.0
         fadeAnimation.toValue = 0.0
-        fadeAnimation.duration = 0.5
+        fadeAnimation.duration = duration
 
         gradient.add(fadeAnimation, forKey: "opacity")
         gradient.opacity = 0.0
