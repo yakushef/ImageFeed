@@ -38,7 +38,6 @@ final class ImagesListService: ImagesListServiceProtocol {
         self.photosTask?.cancel()
         
         let page = photos.count == 0 ? 0 : (photos.count / 10) + 1
-        print("fetching page \(page)")
         var photoRequest = URLRequest.makeHttpRequest(path: "/photos" + "?page=\(page)", httpMethod: "GET")
         photoRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         

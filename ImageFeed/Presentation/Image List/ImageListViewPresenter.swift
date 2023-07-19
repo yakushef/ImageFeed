@@ -20,7 +20,7 @@ protocol ImageListViewPresenterProtocol: AnyObject {
     
     func getPhoto(withIndex index: Int) -> Photo
     func getFullSizeUrl(forIndex index: Int) -> String?
-    func checkIfnewPageIsNeeded(for index: Int)
+    func checkIfNewPageIsNeeded(for index: Int)
     func getCurrentPhotoCount() -> Int
     func convertDate(_ date: String?) -> String
     
@@ -107,11 +107,10 @@ extension ImageListViewPresenter {
     }
     
     func fetchNextPageIfShould() {
-        print("FETCH")
             imageService.fetchPhotosNextPage()
     }
     
-    func checkIfnewPageIsNeeded(for index: Int) {
+    func checkIfNewPageIsNeeded(for index: Int) {
         let count = photoCount
         let fetchRemainder = 3
         

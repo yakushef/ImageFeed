@@ -24,7 +24,6 @@ final class ImagesListCell: UITableViewCell {
     private var animationLayers = [CALayer]()
     private var gradient: CAGradientLayer!
     private var gradientAnimation: CABasicAnimation!
-    private var usernameGradient: CAGradientLayer!
     
     var urlString = ""
     var displaySize = CGSize(width: 0, height: 0)
@@ -32,15 +31,11 @@ final class ImagesListCell: UITableViewCell {
     
     static let reuseIdentifier = "ImagesListCell"
     
+    // MARK: - Lifecycle
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        print("awakeFromNib() \(index)")
         restartAnimations()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        print("layoutSubviews() \(frame.size)")
     }
     
     override func prepareForReuse() {
@@ -48,33 +43,51 @@ final class ImagesListCell: UITableViewCell {
         
         cellImage.kf.cancelDownloadTask()
         cellImage.image = nil
+
         urlString = ""
         gradient?.removeFromSuperlayer()
         gradient = nil
         
         urlString = ""
         displaySize = CGSize(width: 0, height: 0)
-        
-        print("REUSE index \(index)")
     }
     
+    // MARK: - Load Image
     func loadImage(from url: URL, displaySize: CGSize) {
         self.isUserInteractionEnabled = false
         
         let placeholder = UIImage(named: "PhotoLoader") ?? UIImage()
-        let size = CGSize(width: placeholder.size.width * 0.5, height: placeholder.size.height * 0.5)
         
-        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
-        placeholder.draw(in: CGRect(origin: CGPoint.zero, size: size))
-        let scaledPlaceholder: UIImage = UIGraphicsGetImageFromCurrentImageContext() ?? placeholder
+        var scaledPlaceholder = UIImage()
+        
+        UIGraphicsBeginImageContextWithOptions(displaySize, false, 0.0)
+        if let context = UIGraphicsGetCurrentContext(),
+           displaySize.height >= placeholder.size.height,
+           displaySize.width >= placeholder.size.width {
+            
+            context.setFillColor(UIColor.clear.cgColor)
+            context.fill(CGRect(origin: .zero, size: displaySize))
+            
+            let placeholderOrigin = CGPoint(x: (displaySize.width - placeholder.size.width) / 2,
+                                            y: (displaySize.height - placeholder.size.height) / 2)
+            placeholder.draw(in: CGRect(origin: placeholderOrigin, size: placeholder.size))
+            
+            scaledPlaceholder = UIGraphicsGetImageFromCurrentImageContext() ?? placeholder
+        } else {
+            UIImage().draw(in: CGRect(origin: CGPoint.zero, size: displaySize))
+            scaledPlaceholder = UIGraphicsGetImageFromCurrentImageContext() ?? placeholder
+        }
         UIGraphicsEndImageContext()
         
-        let resizer = ResizingImageProcessor(referenceSize: self.displaySize)
+        cellImage.image = scaledPlaceholder
+        cellImage.contentMode = .center
+
         cellImage.kf.setImage(with: url,
-                              placeholder: scaledPlaceholder.kf.resize(to: self.displaySize,for: .none), options: [.transition(.none), .processor(resizer)]) { [weak self] didLoad in
+                              placeholder: nil, options: [.transition(.fade(0)), .keepCurrentImageWhileLoading]) { [weak self] didLoad in
             guard let self else { return }
             switch didLoad {
             case .success(_):
+                self.layoutSubviews()
                     self.removeGradient()
                     self.isUserInteractionEnabled = true
             case .failure(_):
@@ -83,8 +96,9 @@ final class ImagesListCell: UITableViewCell {
         }
     }
     
+    // MARK: - Gradients
+    
     func restartAnimations() {
-        
         gradient?.add(gradientAnimation, forKey: "locationsChange")
            
         addGradient(ofSize: displaySize)
@@ -94,7 +108,7 @@ final class ImagesListCell: UITableViewCell {
     
     func addGradient(ofSize size: CGSize) {
         gradient?.removeFromSuperlayer()
-        gradient = configureGradient(ofSize: size)
+        gradient = configureGradient(ofSize: CGSize(width: size.width * 1.1, height: size.height * 1.1))
         
         animationLayers.append(gradient)
         cellImage.layer.addSublayer(gradient)
@@ -119,22 +133,23 @@ final class ImagesListCell: UITableViewCell {
         ]
         gradient.startPoint = CGPoint(x: 0, y: 0.5)
         gradient.endPoint = CGPoint(x: 1, y: 0.5)
+        gradient.opacity = 1.0
         gradient.masksToBounds = true
         
         return gradient
     }
     
     func removeGradient() {
-        UIView.transition(with: cellImage,
-                          duration: 0.3,
-                          options: .transitionCrossDissolve,
-                          animations: {
-            self.gradient.isHidden = true
-                          },
-                          completion: { _ in
-            self.gradient.removeFromSuperlayer()
-                          })
+        let fadeAnimation = CABasicAnimation(keyPath: "opacity")
+        fadeAnimation.fromValue = 1.0
+        fadeAnimation.toValue = 0.0
+        fadeAnimation.duration = 0.5
+
+        gradient.add(fadeAnimation, forKey: "opacity")
+        gradient.opacity = 0.0
     }
+    
+    //MARK: - Cell methods
     
     func changeLikeButtonStatus(liked: Bool) {
         likeButton.isSelected = liked

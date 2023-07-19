@@ -68,17 +68,6 @@ extension ImageListTableViewAdaper: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier,
                                                  for: indexPath)
-        print("cell for row at \(indexPath) \(String(describing: cell.reuseIdentifier))")
-        
-        let index = indexPath.row
-//        if presenter.currentPage * 10 + 7 == index {
-    
-        
-            
-
-
-//        }
-        
         guard let imageListCell = cell as? ImagesListCell else {
             return UITableViewCell()
         }
@@ -91,26 +80,13 @@ extension ImageListTableViewAdaper: UITableViewDataSource {
 extension ImageListTableViewAdaper: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        print("will display \(indexPath)")
-        
-        for cell in tableView.visibleCells {
-            print("will display: visible \(String(describing: cell.accessibilityIdentifier))")
-//            if cell.accessibilityIdentifier == "Cell \(indexPath.Row)"
-        }
-        
         if  let visibleCells = tableView.indexPathsForVisibleRows,
             visibleCells.contains(indexPath) {
-            print("called for fetch at: \(indexPath)")
-            presenter.checkIfnewPageIsNeeded(for: indexPath.row)
+            presenter.checkIfNewPageIsNeeded(for: indexPath.row)
         }
         guard let cell = cell as? ImagesListCell else { return }
         cell.restartAnimations()
     }
-    
-    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        print("did end displaying \(indexPath)")
-    }
-
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         presenter.didSelectRow(at: indexPath)
@@ -129,6 +105,6 @@ extension ImageListTableViewAdaper: ImageListCellDelegate {
     }
     
     func checkIfnewPageIsNeeded(for index: Int) {
-        presenter.checkIfnewPageIsNeeded(for: index)
+        presenter.checkIfNewPageIsNeeded(for: index)
     }
 }

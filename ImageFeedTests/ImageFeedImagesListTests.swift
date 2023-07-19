@@ -56,7 +56,7 @@ final class ImageListViewPresenterSpy: ImageListViewPresenterProtocol {
     var isConnectTableCalled = false
     
     
-    func checkIfnewPageIsNeeded(for index: Int) {
+    func checkIfNewPageIsNeeded(for index: Int) {
         
     }
 
