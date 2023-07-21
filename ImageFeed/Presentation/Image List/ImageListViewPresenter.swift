@@ -47,11 +47,11 @@ final class ImageListViewPresenter: ImageListViewPresenterProtocol {
     
     private lazy var photoDateFormatter = ISO8601DateFormatter()
     private lazy var listDateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .long
-        formatter.timeStyle = .none
-        return formatter
-    }()
+            let formatter = DateFormatter()
+            formatter.dateFormat = "dd MMMM yyyy"
+            formatter.locale = Locale(identifier: "ru_RU")
+            return formatter
+        }()
     
     init(adapter: UITableViewAdapterProtocol? = nil,
          service: ImagesListServiceProtocol = ImagesListService.shared) {
@@ -117,7 +117,7 @@ extension ImageListViewPresenter {
         if index == count - fetchRemainder,
         lastPageRequest != count / 10 {
             lastPageRequest = count / 10
-            self.fetchNextPageIfShould()
+            fetchNextPageIfShould()
         }
     }
     

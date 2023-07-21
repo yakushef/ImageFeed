@@ -61,7 +61,7 @@ final class OAuth2Service {
     func authTokenRequest(code: String) -> URLRequest {
 
         let path = "/oauth/token" +
-            "?client_id=\(authConfig.accesssKey)" +
+            "?client_id=\(authConfig.accessKey)" +
             "&&client_secret=\(authConfig.secretkey)" +
             "&&redirect_uri=\(authConfig.redirectURI)" +
             "&&code=\(code)" +

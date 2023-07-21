@@ -41,10 +41,8 @@ final class SingleImageViewController: UIViewController {
                 UIView.animate(withDuration: 0.3, animations: { [weak self] in
                     self?.fullScreenImageView.alpha = 1
                 })
-//                UIBlockingProgressHUD.dismiss()
                 self.shareButton.isEnabled = true
             case .failure(_):
-//                UIBlockingProgressHUD.dismiss()
                 let alert = UIAlertController(title: "Что-то пошло не так",
                                               message: "Попробовать еще раз?",
                                               preferredStyle: .alert)

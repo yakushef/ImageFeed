@@ -13,7 +13,7 @@ protocol AuthViewControllerDelegae {
 
 final class AuthViewController: UIViewController {
     var delegate: SplashViewController?
-    private let ShowWebViewSegueId = "ShowWebView"
+    private let showWebViewSegueId = "ShowWebView"
     private let authSegueID = "ShowWebView"
     let oAuth2Service = OAuth2Service()
     
@@ -27,21 +27,21 @@ final class AuthViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard segue.identifier == ShowWebViewSegueId else {
+        guard segue.identifier == showWebViewSegueId else {
             fatalError("Faild to prepare for \(String(describing: segue.identifier))")
         }
         if let webViewVC = segue.destination as? WebViewViewController {
             let webViewPresenter = WebViewPresenter()
             webViewPresenter.view = webViewVC
+            webViewPresenter.delegate = self
             webViewVC.presenter = webViewPresenter
-            webViewVC.delegate = self
         } else {
             super.prepare(for: segue, sender: sender)
         }
     }
 }
 
-extension AuthViewController: WebViewViewControllerDelegate {
+extension AuthViewController: WebViewPresenterDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         self.delegate?.authViewController(self, didAuthenticateWithCode: code)
         }

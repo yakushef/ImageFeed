@@ -7,15 +7,38 @@
 
 import Foundation
 
-public protocol WebViewViewPresenterProtocol: AnyObject {
+protocol WebViewViewPresenterProtocol: AnyObject {
     var view: WebViewViewControllerProtocol? { get set }
+    var delegate: WebViewPresenterDelegate? { get set }
+    
     func viewDidLoad()
     func didUpdateProgressValue(_ newValue: Double)
     func code(from url: URL) -> String?
+    
+    func webViewDidCancel()
+    func webViewDidAuthWith(code: String)
+}
+
+protocol WebViewPresenterDelegate: AnyObject {
+    func webViewViewController(_ vc: WebViewViewController,
+                               didAuthenticateWithCode code: String)
+
+    func webViewViewControllerDidCancel(_ vc: WebViewViewController)
 }
 
 final class WebViewPresenter: WebViewViewPresenterProtocol {
+    func webViewDidCancel() {
+        guard let view = view as? WebViewViewController else { return }
+        delegate?.webViewViewControllerDidCancel(view)
+    }
+    
+    func webViewDidAuthWith(code: String) {
+        guard let view = view as? WebViewViewController else { return }
+        delegate?.webViewViewController(view, didAuthenticateWithCode: code)
+    }
+    
     weak var view: WebViewViewControllerProtocol?
+    weak var delegate: WebViewPresenterDelegate?
     
     let authConfig = AuthConfiguration.standard
     

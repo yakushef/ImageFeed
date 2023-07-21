@@ -130,8 +130,10 @@ final class ImageFeedImagesListTests: XCTestCase {
         let correctDate = presenter.convertDate(photoArrayStub[0].createdAt)
         let incorrectDate = presenter.convertDate(photoArrayStub[1].createdAt)
         
+        print(correctDate)
+        print(incorrectDate)
         //then
-        XCTAssertTrue(correctDate == "3 May 2016" || correctDate == "3 мая 2016 г." || correctDate == "May 3, 2016")
+        XCTAssertTrue(correctDate == "3 May 2016" || correctDate == "03 мая 2016" || correctDate == "May 3, 2016" || correctDate == "03 May 2016" || correctDate == "May 03, 2016")
         XCTAssertEqual(incorrectDate, "")
     }
     

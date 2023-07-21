@@ -30,19 +30,26 @@ final class ImageFeedUITests: XCTestCase {
         let webView = app.webViews["UnsplashWebView"]
         XCTAssertTrue(webView.waitForExistence(timeout: 5))
         
+        let coordinate1 = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.3))
+        let coordinate2 = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.2))
+        
         // MARK: - ACCOUNT LOGIN
+        
         let loginTextField = webView.descendants(matching: .textField).element
         XCTAssertTrue(loginTextField.waitForExistence(timeout: 5))
         loginTextField.tap()
-        loginTextField.typeText("email@e.mail")
+        loginTextField.typeText("av.yakush@gmail.com")
         
-        webView.swipeUp()
+        coordinate1.press(forDuration: 0, thenDragTo: coordinate2)
+        
         // MARK: - ACCOUNT PASSWORD
+        
         let passwordTextField = webView.descendants(matching: .secureTextField).element
         XCTAssertTrue(passwordTextField.waitForExistence(timeout: 5))
         passwordTextField.tap()
-        passwordTextField.typeText("password")
-        webView.swipeUp()
+        passwordTextField.typeText("3Yakushef")
+        
+        coordinate1.press(forDuration: 0, thenDragTo: coordinate2)
         
         webView.buttons.matching(identifier: "Login").element.tap()
         
@@ -87,13 +94,23 @@ final class ImageFeedUITests: XCTestCase {
     func testProfile() throws {
         sleep(3)
         app.tabBars.buttons.element(boundBy: 1).tap()
+        
+        sleep(5)
+        
+        let fullNameLabel = app.staticTexts.matching(identifier: "Full Name Label").firstMatch
+        let fullNameText = fullNameLabel.label
+        let usernameLabel = app.staticTexts.matching(identifier: "Username Label").firstMatch
+        let usernameText = usernameLabel.label
        
         // MARK: - Name + Lastname + @username
-        XCTAssertTrue(app.staticTexts["Full Name"].exists)
-        XCTAssertTrue(app.staticTexts["@user"].exists)
+        
+        XCTAssertEqual("Povar Vrach", fullNameText)
+        XCTAssertEqual("@yakushef", usernameText)
         
         app.buttons["Logout Button"].tap()
         
         app.alerts["Logout Alert"].scrollViews.otherElements.buttons["Yes"].tap()
+        
+        XCTAssertTrue(app.buttons["Authenticate"].waitForExistence(timeout: 10))
     }
 }

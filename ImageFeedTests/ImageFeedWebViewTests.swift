@@ -9,6 +9,16 @@
 import XCTest
 
 final class WebViewPresenterSpy: WebViewViewPresenterProtocol {
+    var delegate: ImageFeed.WebViewPresenterDelegate?
+    
+    func webViewDidCancel() {
+        
+    }
+    
+    func webViewDidAuthWith(code: String) {
+        
+    }
+    
     var view: ImageFeed.WebViewViewControllerProtocol?
     var isViewDidLoadCalled = false
     
@@ -107,7 +117,7 @@ final class ImageFeedWebViewTests: XCTestCase {
         
         //then
         XCTAssertTrue(urlString.contains(authConfig.authURLString))
-        XCTAssertTrue(urlString.contains(authConfig.accesssKey))
+        XCTAssertTrue(urlString.contains(authConfig.accessKey))
         XCTAssertTrue(urlString.contains(authConfig.redirectURI))
         XCTAssertTrue(urlString.contains("code"))
         XCTAssertTrue(urlString.contains(authConfig.accessScope))

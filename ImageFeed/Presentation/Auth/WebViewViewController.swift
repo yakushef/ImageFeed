@@ -8,29 +8,22 @@
 import UIKit
 import WebKit
 
-public protocol WebViewViewControllerProtocol: AnyObject {
+protocol WebViewViewControllerProtocol: AnyObject {
     var presenter: WebViewViewPresenterProtocol? { get set }
     func load(request: URLRequest)
     func setProgressValue(_ newValue: Float)
     func setProgressHidden(_ isHidden: Bool)
 }
 
-protocol WebViewViewControllerDelegate {
-    
-    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
-    
-    func webViewViewControllerDidCancel(_ vc: WebViewViewController)
-}
 
 final class WebViewViewController: UIViewController & WebViewViewControllerProtocol {
 
+    var presenter: WebViewViewPresenterProtocol?
+    
     @IBOutlet private weak var webView: WKWebView!
     @IBOutlet private weak var progressBar: UIProgressView!
     
-    var presenter: WebViewViewPresenterProtocol?
-    
     private var estimatedProgressObservation: NSKeyValueObservation?
-    var delegate: WebViewViewControllerDelegate?
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -69,27 +62,20 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
         progressBar.isHidden = isHidden
     }
     
-    @IBAction private func bacButtonTapped(_ sender: Any?) {
-        delegate?.webViewViewControllerDidCancel(self)
+    @IBAction private func backButtonTapped(_ sender: Any?) {
+        presenter?.webViewDidCancel()
     }
 }
 
 extension WebViewViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences, decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
-        if let code = code(from: navigationAction) {
-                self.delegate?.webViewViewController(self, didAuthenticateWithCode: code)
+        
+        if let url = navigationAction.request.url,
+           let code = presenter?.code(from: url) {
+            presenter?.webViewDidAuthWith(code: code)
             decisionHandler(.cancel, preferences)
         } else {
             decisionHandler(.allow, preferences)
-        }
-    }
-    
-    private func code(from navifationAction: WKNavigationAction) -> String? {
-        
-        if let url = navifationAction.request.url {
-            return presenter?.code(from: url)
-        } else {
-            return nil
         }
     }
 }

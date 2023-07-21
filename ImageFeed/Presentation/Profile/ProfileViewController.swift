@@ -168,6 +168,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         logoutButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -12).isActive = true
         
         // MARK: - full name label
+        fullNameLabel.accessibilityIdentifier = "Full Name Label"
         fullNameLabel.text = "loading..."
         fullNameLabel.font = UIFont.systemFont(ofSize: 23, weight: .semibold)
         fullNameLabel.textColor = .ypBlack()
@@ -179,12 +180,13 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         fullNameLabel.trailingAnchor.constraint(equalTo: logoutButton.trailingAnchor).isActive = true
         
         // MARK: - username label
-        
+        usernameLabel.accessibilityIdentifier = "Username Label"
         usernameLabel.text = "@loading..."
         usernameLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         usernameLabel.textColor = .ypBlack()
-        fullNameLabel.numberOfLines = 0
+        usernameLabel.numberOfLines = 0
         usernameLabel.translatesAutoresizingMaskIntoConstraints = false
+        
         
         usernameLabel.topAnchor.constraint(equalTo: fullNameLabel.bottomAnchor, constant: 8).isActive = true
         usernameLabel.leadingAnchor.constraint(equalTo: fullNameLabel.leadingAnchor).isActive = true
@@ -194,7 +196,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         statusLabel.text = "loading..."
         statusLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         statusLabel.textColor = .ypBlack()
-        fullNameLabel.numberOfLines = 0
+        statusLabel.numberOfLines = 0
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
         
         statusLabel.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 8).isActive = true

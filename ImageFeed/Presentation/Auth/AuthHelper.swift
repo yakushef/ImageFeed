@@ -28,7 +28,7 @@ final class AuthHelper: AuthHelperProtocol {
             return components }()
         
         urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: authConfig.accesssKey),
+            URLQueryItem(name: "client_id", value: authConfig.accessKey),
             URLQueryItem(name: "redirect_uri", value: authConfig.redirectURI),
             URLQueryItem(name: "response_type", value: "code"),
             URLQueryItem(name: "scope", value: authConfig.accessScope)
