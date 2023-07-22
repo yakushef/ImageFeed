@@ -38,7 +38,7 @@ final class ImageFeedUITests: XCTestCase {
         let loginTextField = webView.descendants(matching: .textField).element
         XCTAssertTrue(loginTextField.waitForExistence(timeout: 5))
         loginTextField.tap()
-        loginTextField.typeText("av.yakush@gmail.com")
+        loginTextField.typeText("@gmail.com")
         
         coordinate1.press(forDuration: 0, thenDragTo: coordinate2)
         
@@ -47,7 +47,7 @@ final class ImageFeedUITests: XCTestCase {
         let passwordTextField = webView.descendants(matching: .secureTextField).element
         XCTAssertTrue(passwordTextField.waitForExistence(timeout: 5))
         passwordTextField.tap()
-        passwordTextField.typeText("3Yakushef")
+        passwordTextField.typeText("")
         
         coordinate1.press(forDuration: 0, thenDragTo: coordinate2)
         
