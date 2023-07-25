@@ -16,7 +16,7 @@ enum NetworkError: Error {
 extension URLRequest {
     static func makeHttpRequest(path: String,
                                 httpMethod: String,
-                                baseURL: URL = DefaultBaseURL) -> URLRequest {
+                                baseURL: URL = AuthConfiguration.standard.baseURL) -> URLRequest {
         
         let url: URL = {
             guard let url = URL(string: path, relativeTo: baseURL) else {

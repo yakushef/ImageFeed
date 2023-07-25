@@ -19,7 +19,7 @@
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PhotoLoader" translatesAutoresizingMaskIntoConstraints="NO" id="Rvy-2w-Pzi" customClass="GradientImageView" customModule="ImageFeed" customModuleProvider="target">
                         <rect key="frame" x="16" y="4" width="358" height="139"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="YPWhiteAlpha50"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -29,6 +29,7 @@
                     </imageView>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K7E-5L-vIR">
                         <rect key="frame" x="330" y="4" width="44" height="44"/>
+                        <accessibility key="accessibilityConfiguration" identifier="LikeButton"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="44" id="MAm-Bi-q2j"/>
                             <constraint firstAttribute="width" constant="44" id="S17-VL-6gJ"/>
@@ -36,7 +37,7 @@
                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                         <state key="normal" image="likeButtonInactive"/>
                         <connections>
-                            <action selector="likeButtonTapped" destination="Uzf-vy-By7" eventType="touchUpInside" id="jNR-15-Xnt"/>
+                            <action selector="likeButtonTapped" destination="Uzf-vy-By7" eventType="touchUpInside" id="qrR-0N-eVg"/>
                         </connections>
                     </button>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="27 августа 2021" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gYE-Gm-j43">
@@ -79,6 +80,9 @@
         </namedColor>
         <namedColor name="YPWhite">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="YPWhiteAlpha50">
+            <color red="1" green="1" blue="1" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

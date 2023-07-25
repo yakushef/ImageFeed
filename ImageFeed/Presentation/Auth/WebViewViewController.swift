@@ -8,20 +8,22 @@
 import UIKit
 import WebKit
 
-protocol WebViewViewControllerDelegate {
-    
-    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
-    
-    func webViewViewControllerDidCancel(_ vc: WebViewViewController)
+protocol WebViewViewControllerProtocol: AnyObject {
+    var presenter: WebViewViewPresenterProtocol? { get set }
+    func load(request: URLRequest)
+    func setProgressValue(_ newValue: Float)
+    func setProgressHidden(_ isHidden: Bool)
 }
 
-final class WebViewViewController: UIViewController {
+
+final class WebViewViewController: UIViewController & WebViewViewControllerProtocol {
+
+    var presenter: WebViewViewPresenterProtocol?
     
     @IBOutlet private weak var webView: WKWebView!
     @IBOutlet private weak var progressBar: UIProgressView!
     
     private var estimatedProgressObservation: NSKeyValueObservation?
-    var delegate: WebViewViewControllerDelegate?
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -35,71 +37,45 @@ final class WebViewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        webView.accessibilityIdentifier = "UnsplashWebView"
+        
         progressBar.progress = 0
         webView.navigationDelegate = self
+        
+        presenter?.viewDidLoad()
         
         estimatedProgressObservation = webView.observe(\.estimatedProgress,
                                                         changeHandler: { [weak self] _, _ in
             guard let self = self else { return }
-            updateProgress()
+            self.presenter?.didUpdateProgressValue(webView.estimatedProgress)
         })
-        
-        let UnsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
-
-        var urlComponents: URLComponents = { guard let components = URLComponents(string: UnsplashAuthorizeURLString) else { assertionFailure("Invalid Authorize URLComonents"); return URLComponents() }
-            return components }()
-        
-        urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: AccessKey),
-            URLQueryItem(name: "redirect_uri", value: RedirectURI),
-            URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: AccessScope)
-        ]
-        let url: URL = {
-            guard let url = urlComponents.url else {
-                assertionFailure("Invalid Authorize URL")
-                return URL(string: "")!
-            }
-            return url
-        }()
-        let request = URLRequest(url: url)
-        
+    }
+    
+    func load(request: URLRequest) {
         webView.load(request)
     }
     
-    private func updateProgress() {
-        let progress = Float(webView.estimatedProgress)
-        progressBar.setProgress(progress, animated: false)
-        progressBar.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
+    func setProgressValue(_ newValue: Float) {
+        progressBar.setProgress(newValue, animated: false)
+    }
+    func setProgressHidden(_ isHidden: Bool) {
+        progressBar.isHidden = isHidden
     }
     
-    @IBAction private func bacButtonTapped(_ sender: Any?) {
-        delegate?.webViewViewControllerDidCancel(self)
+    @IBAction private func backButtonTapped(_ sender: Any?) {
+        presenter?.webViewDidCancel()
     }
 }
 
 extension WebViewViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences, decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
-        if let code = code(from: navigationAction) {
-                self.delegate?.webViewViewController(self, didAuthenticateWithCode: code)
+        
+        if let url = navigationAction.request.url,
+           let code = presenter?.code(from: url) {
+            presenter?.webViewDidAuthWith(code: code)
             decisionHandler(.cancel, preferences)
         } else {
             decisionHandler(.allow, preferences)
-        }
-    }
-    
-    private func code(from navifationAction: WKNavigationAction) -> String? {
-        
-        if
-            let url = navifationAction.request.url,
-            let urlComponents = URLComponents(string: url.absoluteString),
-            urlComponents.path == "/oauth/authorize/native",
-            let items = urlComponents.queryItems,
-            let codeItem = items.first(where: { $0.name == "code" })
-        {
-            return codeItem.value
-        } else {
-            return nil
         }
     }
 }

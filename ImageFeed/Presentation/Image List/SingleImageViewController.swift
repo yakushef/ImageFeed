@@ -27,16 +27,22 @@ final class SingleImageViewController: UIViewController {
     private var doubleTapRecognizer: UITapGestureRecognizer!
     
     func loadImage() {
-        fullScreenImageView.kf.setImage(with: imageURL) { [weak self] result in
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .bold, scale: .large)
+        let symbolImage: UIImage = UIImage(systemName: "circle.fill", withConfiguration: symbolConfig)?.withTintColor(.ypBlack(), renderingMode: .alwaysOriginal) ?? UIImage()
+        
+        fullScreenImageView.kf.setImage(with: imageURL,
+                                        placeholder: symbolImage.kf.resize(to: view.frame.size, for: .none)){ [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let imageResult):
+                fullScreenImageView.alpha = 0
                 let image = imageResult.image
                 self.rescaleAndCenterImageInScrollView(image: image)
-                UIBlockingProgressHUD.dismiss()
+                UIView.animate(withDuration: 0.3, animations: { [weak self] in
+                    self?.fullScreenImageView.alpha = 1
+                })
                 self.shareButton.isEnabled = true
             case .failure(_):
-                UIBlockingProgressHUD.dismiss()
                 let alert = UIAlertController(title: "Что-то пошло не так",
                                               message: "Попробовать еще раз?",
                                               preferredStyle: .alert)
@@ -57,10 +63,8 @@ final class SingleImageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        fullScreenImageView.kf.indicatorType = .activity
         alertPresenter = AlertPresenter(delegate: self)
-        
-        UIBlockingProgressHUD.show()
         
         shareButton.isEnabled = false
         

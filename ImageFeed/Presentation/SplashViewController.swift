@@ -99,6 +99,7 @@ final class SplashViewController: UIViewController {
                 self.dismiss(animated: true)
                 self.authDone()
             case .failure(let error):
+                UIBlockingProgressHUD.dismiss()
                 self.showAlert(with: "Не удалось войти в систему:\n\n \(error.localizedDescription)")
             }
         }

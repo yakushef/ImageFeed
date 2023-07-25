@@ -12,7 +12,7 @@ final class OAuth2Service {
     static let shared = OAuth2Service()
     
     private let urlSession = URLSession.shared
-    
+    private let authConfig = AuthConfiguration.standard
     private var lastCode: String?
     private var task: URLSessionTask?
     
@@ -61,11 +61,11 @@ final class OAuth2Service {
     func authTokenRequest(code: String) -> URLRequest {
 
         let path = "/oauth/token" +
-                   "?client_id=\(AccessKey)" +
-                   "&&client_secret=\(SecretKey)" +
-                   "&&redirect_uri=\(RedirectURI)" +
-                   "&&code=\(code)" +
-                   "&&grant_type=authorization_code"
+            "?client_id=\(authConfig.accessKey)" +
+            "&&client_secret=\(authConfig.secretkey)" +
+            "&&redirect_uri=\(authConfig.redirectURI)" +
+            "&&code=\(code)" +
+            "&&grant_type=authorization_code"
         
         guard let url = URL(string: "https://unsplash.com") else { fatalError("Invalid base URL") }
                 
